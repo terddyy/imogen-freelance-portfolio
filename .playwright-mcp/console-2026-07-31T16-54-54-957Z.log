@@ -1,0 +1,2 @@
+[   10163ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=NiJD0h5bMSQ3Xqr7AaM0P' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE @ http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422
+[   11206ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:3000/_next/webpack-hmr?id=NiJD0h5bMSQ3Xqr7AaM0P' failed: Error during WebSocket handshake: net::ERR_INVALID_HTTP_RESPONSE @ http://127.0.0.1:3000/_next/static/chunks/node_modules_next_dist_client_0r5nbpw._.js:13422

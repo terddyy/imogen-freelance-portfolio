@@ -1,0 +1,415 @@
+- generic [active] [ref=f6e1]:
+  - banner "Primary navigation" [ref=f6e2]:
+    - link "Imogen Inocentes home" [ref=f6e3] [cursor=pointer]:
+      - /url: /
+      - strong [ref=f6e4]: IMOGEN.
+    - link "Start a project" [ref=f6e6] [cursor=pointer]:
+      - /url: /contact
+  - main [ref=f6e7]:
+    - region "Imogen Inocentes hero" [ref=f6e8]:
+      - img "Imogen Inocentes in a dark studio portrait" [ref=f6e9]
+      - generic [ref=f6e11]:
+        - generic [ref=f6e12]: Available for select projects
+        - heading [level=1] [ref=f6e16]:
+          - text: Complex problems.
+          - emphasis [ref=f6e17]: Clear software.
+        - generic [ref=f6e18]:
+          - strong [ref=f6e19]: Lead Full Stack Developer
+          - link "Nexvision Innovations Inc." [ref=f6e20] [cursor=pointer]:
+            - /url: https://nexvision.info/
+          - link "Co-founder & CEO at Zentari" [ref=f6e24] [cursor=pointer]:
+            - /url: https://www.facebook.com/zentarisoftwaresolution
+        - paragraph [ref=f6e28]: I'm Imogen Inocentes. I design and build reliable web products, internal systems, and automations for teams that need clarity, speed, and solutions that hold up in the real world.
+        - generic [ref=f6e29]:
+          - link "Discuss your problem" [ref=f6e30] [cursor=pointer]:
+            - /url: /contact
+          - link "View my work" [ref=f6e31] [cursor=pointer]:
+            - /url: /projects
+    - region [ref=f6e33]:
+      - generic [ref=f6e35]:
+        - paragraph [ref=f6e36]: Portfolio
+        - heading "Featured Projects" [level=2] [ref=f6e37]
+      - generic "Featured projects" [ref=f6e38]:
+        - generic "Featured projects. Drag horizontally to browse." [ref=f6e39]:
+          - generic [ref=f6e40]:
+            - article [ref=f6e41]:
+              - link "View Local Service Website" [ref=f6e42] [cursor=pointer]:
+                - /url: /projects
+                - img "Local Service Website project preview" [ref=f6e43]
+                - generic [ref=f6e45]: "01"
+                - generic [ref=f6e47]:
+                  - generic [ref=f6e48]: Websites
+                  - heading "Local Service Website" [level=3] [ref=f6e49]
+            - article [ref=f6e50]:
+              - link "View Personal Brand Portfolio" [ref=f6e51] [cursor=pointer]:
+                - /url: /projects
+                - img "Personal Brand Portfolio project preview" [ref=f6e52]
+                - generic [ref=f6e54]: "02"
+                - generic [ref=f6e56]:
+                  - generic [ref=f6e57]: Websites
+                  - heading "Personal Brand Portfolio" [level=3] [ref=f6e58]
+            - article [ref=f6e59]:
+              - link "View Online Booking Landing Page" [ref=f6e60] [cursor=pointer]:
+                - /url: /projects
+                - img "Online Booking Landing Page project preview" [ref=f6e61]
+                - generic [ref=f6e63]: "03"
+                - generic [ref=f6e65]:
+                  - generic [ref=f6e66]: Landing Pages
+                  - heading "Online Booking Landing Page" [level=3] [ref=f6e67]
+            - article [ref=f6e68]:
+              - link "View Product Catalog Mockup" [ref=f6e69] [cursor=pointer]:
+                - /url: /projects
+                - img "Product Catalog Mockup project preview" [ref=f6e70]
+                - generic [ref=f6e72]: "04"
+                - generic [ref=f6e74]:
+                  - generic [ref=f6e75]: Commerce
+                  - heading "Product Catalog Mockup" [level=3] [ref=f6e76]
+            - article [ref=f6e77]:
+              - link "View Event Promo Page" [ref=f6e78] [cursor=pointer]:
+                - /url: /projects
+                - img "Event Promo Page project preview" [ref=f6e79]
+                - generic [ref=f6e81]: "05"
+                - generic [ref=f6e83]:
+                  - generic [ref=f6e84]: Landing Pages
+                  - heading "Event Promo Page" [level=3] [ref=f6e85]
+            - article [ref=f6e86]:
+              - link "View Client Dashboard Concept" [ref=f6e87] [cursor=pointer]:
+                - /url: /projects
+                - img "Client Dashboard Concept project preview" [ref=f6e88]
+                - generic [ref=f6e90]: "06"
+                - generic [ref=f6e92]:
+                  - generic [ref=f6e93]: Dashboards
+                  - heading "Client Dashboard Concept" [level=3] [ref=f6e94]
+            - article [ref=f6e95]:
+              - link [ref=f6e96] [cursor=pointer]:
+                - /url: /projects
+                - generic [ref=f6e99]: "01"
+                - generic [ref=f6e101]:
+                  - generic [ref=f6e102]: Websites
+                  - heading [level=3] [ref=f6e103]: Local Service Website
+            - article [ref=f6e104]:
+              - link [ref=f6e105] [cursor=pointer]:
+                - /url: /projects
+                - generic [ref=f6e108]: "02"
+                - generic [ref=f6e110]:
+                  - generic [ref=f6e111]: Websites
+                  - heading [level=3] [ref=f6e112]: Personal Brand Portfolio
+            - article [ref=f6e113]:
+              - link [ref=f6e114] [cursor=pointer]:
+                - /url: /projects
+                - generic [ref=f6e117]: "03"
+                - generic [ref=f6e119]:
+                  - generic [ref=f6e120]: Landing Pages
+                  - heading [level=3] [ref=f6e121]: Online Booking Landing Page
+            - article [ref=f6e122]:
+              - link [ref=f6e123] [cursor=pointer]:
+                - /url: /projects
+                - generic [ref=f6e126]: "04"
+                - generic [ref=f6e128]:
+                  - generic [ref=f6e129]: Commerce
+                  - heading [level=3] [ref=f6e130]: Product Catalog Mockup
+            - article [ref=f6e131]:
+              - link [ref=f6e132] [cursor=pointer]:
+                - /url: /projects
+                - generic [ref=f6e135]: "05"
+                - generic [ref=f6e137]:
+                  - generic [ref=f6e138]: Landing Pages
+                  - heading [level=3] [ref=f6e139]: Event Promo Page
+            - article [ref=f6e140]:
+              - link [ref=f6e141] [cursor=pointer]:
+                - /url: /projects
+                - generic [ref=f6e144]: "06"
+                - generic [ref=f6e146]:
+                  - generic [ref=f6e147]: Dashboards
+                  - heading [level=3] [ref=f6e148]: Client Dashboard Concept
+      - link "View all projects" [ref=f6e150] [cursor=pointer]:
+        - /url: /projects
+    - region "Skills and tools" [ref=f6e154]:
+      - generic [ref=f6e155]:
+        - generic [ref=f6e156]:
+          - text: Next.js
+          - generic [ref=f6e160]: Frontend
+        - generic [ref=f6e161]:
+          - text: TypeScript
+          - generic [ref=f6e165]: Frontend
+        - generic [ref=f6e166]:
+          - text: React
+          - generic [ref=f6e170]: Frontend
+        - generic [ref=f6e171]:
+          - text: Responsive CSS
+          - generic [ref=f6e175]: Frontend
+        - generic [ref=f6e176]:
+          - text: Figma
+          - generic [ref=f6e180]: Design
+        - generic [ref=f6e181]:
+          - text: Brand Systems
+          - generic [ref=f6e185]: Design
+        - generic [ref=f6e186]:
+          - text: Landing Pages
+          - generic [ref=f6e190]: Workflow
+        - generic [ref=f6e191]:
+          - text: Forms
+          - generic [ref=f6e195]: Workflow
+        - generic [ref=f6e196]:
+          - text: Content Updates
+          - generic [ref=f6e200]: Workflow
+        - generic [ref=f6e201]:
+          - text: SEO Basics
+          - generic [ref=f6e205]: Tools
+        - generic [ref=f6e206]:
+          - text: GitHub
+          - generic [ref=f6e210]: Tools
+        - generic [ref=f6e211]:
+          - text: Automation
+          - generic [ref=f6e215]: Tools
+        - generic [ref=f6e216]:
+          - text: Next.js
+          - generic [ref=f6e220]: Frontend
+        - generic [ref=f6e221]:
+          - text: TypeScript
+          - generic [ref=f6e225]: Frontend
+        - generic [ref=f6e226]:
+          - text: React
+          - generic [ref=f6e230]: Frontend
+        - generic [ref=f6e231]:
+          - text: Responsive CSS
+          - generic [ref=f6e235]: Frontend
+        - generic [ref=f6e236]:
+          - text: Figma
+          - generic [ref=f6e240]: Design
+        - generic [ref=f6e241]:
+          - text: Brand Systems
+          - generic [ref=f6e245]: Design
+        - generic [ref=f6e246]:
+          - text: Landing Pages
+          - generic [ref=f6e250]: Workflow
+        - generic [ref=f6e251]:
+          - text: Forms
+          - generic [ref=f6e255]: Workflow
+        - generic [ref=f6e256]:
+          - text: Content Updates
+          - generic [ref=f6e260]: Workflow
+        - generic [ref=f6e261]:
+          - text: SEO Basics
+          - generic [ref=f6e265]: Tools
+        - generic [ref=f6e266]:
+          - text: GitHub
+          - generic [ref=f6e270]: Tools
+        - generic [ref=f6e271]:
+          - text: Automation
+          - generic [ref=f6e275]: Tools
+    - generic [ref=f6e277]:
+      - generic [ref=f6e278]:
+        - generic [ref=f6e279]:
+          - generic [ref=f6e280]: Client Notes
+          - heading "Feedback space that does not invent client claims." [level=2] [ref=f6e281]
+          - paragraph [ref=f6e282]: The section keeps the reference site's social-proof structure, but the copy stays explicitly placeholder-safe until real testimonials are approved.
+        - link "See all" [ref=f6e283] [cursor=pointer]:
+          - /url: /testimonials
+      - generic [ref=f6e287]:
+        - article [ref=f6e288]:
+          - generic [ref=f6e289]:
+            - generic [ref=f6e290]: CN
+            - generic [ref=f6e291]:
+              - heading "Client Note" [level=3] [ref=f6e292]
+              - paragraph [ref=f6e293]: Placeholder feedback
+          - paragraph [ref=f6e294]: This space is reserved for a real client note once Imogen has approved feedback to publish. The design keeps the layout ready without inventing testimonials.
+        - article [ref=f6e295]:
+          - generic [ref=f6e296]:
+            - generic [ref=f6e297]: PR
+            - generic [ref=f6e298]:
+              - heading "Project Review" [level=3] [ref=f6e299]
+              - paragraph [ref=f6e300]: Placeholder feedback
+          - paragraph [ref=f6e301]: Use this card for a short review about communication, design clarity, delivery, or launch support. Replace it only with permission from the client.
+        - article [ref=f6e302]:
+          - generic [ref=f6e303]:
+            - generic [ref=f6e304]: FS
+            - generic [ref=f6e305]:
+              - heading "Future Story" [level=3] [ref=f6e306]
+              - paragraph [ref=f6e307]: Placeholder feedback
+          - paragraph [ref=f6e308]: A third placeholder keeps the carousel balanced while the portfolio is being prepared. It should be swapped for a real result or removed before public launch.
+    - generic [ref=f6e310]:
+      - generic [ref=f6e311]:
+        - generic [ref=f6e312]: About Imogen
+        - heading "Independent freelancer, practical design partner, calm launch process." [level=2] [ref=f6e313]
+        - paragraph [ref=f6e314]: "Imogen Inocentes works with founders, service providers, and small teams who need a site that is clear, usable, and easy to keep improving. The focus is simple: make the offer understandable, make the next step obvious, and make the interface feel polished on every screen."
+        - generic [ref=f6e315]:
+          - article [ref=f6e316]:
+            - generic [ref=f6e321]:
+              - heading "Practical design" [level=3] [ref=f6e322]
+              - paragraph [ref=f6e323]: Layouts are shaped around what visitors need to understand, compare, and do next.
+          - article [ref=f6e324]:
+            - generic [ref=f6e329]:
+              - heading "Reliable build habits" [level=3] [ref=f6e330]
+              - paragraph [ref=f6e331]: Responsive sections, reusable components, and clear content structure are treated as baseline work.
+          - article [ref=f6e332]:
+            - generic [ref=f6e338]:
+              - heading "Launch-minded polish" [level=3] [ref=f6e339]
+              - paragraph [ref=f6e340]: Each page is checked for spacing, mobile behavior, clarity, and conversion paths before handoff.
+      - img "Workspace placeholder for Imogen Inocentes" [ref=f6e342]
+    - generic [ref=f6e344]:
+      - generic [ref=f6e346]:
+        - generic [ref=f6e347]: Services
+        - heading "Freelance help for focused websites and simple digital workflows." [level=2] [ref=f6e348]
+        - paragraph [ref=f6e349]: The services mirror the reference site's breadth while keeping the positioning solo, practical, and Imogen-specific.
+      - generic [ref=f6e350]:
+        - article [ref=f6e351]:
+          - heading "Portfolio & Business Websites" [level=3] [ref=f6e355]
+          - paragraph [ref=f6e356]: Readable, credible websites that introduce your work clearly and guide visitors toward an inquiry.
+        - article [ref=f6e357]:
+          - heading "Brand-Aligned Landing Pages" [level=3] [ref=f6e365]
+          - paragraph [ref=f6e366]: Campaign pages with sharp messaging, visual consistency, and conversion-focused section flow.
+        - article [ref=f6e367]:
+          - heading "Content Updates & Site Care" [level=3] [ref=f6e371]
+          - paragraph [ref=f6e372]: Practical site upkeep, page refreshes, content edits, and UI improvements without unnecessary rebuilds.
+        - article [ref=f6e373]:
+          - heading "Booking & Inquiry Forms" [level=3] [ref=f6e377]
+          - paragraph [ref=f6e378]: Simple lead paths for bookings, requests, and project briefs that keep next steps clear.
+        - article [ref=f6e379]:
+          - heading "Simple E-commerce Setup" [level=3] [ref=f6e384]
+          - paragraph [ref=f6e385]: Starter catalog and storefront experiences for small product lines, service add-ons, or launches.
+        - article [ref=f6e386]:
+          - heading "Workflow Automation Support" [level=3] [ref=f6e391]
+          - paragraph [ref=f6e392]: Lightweight automations that connect forms, messages, spreadsheets, and repeatable admin tasks.
+    - generic [ref=f6e394]:
+      - generic [ref=f6e396]:
+        - generic [ref=f6e397]: Process
+        - heading "A clear path from first message to launch handoff." [level=2] [ref=f6e398]
+        - paragraph [ref=f6e399]: Each phase gives both sides a concrete checkpoint, so the work stays scoped and the site has a reliable path to completion.
+      - generic [ref=f6e400]:
+        - article [ref=f6e401]:
+          - text: "01"
+          - generic [ref=f6e402]: Project fit
+          - heading "Discovery" [level=3] [ref=f6e403]
+          - paragraph [ref=f6e404]: Clarify the goal, audience, references, deadlines, and what a successful launch should accomplish.
+        - article [ref=f6e405]:
+          - text: "02"
+          - generic [ref=f6e406]: Plan the work
+          - heading "Scope" [level=3] [ref=f6e407]
+          - paragraph [ref=f6e408]: Turn the brief into a clear page list, section plan, deliverables, timeline, and content checklist.
+        - article [ref=f6e409]:
+          - text: "03"
+          - generic [ref=f6e410]: Shape the system
+          - heading "Design" [level=3] [ref=f6e411]
+          - paragraph [ref=f6e412]: Create the visual direction, page rhythm, reusable components, and responsive layout decisions.
+        - article [ref=f6e413]:
+          - text: "04"
+          - generic [ref=f6e414]: Make it real
+          - heading "Build" [level=3] [ref=f6e415]
+          - paragraph [ref=f6e416]: Implement the site in clean responsive code, with practical content structure and accessible UI.
+        - article [ref=f6e417]:
+          - text: "05"
+          - generic [ref=f6e418]: Polish together
+          - heading "Review" [level=3] [ref=f6e419]
+          - paragraph [ref=f6e420]: Walk through desktop and mobile, tighten details, and adjust copy, spacing, and calls to action.
+        - article [ref=f6e421]:
+          - text: "06"
+          - generic [ref=f6e422]: Hand off
+          - heading "Launch" [level=3] [ref=f6e423]
+          - paragraph [ref=f6e424]: Prepare the final files, launch checklist, and simple guidance for future updates.
+    - generic [ref=f6e426]:
+      - generic [ref=f6e428]:
+        - generic [ref=f6e429]: Pricing
+        - heading "Placeholder tiers for planning conversations." [level=2] [ref=f6e430]
+        - paragraph [ref=f6e431]: The ranges are intentionally starter estimates, not final quotes. Real pricing should be confirmed against scope, content, and launch timeline.
+      - generic [ref=f6e432]:
+        - article [ref=f6e433]:
+          - generic [ref=f6e434]:
+            - heading "Starter" [level=3] [ref=f6e435]
+            - paragraph [ref=f6e436]: A focused first site
+          - strong [ref=f6e437]: From PHP 12k
+          - paragraph [ref=f6e438]: Best for a concise personal, freelancer, or local business site that needs to go live cleanly.
+          - list [ref=f6e439]:
+            - listitem [ref=f6e440]: One to three responsive pages
+            - listitem [ref=f6e443]: Core brand and layout styling
+            - listitem [ref=f6e446]: Contact or inquiry CTA
+            - listitem [ref=f6e449]: Placeholder-ready project/media areas
+          - link "Ask about Starter" [ref=f6e452] [cursor=pointer]:
+            - /url: /contact
+        - article [ref=f6e453]:
+          - generic [ref=f6e454]: Most practical
+          - generic [ref=f6e455]:
+            - heading "Growth" [level=3] [ref=f6e456]
+            - paragraph [ref=f6e457]: More sections, stronger flow
+          - strong [ref=f6e458]: From PHP 24k
+          - paragraph [ref=f6e459]: For service providers and small teams that need richer sections, conversion flow, and polish.
+          - list [ref=f6e460]:
+            - listitem [ref=f6e461]: Up to six page sections or routes
+            - listitem [ref=f6e464]: Project/service card systems
+            - listitem [ref=f6e467]: Booking or inquiry form UI
+            - listitem [ref=f6e470]: Responsive QA and launch support
+          - link "Plan a Growth site" [ref=f6e473] [cursor=pointer]:
+            - /url: /contact
+        - article [ref=f6e474]:
+          - generic [ref=f6e475]:
+            - heading "Custom" [level=3] [ref=f6e476]
+            - paragraph [ref=f6e477]: Built around the brief
+          - strong [ref=f6e478]: By quote
+          - paragraph [ref=f6e479]: For dashboards, commerce concepts, automations, or a larger site that needs scoped requirements.
+          - list [ref=f6e480]:
+            - listitem [ref=f6e481]: Custom interface or workflow
+            - listitem [ref=f6e484]: Expanded content structure
+            - listitem [ref=f6e487]: Advanced interaction planning
+            - listitem [ref=f6e490]: Maintenance options after launch
+          - link "Request a quote" [ref=f6e493] [cursor=pointer]:
+            - /url: /contact
+    - generic [ref=f6e495]:
+      - generic [ref=f6e497]:
+        - generic [ref=f6e498]: Tools I Work With
+        - heading "A GitHub-style area for public work when it is ready." [level=2] [ref=f6e499]
+        - paragraph [ref=f6e500]: Instead of showing empty or private repositories, this section keeps the reference site's technical credibility area as honest placeholders.
+      - generic [ref=f6e501]:
+        - article [ref=f6e502]:
+          - heading "Selected Code" [level=3] [ref=f6e507]
+          - paragraph [ref=f6e508]: Placeholder area for public GitHub projects.
+        - article [ref=f6e509]:
+          - heading "UI Systems" [level=3] [ref=f6e515]
+          - paragraph [ref=f6e516]: Reusable components for consistent pages and cards.
+        - article [ref=f6e517]:
+          - heading "Performance Care" [level=3] [ref=f6e521]
+          - paragraph [ref=f6e522]: Lightweight, responsive pages with practical image handling.
+        - article [ref=f6e523]:
+          - heading "Portfolio Assistant" [level=3] [ref=f6e527]
+          - paragraph [ref=f6e528]: A visual-only shell ready for future content grounding.
+    - generic [ref=f6e530]:
+      - generic [ref=f6e531]:
+        - generic [ref=f6e532]: Start Here
+        - heading "Have a project in mind?" [level=2] [ref=f6e533]
+        - paragraph [ref=f6e534]: Tell Imogen what you need and she'll reply with a clear next step for scope, timeline, and fit.
+      - link "Send Inquiry" [ref=f6e535] [cursor=pointer]:
+        - /url: /contact
+  - contentinfo [ref=f6e538]:
+    - generic [ref=f6e539]:
+      - generic [ref=f6e540]:
+        - paragraph [ref=f6e541]: Good design makes the next step obvious.
+        - paragraph [ref=f6e542]: Imogen Inocentes
+      - generic [ref=f6e543]:
+        - link "Projects" [ref=f6e544] [cursor=pointer]:
+          - /url: /projects
+        - link "About" [ref=f6e545] [cursor=pointer]:
+          - /url: /about
+        - link "Notes" [ref=f6e546] [cursor=pointer]:
+          - /url: /testimonials
+        - link "Contact" [ref=f6e547] [cursor=pointer]:
+          - /url: /contact
+      - generic [ref=f6e548]:
+        - link "GitHub" [ref=f6e549] [cursor=pointer]:
+          - /url: https://github.com/
+        - link "LinkedIn" [ref=f6e553] [cursor=pointer]:
+          - /url: https://www.linkedin.com/
+        - link "Email" [ref=f6e557] [cursor=pointer]:
+          - /url: mailto:hello@imogeninocentes.dev
+    - generic [ref=f6e561]:
+      - generic [ref=f6e562]: Copyright 2026 Imogen Inocentes.
+      - generic [ref=f6e563]: Placeholder images and content ready for replacement.
+  - button "Open portfolio assistant" [ref=f6e564] [cursor=pointer]:
+    - generic [ref=f6e567]: Ask about Imogen
+  - navigation "Mobile navigation" [ref=f6e568]:
+    - link "Home" [ref=f6e569] [cursor=pointer]:
+      - /url: /
+    - link "Work" [ref=f6e574] [cursor=pointer]:
+      - /url: /projects
+    - link "About" [ref=f6e578] [cursor=pointer]:
+      - /url: /about
+    - link "Contact" [ref=f6e583] [cursor=pointer]:
+      - /url: /contact

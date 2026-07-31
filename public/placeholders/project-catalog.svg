@@ -1,0 +1,14 @@
+<svg width="960" height="640" viewBox="0 0 960 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="640" fill="#080C14"/>
+  <rect x="64" y="62" width="832" height="516" rx="18" fill="#101B29" stroke="#7AD7FF" stroke-opacity=".22"/>
+  <rect x="112" y="112" width="220" height="40" rx="10" fill="#F3F8FF" fill-opacity=".82"/>
+  <rect x="112" y="184" width="154" height="34" rx="17" fill="#7CFFB2" fill-opacity=".82"/>
+  <rect x="286" y="184" width="104" height="34" rx="17" fill="#FFFFFF" fill-opacity=".08"/>
+  <rect x="112" y="270" width="176" height="184" rx="14" fill="#0D1724" stroke="#7AD7FF" stroke-opacity=".18"/>
+  <rect x="330" y="270" width="176" height="184" rx="14" fill="#0D1724" stroke="#7AD7FF" stroke-opacity=".18"/>
+  <rect x="548" y="270" width="176" height="184" rx="14" fill="#0D1724" stroke="#7AD7FF" stroke-opacity=".18"/>
+  <circle cx="200" cy="340" r="38" fill="#7AD7FF" fill-opacity=".2"/>
+  <circle cx="418" cy="340" r="38" fill="#7CFFB2" fill-opacity=".2"/>
+  <circle cx="636" cy="340" r="38" fill="#FFD166" fill-opacity=".2"/>
+  <text x="480" y="526" text-anchor="middle" fill="#9EAFBF" font-family="Arial, Helvetica, sans-serif" font-size="24">Product catalog placeholder</text>
+</svg>

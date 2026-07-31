@@ -1,0 +1,19 @@
+<svg width="960" height="640" viewBox="0 0 960 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="640" fill="#07101A"/>
+  <rect x="78" y="74" width="804" height="492" rx="18" fill="#101B29" stroke="#7AD7FF" stroke-opacity=".22"/>
+  <rect x="128" y="128" width="330" height="46" rx="10" fill="#F3F8FF" fill-opacity=".82"/>
+  <rect x="128" y="212" width="388" height="12" rx="6" fill="#F3F8FF" fill-opacity=".22"/>
+  <rect x="128" y="242" width="316" height="12" rx="6" fill="#F3F8FF" fill-opacity=".18"/>
+  <rect x="128" y="314" width="168" height="52" rx="10" fill="#7AD7FF"/>
+  <rect x="580" y="128" width="224" height="300" rx="14" fill="#0D1724" stroke="#7CFFB2" stroke-opacity=".3"/>
+  <rect x="606" y="160" width="172" height="18" rx="9" fill="#7CFFB2" fill-opacity=".8"/>
+  <g fill="#7AD7FF" fill-opacity=".18">
+    <rect x="608" y="212" width="44" height="44" rx="8"/>
+    <rect x="668" y="212" width="44" height="44" rx="8"/>
+    <rect x="728" y="212" width="44" height="44" rx="8"/>
+    <rect x="608" y="272" width="44" height="44" rx="8"/>
+    <rect x="668" y="272" width="44" height="44" rx="8"/>
+    <rect x="728" y="272" width="44" height="44" rx="8"/>
+  </g>
+  <text x="480" y="516" text-anchor="middle" fill="#9EAFBF" font-family="Arial, Helvetica, sans-serif" font-size="24">Booking landing page placeholder</text>
+</svg>
