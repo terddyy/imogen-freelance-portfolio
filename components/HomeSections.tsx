@@ -64,11 +64,11 @@ export function HeroSection() {
         <div className="heroCopy">
           <p className="heroKicker">
             <span>01</span>
-            Nexvision Innovations Inc. · BGC PSE Building
+            Lead full-stack development · Scalable software
           </p>
           <span className="availability">
             <CircleDot size={14} />
-            Available for select projects
+            Available for select builds
           </span>
           <h1>
             Complex problems.
@@ -77,25 +77,26 @@ export function HeroSection() {
           <div className="heroMeta heroMetaInline">
             <strong>Lead Full Stack Developer</strong>
             <a href="https://nexvision.info/" target="_blank" rel="noreferrer">
-              Nexvision Innovations Inc.
+              Nexvision Innovations
               <ArrowUpRight size={15} />
             </a>
             <a href="https://www.facebook.com/zentarisoftwaresolution" target="_blank" rel="noreferrer">
-              Co-founder &amp; CEO at Zentari
+              Co-founder &amp; CEO, Zentari
               <ArrowUpRight size={15} />
             </a>
           </div>
           <p className="heroIntro">
-            I&apos;m Imogen Inocentes. I design and build reliable web products, internal systems,
-            and automations for teams that need clarity, speed, and solutions that hold up in the
-            real world.
+            5 years of experience building scalable software across web products, internal systems, and
+            workflow automation.
           </p>
           <div className="buttonRow">
             <Link className="primaryButton heroPrimary" href="/contact">
-              Discuss your problem
+              Tell me what you&apos;re building
+              <ArrowUpRight size={17} aria-hidden="true" />
             </Link>
             <Link className="secondaryButton heroSecondary" href="/projects">
-              View my work
+              Explore the work
+              <ArrowRight size={17} aria-hidden="true" />
             </Link>
           </div>
           <div className="socialRow heroSocials" aria-label="Social links">

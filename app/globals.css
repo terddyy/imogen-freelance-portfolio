@@ -1973,7 +1973,7 @@ html[data-theme="light"] .siteHeader {
   display: flex;
   align-items: flex-start;
   min-height: var(--hero-height);
-  padding: clamp(122px, 15vh, 164px) 0 clamp(48px, 6vh, 64px);
+  padding: clamp(158px, 19vh, 200px) 0 clamp(48px, 6vh, 64px);
 }
 
 .heroContent.shell {
@@ -1981,42 +1981,42 @@ html[data-theme="light"] .siteHeader {
 }
 
 .heroCopy {
-  width: min(100%, 760px);
-  gap: 20px;
+  width: min(100%, 700px);
+  gap: 14px;
 }
 
 .heroCopy h1 {
   display: grid;
-  max-width: 760px;
+  max-width: 580px;
   color: #fff;
-  font-size: clamp(58px, 6.3vw, 104px);
-  line-height: 0.88;
-  letter-spacing: -0.065em;
-  text-wrap: nowrap;
+  font-size: clamp(38px, 4vw, 62px);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
 }
 
 .heroCopy h1 em {
   color: #8ceac4;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 0.94em;
+  font-size: 0.9em;
   font-weight: 400;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.045em;
 }
 
 .heroKicker {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   color: rgba(255, 255, 255, 0.54);
-  font: 700 11px/1 var(--font-geist-mono), monospace;
+  font: 700 8px/1 var(--font-geist-mono), monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .heroKicker span {
   display: grid;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   place-items: center;
   border: 1px solid rgba(140, 234, 196, 0.38);
   border-radius: 50%;
@@ -2024,6 +2024,8 @@ html[data-theme="light"] .siteHeader {
 }
 
 .availability {
+  padding: 5px 7px;
+  font-size: 9px;
   border-color: rgba(0, 214, 146, 0.58);
   color: #6ff7bd;
   background: rgba(0, 214, 146, 0.06);
@@ -2032,14 +2034,14 @@ html[data-theme="light"] .siteHeader {
 
 .heroMetaInline {
   align-items: center;
-  gap: 18px;
+  gap: 10px;
   color: rgba(255, 255, 255, 0.62);
-  font-size: 16px;
+  font-size: 11px;
 }
 
 .heroMetaInline strong {
   color: #fff;
-  font-size: 18px;
+  font-size: 13px;
 }
 
 .heroMetaInline a {
@@ -2056,14 +2058,17 @@ html[data-theme="light"] .siteHeader {
 }
 
 .heroIntro {
-  max-width: 590px;
+  max-width: 430px;
   color: rgba(255, 255, 255, 0.64);
-  font-size: clamp(16px, 1.45vw, 19px);
-  line-height: 1.65;
+  font-size: clamp(13px, 0.9vw, 15px);
+  line-height: 1.5;
 }
 
 .heroPrimary {
-  min-width: 132px;
+  min-width: 190px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-size: 12px;
   border: 0;
   color: #111;
   background: #fff;
@@ -2072,14 +2077,17 @@ html[data-theme="light"] .siteHeader {
 
 .heroSecondary {
   min-width: 132px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-size: 12px;
   border-color: rgba(255, 255, 255, 0.18);
   color: #fff;
   background: rgba(255, 255, 255, 0.03);
 }
 
 .heroSocials {
-  gap: 20px;
-  padding-top: 8px;
+  gap: 16px;
+  padding-top: 2px;
 }
 
 .heroSocials a {
@@ -2123,11 +2131,11 @@ html[data-theme="light"] .siteHeader {
   }
 
   .heroCopy {
-    width: min(58vw, 500px);
+    width: min(62vw, 500px);
   }
 
   .heroCopy h1 {
-    font-size: clamp(48px, 7.4vw, 68px);
+    font-size: clamp(36px, 5.8vw, 54px);
     text-wrap: balance;
   }
 
@@ -2170,15 +2178,15 @@ html[data-theme="light"] .siteHeader {
   }
 
   .heroSection {
-    --hero-height: clamp(740px, 92svh, 800px);
+    --hero-height: clamp(600px, 76svh, 660px);
     min-height: var(--hero-height);
   }
 
   .heroContent {
     align-items: flex-start;
     min-height: var(--hero-height);
-    padding-top: clamp(164px, 30svh, 252px);
-    padding-bottom: calc(56px + env(safe-area-inset-bottom));
+    padding-top: clamp(144px, 20svh, 172px);
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
   }
 
   .heroContent.shell {
@@ -2187,27 +2195,27 @@ html[data-theme="light"] .siteHeader {
 
   .heroCopy {
     width: min(100%, 520px);
-    gap: 16px;
+    gap: 12px;
   }
 
   .heroCopy h1 {
-    font-size: clamp(43px, 12.5vw, 58px);
+    font-size: clamp(34px, 9vw, 44px);
     line-height: 0.91;
   }
 
   .heroMetaInline {
     gap: 8px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .heroMetaInline strong {
     flex-basis: 100%;
-    font-size: 16px;
+    font-size: 13px;
   }
 
   .heroIntro {
     max-width: 36ch;
-    font-size: 15px;
+    font-size: 13px;
   }
 
   .heroBackground {
@@ -2258,7 +2266,7 @@ html[data-theme="light"] .siteHeader {
   }
 
   .heroCopy h1 {
-    font-size: clamp(40px, 11.5vw, 48px);
+    font-size: clamp(36px, 10.5vw, 44px);
   }
 
   .heroIntro {
