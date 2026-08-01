@@ -32,7 +32,6 @@ export function HeroSection() {
         alt="Imogen Inocentes in a dark studio portrait"
         fill
         preload
-        placeholder="blur"
         sizes="100vw"
       />
       <div className="heroShade" />
