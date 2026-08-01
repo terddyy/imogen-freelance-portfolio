@@ -37,6 +37,30 @@ export function HeroSection() {
       />
       <div className="heroShade" />
 
+      <div className="heroBrandCloud" aria-hidden="true">
+        <span className="heroBrand heroBrandAws">
+          <Image src="/logos/aws.svg" alt="" width={160} height={88} />
+        </span>
+        <span className="heroBrand heroBrandGoogle">
+          <Image src="/logos/google.svg" alt="" width={136} height={46} />
+        </span>
+        <span className="heroBrand heroBrandMicrosoft">
+          <Image src="/logos/microsoft.svg" alt="" width={36} height={36} />
+        </span>
+        <span className="heroBrand heroBrandOracle">
+          <Image src="/logos/oracle.svg" alt="" width={112} height={18} />
+        </span>
+        <span className="heroBrand heroBrandIbm">
+          <Image src="/logos/ibm.svg" alt="" width={72} height={26} />
+        </span>
+        <span className="heroBrand heroBrandAzure">
+          <Image src="/logos/azure.svg" alt="" width={36} height={36} />
+        </span>
+        <span className="heroBrand heroBrandAsu">
+          <Image src="/logos/asu.svg" alt="" width={118} height={26} />
+        </span>
+      </div>
+
       <div className="shell heroContent">
         <div className="heroCopy">
           <p className="heroKicker">

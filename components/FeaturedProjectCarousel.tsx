@@ -202,6 +202,15 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
                     <div className="featuredCarouselScrim" />
                     <div className="featuredCarouselTopline">
                       <span>{String(displayIndex).padStart(2, "0")}</span>
+                      <span className="featuredCarouselSize featuredCarouselSizeDesktop">
+                        Max frame · 340 × 460 px
+                      </span>
+                      <span className="featuredCarouselSize featuredCarouselSizeTablet">
+                        Max frame · 300 × 420 px
+                      </span>
+                      <span className="featuredCarouselSize featuredCarouselSizeMobile">
+                        Max frame · 280 × 400 px
+                      </span>
                     </div>
                     <div className="featuredCarouselMeta">
                       <span>{project.category}</span>
