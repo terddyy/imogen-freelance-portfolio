@@ -1,10 +1,12 @@
 "use client";
 
-import { ArrowRight, Boxes, Check, ChevronLeft, CircleAlert, Ellipsis, Globe2, GraduationCap, LoaderCircle, MonitorSmartphone, PhoneCall, TrendingUp, X, type LucideProps } from "lucide-react";
-import { createContext, FormEvent, KeyboardEvent, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { ArrowRight, Boxes, Check, ChevronLeft, CircleAlert, Ellipsis, Globe2, GraduationCap, LoaderCircle, MonitorSmartphone, PhoneCall, Plus, TrendingUp, X, type LucideProps } from "lucide-react";
+import Link from "next/link";
+import { FormEvent, KeyboardEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { contactMethods } from "@/lib/portfolio-data";
 import { WhatsAppIcon } from "@/components/WhatsAppContact";
+import { isTurnstileConfigured, TurnstileField } from "@/components/TurnstileField";
 
 type Inquiry = {
   projectTypes: string[];
@@ -17,11 +19,10 @@ type Inquiry = {
   email: string;
 };
 
-type InquiryContextValue = {
-  openInquiry: () => void;
+type ProjectInquiryDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 };
-
-const InquiryContext = createContext<InquiryContextValue | null>(null);
 
 const emptyInquiry: Inquiry = { projectTypes: [], project: "", website: "", budget: "", thesisBudget: "", teamSize: "", phone: "", email: "" };
 const standardBudgets = ["Under ₱100k", "₱100k–₱350k", "₱350k–₱650k", "₱650k–₱1.2M", "₱1.2M+"];
@@ -46,6 +47,13 @@ const projectTypes = [
 ];
 const whatsappContact = contactMethods.find((method) => method.label === "WhatsApp");
 const phoneContact = contactMethods.find((method) => method.label === "Call");
+const inquirySteps = [
+  "Getting started",
+  "Your website",
+  "Budget",
+  "Team size",
+  "Contact",
+] as const;
 
 function isWebsite(value: string) {
   if (!value.trim()) return true;
@@ -71,15 +79,19 @@ function isPhone(value: string) {
   return value.trim().startsWith("+") && digits.length >= 8;
 }
 
-export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
-  const [open, setOpen] = useState(false);
+export function ProjectInquiryDialog({ open, onOpenChange }: ProjectInquiryDialogProps) {
   const [step, setStep] = useState(0);
   const [inquiry, setInquiry] = useState<Inquiry>(emptyInquiry);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [useEmailInstead, setUseEmailInstead] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [stepDirection, setStepDirection] = useState<"forward" | "back">("forward");
   const [error, setError] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const router = useRouter();
+  const turnstileRequired = isTurnstileConfigured();
 
   const hasAnswers = inquiry.projectTypes.length > 0 || Object.entries(inquiry).some(([field, value]) => field !== "projectTypes" && Boolean(value));
   const hasThesis = inquiry.projectTypes.includes("Thesis / capstone");
@@ -136,16 +148,20 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
     setStep(0);
     setInquiry(emptyInquiry);
     setUseEmailInstead(false);
+    setNoteOpen(false);
+    setStepDirection("forward");
     setStatus("idle");
     setError("");
+    setConsent(false);
+    setCaptchaToken("");
   }, []);
 
   const discardAndClose = useCallback(() => {
     const dialog = dialogRef.current;
     if (dialog?.open) dialog.close();
-    setOpen(false);
+    onOpenChange(false);
     resetInquiry();
-  }, [resetInquiry]);
+  }, [onOpenChange, resetInquiry]);
 
   const requestClose = useCallback(() => {
     if (hasAnswers) {
@@ -154,10 +170,6 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
     }
     discardAndClose();
   }, [discardAndClose, hasAnswers]);
-
-  const openInquiry = useCallback(() => {
-    setOpen(true);
-  }, []);
 
   const validStep =
     step === 0
@@ -168,9 +180,9 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
           ? (!hasOtherProject || Boolean(inquiry.budget)) && (!hasThesis || Boolean(inquiry.thesisBudget))
           : step === 3
             ? Boolean(inquiry.teamSize)
-            : useEmailInstead
-              ? isEmail(inquiry.email)
-              : isPhone(inquiry.phone);
+            : (useEmailInstead ? isEmail(inquiry.email) : isPhone(inquiry.phone)) &&
+              consent &&
+              (!turnstileRequired || Boolean(captchaToken));
 
   function update(field: keyof Inquiry, value: string) {
     setInquiry((current) => ({ ...current, [field]: value }));
@@ -189,6 +201,12 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
   }
 
   async function submit() {
+    if (!consent || (turnstileRequired && !captchaToken)) {
+      setStatus("error");
+      setError("Please confirm the privacy notice and security check before sending.");
+      return;
+    }
+
     setStatus("loading");
     setError("");
 
@@ -196,7 +214,7 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
       const response = await fetch("/api/project-inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(inquiry),
+        body: JSON.stringify({ ...inquiry, consent: true, captchaToken }),
       });
       const result = (await response.json()) as { error?: string; ok?: boolean };
 
@@ -205,6 +223,7 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
     } catch (reason) {
       setStatus("error");
       setError(reason instanceof Error ? reason.message : "Unable to send your inquiry right now.");
+      setCaptchaToken("");
     }
   }
 
@@ -212,6 +231,7 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
     event.preventDefault();
     if (!validStep || status === "loading") return;
     if (step < 4) {
+      setStepDirection("forward");
       setStep((current) => current + 1);
       return;
     }
@@ -224,23 +244,27 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
     event.preventDefault();
     if (!validStep || status === "loading") return;
     if (step < 4) {
+      setStepDirection("forward");
       setStep((current) => current + 1);
       return;
     }
     void submit();
   }
 
+  function goBack() {
+    setStepDirection("back");
+    setStep((current) => current - 1);
+  }
+
   return (
-    <InquiryContext.Provider value={{ openInquiry }}>
-      {children}
-      <dialog
-        ref={dialogRef}
-        className="inquiryDialog"
-        aria-labelledby="inquiry-title"
-        onClose={() => {
-          setOpen(false);
-          resetInquiry();
-        }}
+    <dialog
+      ref={dialogRef}
+      className="inquiryDialog"
+      aria-labelledby="inquiry-title"
+      onClose={() => {
+        onOpenChange(false);
+        resetInquiry();
+      }}
         onCancel={(event) => {
           event.preventDefault();
           requestClose();
@@ -288,9 +312,12 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
           ) : (
             <form onSubmit={continueOrSubmit} onKeyDown={continueOnEnter} className="inquiryForm" noValidate>
               <header className="inquiryHeader">
-                <div className="inquiryProgress" aria-label={`Step ${step + 1} of 5`}>
-                  <span>Step {step + 1} of 5</span>
-                  <div aria-hidden="true"><i style={{ width: `${((step + 1) / 5) * 100}%` }} /></div>
+                <div className="inquiryProgressWrap">
+                  <div className="inquiryProgress" aria-label={`Step ${step + 1} of 5`}>
+                    <span>Step {String(step + 1).padStart(2, "0")} / 05</span>
+                    <div aria-hidden="true"><i style={{ width: `${((step + 1) / 5) * 100}%` }} /></div>
+                    <small>{inquirySteps[step]}</small>
+                  </div>
                 </div>
                 <button
                   className="inquiryClose"
@@ -302,19 +329,29 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
                 </button>
               </header>
 
-              <div className="inquiryQuestion" key={step}>
+              <div className="inquiryQuestion" key={step} data-direction={stepDirection}>
                 {step === 0 ? (
                   <>
-                    <h2 id="inquiry-title">What are you building?</h2>
-                    <p>Choose one or more options that fit.</p>
+                    <h2 id="inquiry-title">Let&apos;s work together.</h2>
+                    <p>Choose everything that applies.</p>
                     <ProjectTypeStep value={inquiry.projectTypes} onChange={toggleProjectType} />
-                    <details className="inquiryOptional">
-                      <summary>Add a note <span>(optional)</span></summary>
-                      <label className="inquiryField">
-                        <span className="srOnly">Project details</span>
-                        <textarea rows={3} value={inquiry.project} onChange={(event) => update("project", event.target.value)} placeholder="Anything else that would be helpful to know?" />
-                      </label>
-                    </details>
+                    <div className="inquiryOptional">
+                      <button
+                        className="inquiryOptionalToggle"
+                        type="button"
+                        aria-expanded={noteOpen}
+                        onClick={() => setNoteOpen((open) => !open)}
+                      >
+                        <Plus size={14} aria-hidden="true" />
+                        Add a note <span>(optional)</span>
+                      </button>
+                      {noteOpen ? (
+                        <label className="inquiryField">
+                          <span className="inquiryOptionalLabel">Additional details</span>
+                          <textarea rows={3} value={inquiry.project} onChange={(event) => update("project", event.target.value)} placeholder="Tell us anything important…" />
+                        </label>
+                      ) : null}
+                    </div>
                   </>
                 ) : null}
 
@@ -335,35 +372,38 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
                 {step === 3 ? <ChoiceStep dialogTitle title="How big is your team?" description="This helps me understand how the project will be managed and who I&apos;ll collaborate with." name="team" options={teamSizes} value={inquiry.teamSize} onChange={(value) => update("teamSize", value)} /> : null}
 
                 {step === 4 ? (
-                  useEmailInstead ? (
-                    <>
-                      <h2 id="inquiry-title">Where should I send the meeting link?</h2>
-                      <p>Enter your email and I&apos;ll send you the next steps for scheduling a quick call.</p>
-                      <label className="inquiryField">
-                        <span className="srOnly">Email address</span>
-                        <input data-inquiry-autofocus type="email" autoComplete="email" required value={inquiry.email} onChange={(event) => update("email", event.target.value)} placeholder="you@company.com" aria-invalid={inquiry.email.length > 0 && !isEmail(inquiry.email)} />
-                      </label>
-                      {inquiry.email && !isEmail(inquiry.email) ? <p className="inquiryValidation">Enter a valid email address.</p> : null}
-                      <button className="inquirySkip" type="button" onClick={() => { update("email", ""); setUseEmailInstead(false); }}>Use phone instead</button>
-                    </>
-                  ) : (
-                    <>
-                      <h2 id="inquiry-title">What&apos;s the best number to reach you?</h2>
-                      <p>Share your mobile number and I&apos;ll text you the next steps for scheduling a quick call.</p>
-                      <label className="inquiryField">
-                        <span className="srOnly">Phone number</span>
-                        <input data-inquiry-autofocus type="tel" autoComplete="tel" inputMode="tel" required value={inquiry.phone} onChange={(event) => update("phone", event.target.value)} placeholder="+63 917 123 4567" aria-invalid={inquiry.phone.length > 0 && !isPhone(inquiry.phone)} />
-                      </label>
-                      {inquiry.phone && !isPhone(inquiry.phone) ? <p className="inquiryValidation">Enter a valid phone number.</p> : null}
-                      <button className="inquirySkip" type="button" onClick={() => { update("phone", ""); setUseEmailInstead(true); }}>Use email instead</button>
-                    </>
-                  )
+                  <>
+                    {useEmailInstead ? (
+                      <>
+                        <h2 id="inquiry-title">Where should I send the meeting link?</h2>
+                        <p>Enter your email and I&apos;ll send you the next steps for scheduling a quick call.</p>
+                        <label className="inquiryField">
+                          <span className="srOnly">Email address</span>
+                          <input data-inquiry-autofocus type="email" autoComplete="email" required value={inquiry.email} onChange={(event) => update("email", event.target.value)} placeholder="you@company.com" aria-invalid={inquiry.email.length > 0 && !isEmail(inquiry.email)} />
+                        </label>
+                        {inquiry.email && !isEmail(inquiry.email) ? <p className="inquiryValidation">Enter a valid email address.</p> : null}
+                        <button className="inquirySkip" type="button" onClick={() => { update("email", ""); setUseEmailInstead(false); }}>Use phone instead</button>
+                      </>
+                    ) : (
+                      <>
+                        <h2 id="inquiry-title">What&apos;s the best number to reach you?</h2>
+                        <p>Share your mobile number and I&apos;ll text you the next steps for scheduling a quick call.</p>
+                        <label className="inquiryField">
+                          <span className="srOnly">Phone number</span>
+                          <input data-inquiry-autofocus type="tel" autoComplete="tel" inputMode="tel" required value={inquiry.phone} onChange={(event) => update("phone", event.target.value)} placeholder="+63 917 123 4567" aria-invalid={inquiry.phone.length > 0 && !isPhone(inquiry.phone)} />
+                        </label>
+                        {inquiry.phone && !isPhone(inquiry.phone) ? <p className="inquiryValidation">Enter a valid phone number.</p> : null}
+                        <button className="inquirySkip" type="button" onClick={() => { update("phone", ""); setUseEmailInstead(true); }}>Use email instead</button>
+                      </>
+                    )}
+                    <InquiryPrivacyControls consent={consent} onConsentChange={setConsent} onCaptchaTokenChange={setCaptchaToken} />
+                  </>
                 ) : null}
               </div>
 
               {status === "error" ? <p className="inquiryError" role="alert"><CircleAlert size={17} aria-hidden="true" />{error}</p> : null}
               <footer className="inquiryActions">
-                {step > 0 ? <button className="inquiryBack" type="button" onClick={() => setStep((current) => current - 1)}><ChevronLeft size={17} aria-hidden="true" />Back</button> : <span />}
+                {step > 0 ? <button className="inquiryBack" type="button" onClick={goBack}><ChevronLeft size={17} aria-hidden="true" />Back</button> : <span />}
                 <button className="primaryButton inquirySubmit" type="submit" disabled={!validStep || status === "loading"}>
                   {status === "loading" ? <><LoaderCircle className="inquiryLoader" size={17} aria-hidden="true" />Sending…</> : step === 4 ? "Send me the meeting link" : <>Continue <ArrowRight size={17} aria-hidden="true" /></>}
                 </button>
@@ -372,7 +412,37 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
           )}
         </div>
       </dialog>
-    </InquiryContext.Provider>
+  );
+}
+
+function InquiryPrivacyControls({
+  consent,
+  onConsentChange,
+  onCaptchaTokenChange,
+}: {
+  consent: boolean;
+  onConsentChange: (value: boolean) => void;
+  onCaptchaTokenChange: (token: string) => void;
+}) {
+  return (
+    <div className="inquiryPrivacy">
+      <p className="inquiryPrivacyNotice">
+        Your contact details are only used to reply about this project. Read the{" "}
+        <Link href="/privacy" target="_blank" rel="noreferrer">
+          privacy notice
+        </Link>{" "}
+        for subprocessors and deletion requests.
+      </p>
+      <label className="inquiryConsent">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(event) => onConsentChange(event.target.checked)}
+        />
+        <span>I understand how my contact details will be used and want to send this inquiry.</span>
+      </label>
+      <TurnstileField onTokenChange={onCaptchaTokenChange} />
+    </div>
   );
 }
 
@@ -432,20 +502,22 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
     <fieldset className="inquiryChoices inquiryProjectChoices">
       <legend className="srOnly">Project type</legend>
       <div>
-        {projectTypes.map(({ label, icon: Icon }) => (
-          <label className="inquiryChoice" key={label}>
-            <input type="checkbox" name="projectTypes" value={label} checked={value.includes(label)} onChange={() => onChange(label)} />
-            <span><span className="inquiryProjectChoiceIcon"><Icon size={24} aria-hidden="true" /></span><strong>{label}</strong></span>
-          </label>
-        ))}
+        {projectTypes.map(({ label, icon: Icon }) => {
+          const selected = value.includes(label);
+          const wide = label === "Something else";
+
+          return (
+            <label className={`inquiryChoice${wide ? " inquiryProjectChoiceWide" : ""}`} key={label}>
+              <input type="checkbox" name="projectTypes" value={label} checked={selected} onChange={() => onChange(label)} />
+              <span>
+                {selected ? <span className="inquiryProjectChoiceCheck" aria-hidden="true"><Check size={12} /></span> : null}
+                <span className="inquiryProjectChoiceIcon"><Icon size={24} aria-hidden="true" /></span>
+                <strong>{label}</strong>
+              </span>
+            </label>
+          );
+        })}
       </div>
     </fieldset>
   );
-}
-
-export function ProjectInquiryTrigger({ children, className }: { children: ReactNode; className?: string }) {
-  const context = useContext(InquiryContext);
-  if (!context) throw new Error("ProjectInquiryTrigger must be used within ProjectInquiryProvider.");
-
-  return <button type="button" className={className} onClick={context.openInquiry}>{children}</button>;
 }

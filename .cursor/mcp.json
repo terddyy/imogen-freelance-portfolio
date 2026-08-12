@@ -7,6 +7,16 @@
     "browser-use": {
       "command": "npx",
       "args": ["-y", "browser-use", "--cli-mcp"]
+    },
+    "cpanel": {
+      "command": "npx",
+      "args": ["-y", "cpanel-mcp"],
+      "envFile": "${workspaceFolder}/.cursor/cpanel.env"
+    },
+    "wordpress": {
+      "command": "npx",
+      "args": ["-y", "@mangerik/wordpress-mcp"],
+      "envFile": "${workspaceFolder}/.cursor/wordpress.env"
     }
   }
 }

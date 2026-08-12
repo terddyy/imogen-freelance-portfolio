@@ -1,25 +1,9 @@
-import type { LucideIcon } from "lucide-react";
-import {
-  BadgeCheck,
-  Blocks,
-  CalendarCheck,
-  Code2,
-  FilePenLine,
-  FormInput,
-  Gauge,
-  Laptop,
-  LayoutDashboard,
-  Mail,
-  MessageCircle,
-  Palette,
-  Phone,
-  Rocket,
-  SearchCheck,
-  Settings2,
-  ShoppingBag,
-  Sparkles,
-  Wrench,
-} from "lucide-react";
+import type {
+  AboutHighlightIconKey,
+  ContactMethodIconKey,
+  ServiceIconKey,
+  ToolCardIconKey,
+} from "@/lib/portfolio-icons";
 
 export type Project = {
   title: string;
@@ -36,10 +20,18 @@ export type Skill = {
   group: "Design" | "Frontend" | "Tools" | "Workflow";
 };
 
+export type ProofMoment = {
+  id: string;
+  src: string;
+  alt: string;
+  label: string;
+  layout: "hero" | "tall" | "wide" | "default";
+};
+
 export type Service = {
   title: string;
   description: string;
-  icon: LucideIcon;
+  iconKey: ServiceIconKey;
 };
 
 export type ProcessStep = {
@@ -86,7 +78,7 @@ export const projects: Project[] = [
       "Enterprise fleet command center for live GPS tracking, trip control, compliance, and financial performance.",
     category: "Dashboards",
     tags: ["Fleet Ops", "Live Tracking", "Analytics"],
-    image: "/projects/sk-logistics.png",
+    image: "/projects/sk-logistics.webp",
     initials: ["SK", "II"],
     href: "https://sk-logistics.nexvision.info",
   },
@@ -96,7 +88,7 @@ export const projects: Project[] = [
       "Product showcase for Hi-Res Hybrid-ANC headphones with feature storytelling and quote-ready CTAs.",
     category: "Commerce",
     tags: ["Product Page", "Brand", "Campaign"],
-    image: "/projects/ayyan-tech.png",
+    image: "/projects/ayyan-tech.webp",
     initials: ["AY", "II"],
     href: "https://ayyantech.net",
   },
@@ -106,7 +98,7 @@ export const projects: Project[] = [
       "Agency site for custom software, web and mobile apps, and AI solutions built to scale with growing teams.",
     category: "Websites",
     tags: ["Agency", "SaaS", "Brand System"],
-    image: "/projects/zentari.png",
+    image: "/projects/zentari.webp",
     initials: ["ZS", "II"],
     href: "https://zentariph.com",
   },
@@ -116,7 +108,7 @@ export const projects: Project[] = [
       "Receivables SaaS landing experience focused on balances, payment approvals, and organized collections.",
     category: "Landing Pages",
     tags: ["Fintech", "SaaS", "Conversion"],
-    image: "/projects/balanceflow.png",
+    image: "/projects/balanceflow.webp",
     initials: ["BF", "II"],
     href: "https://balanceflow.zentariph.com",
   },
@@ -126,7 +118,7 @@ export const projects: Project[] = [
       "Friendly AI companion workspace for smart chats, creative ideas, and built-in image tools.",
     category: "Websites",
     tags: ["AI Product", "Chat UI", "Image Tools"],
-    image: "/projects/terdai.png",
+    image: "/projects/terdai.webp",
     initials: ["TA", "II"],
     href: "https://terdai.app",
   },
@@ -136,7 +128,7 @@ export const projects: Project[] = [
       "Asia-Pacific water and sanitation platform highlighting partnerships, utility training, and shared knowledge.",
     category: "Websites",
     tags: ["Nonprofit", "Partnerships", "WASH"],
-    image: "/projects/waterlinks.png",
+    image: "/projects/waterlinks.webp",
     initials: ["WL", "II"],
     href: "https://waterlinks.org",
   },
@@ -146,7 +138,7 @@ export const projects: Project[] = [
       "Multi-agent sales CRM that finds revenue leaks, guides teams, and executes approved pipeline actions.",
     category: "Dashboards",
     tags: ["CRM", "AI Agents", "Sales"],
-    image: "/projects/nexcrm.png",
+    image: "/projects/nexcrm.webp",
     initials: ["NX", "II"],
     href: "https://nexcrm.terd.dev",
   },
@@ -167,42 +159,80 @@ export const skills: Skill[] = [
   { name: "Automation", group: "Tools" },
 ];
 
+export const proofMoments: ProofMoment[] = [
+  {
+    id: "building",
+    src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1771775485/Screenshot_2026-02-22-23-16-55-04_99c04817c0de5652397fc8b56c3b3817_oxtxth.jpg",
+    alt: "Imogen coding at a desk — hands-on, doing the work",
+    label: "Hands-on",
+    layout: "hero",
+  },
+  {
+    id: "with-clients",
+    src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1771775485/Screenshot_2026-02-22-23-17-42-93_99c04817c0de5652397fc8b56c3b3817_zkccqk.jpg",
+    alt: "Imogen in a client meeting, listening and aligning on goals",
+    label: "With clients",
+    layout: "tall",
+  },
+  {
+    id: "in-the-room",
+    src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1774422110/pubmat_xy3fsz.png",
+    alt: "Imogen leading a session with collaborators in the room",
+    label: "Present",
+    layout: "default",
+  },
+  {
+    id: "team",
+    src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1771775487/FB_IMG_1771773624608_grg6qp.jpg",
+    alt: "Imogen working alongside a team on a shared build",
+    label: "Collaborative",
+    layout: "wide",
+  },
+  {
+    id: "on-site",
+    src: "/proof/aws.jpg",
+    alt: "Imogen on site at delivery — following through to the finish",
+    label: "Delivers",
+    layout: "wide",
+  },
+];
+
 export const services: Service[] = [
   {
     title: "Portfolio & Business Websites",
     description:
       "Readable, credible websites that introduce your work clearly and guide visitors toward an inquiry.",
-    icon: Laptop,
+    iconKey: "laptop",
   },
   {
     title: "Brand-Aligned Landing Pages",
     description:
       "Campaign pages with sharp messaging, visual consistency, and conversion-focused section flow.",
-    icon: Palette,
+    iconKey: "palette",
   },
   {
     title: "Content Updates & Site Care",
     description:
       "Practical site upkeep, page refreshes, content edits, and UI improvements without unnecessary rebuilds.",
-    icon: Wrench,
+    iconKey: "wrench",
   },
   {
     title: "Booking & Inquiry Forms",
     description:
       "Simple lead paths for bookings, requests, and project briefs that keep next steps clear.",
-    icon: FormInput,
+    iconKey: "formInput",
   },
   {
     title: "Simple E-commerce Setup",
     description:
       "Starter catalog and storefront experiences for small product lines, service add-ons, or launches.",
-    icon: ShoppingBag,
+    iconKey: "shoppingBag",
   },
   {
     title: "Workflow Automation Support",
     description:
       "Lightweight automations that connect forms, messages, spreadsheets, and repeatable admin tasks.",
-    icon: Settings2,
+    iconKey: "settings2",
   },
 ];
 
@@ -322,67 +352,80 @@ export const testimonials: Testimonial[] = [
 ];
 
 export const statCards = [
-  { label: "Focus", value: "Solo freelance builds", icon: Sparkles },
-  { label: "Deliverables", value: "Websites, landing pages, forms", icon: Blocks },
-  { label: "Process", value: "Clear scope to launch", icon: BadgeCheck },
+  { label: "Focus", value: "Solo freelance builds", iconKey: "sparkles" as const },
+  { label: "Deliverables", value: "Websites, landing pages, forms", iconKey: "blocks" as const },
+  { label: "Process", value: "Clear scope to launch", iconKey: "badgeCheck" as const },
 ];
 
-export const contactMethods = [
+export const contactMethods: Array<{
+  label: string;
+  value: string;
+  href: string;
+  iconKey: ContactMethodIconKey;
+}> = [
   {
     label: "WhatsApp",
     value: "+63 960 250 6993",
     href: "https://wa.me/639602506993",
-    icon: MessageCircle,
+    iconKey: "messageCircle",
   },
   {
     label: "Call",
     value: "+63 960 250 6993",
     href: "tel:+639602506993",
-    icon: Phone,
+    iconKey: "phone",
   },
   {
     label: "Email",
     value: "hello@imogeninocentes.dev",
     href: "mailto:hello@imogeninocentes.dev",
-    icon: Mail,
+    iconKey: "mail",
   },
   {
     label: "Project brief",
     value: "Share goals, pages, references, and launch date.",
     href: "/contact",
-    icon: FilePenLine,
+    iconKey: "filePenLine",
   },
   {
     label: "Availability",
     value: "Open for freelance work",
     href: "/contact",
-    icon: CalendarCheck,
+    iconKey: "calendarCheck",
   },
 ];
 
-export const aboutHighlights = [
+export const aboutHighlights: Array<{
+  title: string;
+  description: string;
+  iconKey: AboutHighlightIconKey;
+}> = [
   {
     title: "Practical design",
     description:
       "Layouts are shaped around what visitors need to understand, compare, and do next.",
-    icon: SearchCheck,
+    iconKey: "searchCheck",
   },
   {
     title: "Reliable build habits",
     description:
       "Responsive sections, reusable components, and clear content structure are treated as baseline work.",
-    icon: Code2,
+    iconKey: "code2",
   },
   {
     title: "Launch-minded polish",
     description:
       "Each page is checked for spacing, mobile behavior, clarity, and conversion paths before handoff.",
-    icon: Rocket,
+    iconKey: "rocket",
   },
 ];
 
-export const toolCards = [
-  { title: "Selected Code", description: "Placeholder area for public GitHub projects.", icon: Code2 },
-  { title: "UI Systems", description: "Reusable components for consistent pages and cards.", icon: LayoutDashboard },
-  { title: "Performance Care", description: "Lightweight, responsive pages with practical image handling.", icon: Gauge },
+export const toolCards: Array<{
+  title: string;
+  description: string;
+  iconKey: ToolCardIconKey;
+}> = [
+  { title: "Selected Code", description: "Placeholder area for public GitHub projects.", iconKey: "code2" },
+  { title: "UI Systems", description: "Reusable components for consistent pages and cards.", iconKey: "layoutDashboard" },
+  { title: "Performance Care", description: "Lightweight, responsive pages with practical image handling.", iconKey: "gauge" },
 ];

@@ -16,9 +16,9 @@ export function WhatsAppIcon({ size = 20 }: { size?: number }) {
 export function WhatsAppContact() {
   return (
     <aside className="whatsappContact" aria-label="Direct contact">
-      <a className="whatsappContactMain" href={whatsapp?.href ?? "https://wa.me/639602506993"} target="_blank" rel="noreferrer">
+      <a className="whatsappContactMain" href={whatsapp?.href ?? "https://wa.me/639602506993"} target="_blank" rel="noreferrer" aria-label="WhatsApp Imogen at +63 960 250 6993">
         <span className="whatsappContactIcon"><WhatsAppIcon size={21} /></span>
-        <span>
+        <span className="whatsappContactCopy">
           <strong>WhatsApp me</strong>
           <small>+63 960 250 6993</small>
         </span>

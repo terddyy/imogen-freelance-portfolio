@@ -1,7 +1,9 @@
 import { Mail } from "lucide-react";
+import Link from "next/link";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { ProjectInquiryTrigger } from "@/components/ProjectInquiry";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import { contactMethods } from "@/lib/portfolio-data";
+import { getPortfolioIcon } from "@/lib/portfolio-icons";
 
 export const metadata = {
   title: "Contact | Imogen Inocentes",
@@ -20,6 +22,10 @@ export default function ContactPage() {
               Share a few details about your project and get a clear next step for scope, timing, and fit.
             </p>
             <ProjectInquiryTrigger className="primaryButton">Start a project</ProjectInquiryTrigger>
+            <p className="contactPrivacyHint">
+              Inquiries share contact details only so Imogen can reply.{" "}
+              <Link href="/privacy">Read the privacy notice</Link>.
+            </p>
           </div>
 
           <div className="contactForm contactPrompt">
@@ -34,7 +40,7 @@ export default function ContactPage() {
         <section className="shell routeSection">
           <div className="contactMethodGrid">
             {contactMethods.map((method) => {
-              const Icon = method.icon;
+              const Icon = getPortfolioIcon(method.iconKey);
               return (
                 <a href={method.href} key={method.label} className="contactMethodCard">
                   <Icon size={20} />

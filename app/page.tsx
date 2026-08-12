@@ -1,26 +1,42 @@
+import dynamic from "next/dynamic";
 import {
   AboutSection,
-  FeaturedProjects,
   FinalCta,
   HeroSection,
   HomeTestimonials,
   PricingSection,
   ProcessSection,
   ServicesSection,
-  SkillsMarquee,
   ToolsSection,
 } from "@/components/HomeSections";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { projects } from "@/lib/portfolio-data";
+
+const FeaturedProjectCarousel = dynamic(
+  () =>
+    import("@/components/FeaturedProjectCarousel").then((module) => ({
+      default: module.FeaturedProjectCarousel,
+    })),
+  { loading: () => <div className="featuredProjectBand featuredProjectBandPlaceholder" aria-hidden /> },
+);
+
+const ProofGallery = dynamic(
+  () =>
+    import("@/components/ProofGallery").then((module) => ({
+      default: module.ProofGallery,
+    })),
+  { loading: () => null },
+);
 
 export default function Home() {
   return (
     <main className="page">
       <HeroSection />
       <AnimatedSection>
-        <FeaturedProjects />
+        <FeaturedProjectCarousel projects={projects} />
       </AnimatedSection>
       <AnimatedSection mode="fade">
-        <SkillsMarquee />
+        <ProofGallery />
       </AnimatedSection>
       <AnimatedSection>
         <HomeTestimonials />

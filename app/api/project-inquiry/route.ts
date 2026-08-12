@@ -168,19 +168,58 @@ function hasAllowedOrigin(request: Request) {
   }
 }
 
+function hasAllowedRequestSource(request: Request) {
+  const secFetchSite = request.headers.get("sec-fetch-site")?.trim().toLowerCase();
+  if (secFetchSite === "cross-site") return false;
+  return hasAllowedOrigin(request);
+}
+
+async function verifyTurnstileToken(token: string, remoteIp: string) {
+  const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") throw new Error("Turnstile is required in production.");
+    // ponytail: local/dev may omit Turnstile; production fails closed without the secret.
+    return true;
+  }
+
+  if (!token || token.length > 2048) return false;
+
+  const body = new URLSearchParams({ secret, response: token });
+  if (remoteIp && remoteIp !== "unknown") body.set("remoteip", remoteIp);
+
+  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    redirect: "error",
+    signal: AbortSignal.timeout(8000),
+    body,
+  });
+  if (!response.ok) return false;
+
+  const result = (await response.json()) as { success?: boolean };
+  return result.success === true;
+}
+
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] ?? character);
+}
+
+function formatPhilippineMobileNumber(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (digits.startsWith("63") && digits.length === 12) return digits;
+  if (digits.startsWith("0") && digits.length === 11) return `63${digits.slice(1)}`;
+  if (digits.length === 10 && digits.startsWith("9")) return `63${digits}`;
+  return "";
 }
 
 function getDeliveryConfig() {
   const resendApiKey = process.env.RESEND_API_KEY?.trim();
   const resendFromEmail = process.env.RESEND_FROM_EMAIL?.trim();
-  const unismsApiKey = process.env.UNISMS_API_KEY?.trim();
-  const unismsRecipient = process.env.UNISMS_RECIPIENT?.trim();
-  const unismsSenderId = process.env.UNISMS_SENDER_ID?.trim();
+  const iprogSmsApiToken = process.env.IPROG_SMS_API_TOKEN?.trim();
+  const iprogSmsRecipient = formatPhilippineMobileNumber(process.env.IPROG_SMS_RECIPIENT?.trim() ?? "");
 
-  if (!resendApiKey || !resendFromEmail || !unismsApiKey || !/^\+\d{8,15}$/.test(unismsRecipient ?? "") || !unismsSenderId || unismsSenderId.length > 11) return null;
-  return { resendApiKey, resendFromEmail, unismsApiKey, unismsRecipient, unismsSenderId };
+  if (!resendApiKey || !resendFromEmail || !iprogSmsApiToken || !iprogSmsRecipient) return null;
+  return { resendApiKey, resendFromEmail, iprogSmsApiToken, iprogSmsRecipient };
 }
 
 function buildNotificationContent(body: {
@@ -218,6 +257,24 @@ function buildSmsContent(body: {
   return `Portfolio inquiry: ${projectLabel}. ${body.teamSize}. ${budgetLabel}. See email for details.`.slice(0, 160);
 }
 
+async function sendIprogSms(config: NonNullable<ReturnType<typeof getDeliveryConfig>>, message: string) {
+  const response = await fetch("https://www.iprogsms.com/api/v1/sms_messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    redirect: "error",
+    signal: AbortSignal.timeout(8000),
+    body: JSON.stringify({
+      api_token: config.iprogSmsApiToken,
+      phone_number: config.iprogSmsRecipient,
+      message,
+    }),
+  });
+  if (!response.ok) return false;
+
+  const result = (await response.json()) as { status?: number; message_id?: string };
+  return result.status === 200 && Boolean(result.message_id);
+}
+
 async function sendNotifications(
   content: ReturnType<typeof buildNotificationContent>,
   smsBody: { projectTypes: string[]; teamSize: string; budget: string; thesisBudget: string },
@@ -235,7 +292,7 @@ async function sendNotifications(
   };
   if (contact.email) emailPayload.reply_to = contact.email;
 
-  const [emailResponse, smsResponse] = await Promise.all([
+  const [emailResponse, smsAccepted] = await Promise.all([
     fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -247,23 +304,10 @@ async function sendNotifications(
       signal: AbortSignal.timeout(8000),
       body: JSON.stringify(emailPayload),
     }),
-    fetch("https://unismsapi.com/api/sms", {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${Buffer.from(`${config.unismsApiKey}:`).toString("base64")}`,
-        "Content-Type": "application/json",
-      },
-      redirect: "error",
-      signal: AbortSignal.timeout(8000),
-      body: JSON.stringify({
-        recipient: config.unismsRecipient,
-        sender_id: config.unismsSenderId,
-        content: buildSmsContent(smsBody),
-      }),
-    }),
+    sendIprogSms(config, buildSmsContent(smsBody)),
   ]);
 
-  if (!emailResponse.ok || !smsResponse.ok) throw new Error("Notification delivery failed.");
+  if (!emailResponse.ok || !smsAccepted) throw new Error("Notification delivery failed.");
 }
 
 function rateLimitHeaders(decision: RateLimitDecision) {
@@ -275,11 +319,12 @@ function rateLimitHeaders(decision: RateLimitDecision) {
 }
 
 export async function POST(request: Request) {
-  if (!hasAllowedOrigin(request)) return json({ error: "Invalid project inquiry origin." }, 403);
+  if (!hasAllowedRequestSource(request)) return json({ error: "Invalid project inquiry origin." }, 403);
   if (request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json") {
     return json({ error: "Project inquiry must be sent as JSON." }, 415);
   }
 
+  const clientAddress = getClientAddress(request);
   let rateLimit: RateLimitDecision;
   try {
     rateLimit = await consumeRateLimit(getClientFingerprint(request));
@@ -307,6 +352,17 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof RequestBodyTooLargeError) return json({ error: "Project inquiry is too large." }, 413, rateLimitHeaders(rateLimit));
     return json({ error: "Invalid project inquiry." }, 400, rateLimitHeaders(rateLimit));
+  }
+
+  if (body.consent !== true) {
+    return json({ error: "Please confirm the privacy notice before sending your inquiry." }, 400, rateLimitHeaders(rateLimit));
+  }
+
+  try {
+    const captchaOk = await verifyTurnstileToken(getString(body.captchaToken), clientAddress);
+    if (!captchaOk) return json({ error: "Please complete the security check and try again." }, 400, rateLimitHeaders(rateLimit));
+  } catch {
+    return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503, rateLimitHeaders(rateLimit));
   }
 
   const selectedProjectTypes = getStrings(body.projectTypes);

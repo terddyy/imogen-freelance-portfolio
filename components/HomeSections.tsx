@@ -8,7 +8,6 @@ import {
   Check,
   CircleDot,
   Mail,
-  Sparkles,
 } from "lucide-react";
 import {
   aboutHighlights,
@@ -16,48 +15,50 @@ import {
   processSteps,
   projects,
   services,
-  skills,
   testimonials,
   toolCards,
 } from "@/lib/portfolio-data";
+import { getPortfolioIcon } from "@/lib/portfolio-icons";
 import { FeaturedProjectCarousel } from "@/components/FeaturedProjectCarousel";
+import { HeroAnimationController } from "@/components/HeroAnimationController";
 import { TestimonialList } from "@/components/TestimonialList";
-import { ProjectInquiryTrigger } from "@/components/ProjectInquiry";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 
 export function HeroSection() {
   return (
     <section className="heroSection" id="hero" aria-label="Imogen Inocentes hero">
+      <HeroAnimationController />
       <Image
         className="heroBackground"
         src={heroBackground}
         alt="Imogen Inocentes in a dark studio portrait"
         fill
-        preload
-        sizes="100vw"
+        priority
+        sizes="(max-width: 768px) 100vw, 1440px"
       />
       <div className="heroShade" />
 
       <div className="heroBrandCloud" aria-hidden="true">
         <span className="heroBrand heroBrandAws">
-          <Image src="/logos/aws.svg" alt="" width={160} height={88} />
+          <Image src="/logos/aws.svg" alt="" width={160} height={88} loading="lazy" />
         </span>
         <span className="heroBrand heroBrandGoogle">
-          <Image src="/logos/google.svg" alt="" width={136} height={46} />
+          <Image src="/logos/google.svg" alt="" width={136} height={46} loading="lazy" />
         </span>
         <span className="heroBrand heroBrandMicrosoft">
-          <Image src="/logos/microsoft.svg" alt="" width={36} height={36} />
+          <Image src="/logos/microsoft.svg" alt="" width={36} height={36} loading="lazy" />
         </span>
         <span className="heroBrand heroBrandOracle">
-          <Image src="/logos/oracle.svg" alt="" width={112} height={18} />
+          <Image src="/logos/oracle.svg" alt="" width={112} height={18} loading="lazy" />
         </span>
         <span className="heroBrand heroBrandIbm">
-          <Image src="/logos/ibm.svg" alt="" width={72} height={26} />
+          <Image src="/logos/ibm.svg" alt="" width={72} height={26} loading="lazy" />
         </span>
         <span className="heroBrand heroBrandAzure">
-          <Image src="/logos/azure.svg" alt="" width={36} height={36} />
+          <Image src="/logos/azure.svg" alt="" width={36} height={36} loading="lazy" />
         </span>
         <span className="heroBrand heroBrandAsu">
-          <Image src="/logos/asu.svg" alt="" width={118} height={26} />
+          <Image src="/logos/asu.svg" alt="" width={118} height={26} loading="lazy" />
         </span>
       </div>
 
@@ -127,24 +128,6 @@ export function FeaturedProjects() {
   return <FeaturedProjectCarousel projects={projects} />;
 }
 
-export function SkillsMarquee() {
-  const repeatedSkills = [...skills, ...skills];
-
-  return (
-    <section className="marqueeSection" id="skills" aria-label="Skills and tools">
-      <div className="marqueeTrack">
-        {repeatedSkills.map((skill, index) => (
-          <span className="skillChip" key={`${skill.name}-${index}`}>
-            <Sparkles size={13} />
-            {skill.name}
-            <small>{skill.group}</small>
-          </span>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 export function HomeTestimonials() {
   return (
     <section className="shell pageSection" id="notes">
@@ -186,7 +169,7 @@ export function AboutSection() {
         </p>
         <div className="highlightList">
           {aboutHighlights.map((item) => {
-            const Icon = item.icon;
+            const Icon = getPortfolioIcon(item.iconKey);
             return (
               <article className="highlightItem" key={item.title}>
                 <Icon size={18} />
@@ -221,7 +204,7 @@ export function ServicesSection() {
       />
       <div className="serviceGrid">
         {services.map((service) => {
-          const Icon = service.icon;
+          const Icon = getPortfolioIcon(service.iconKey);
           return (
             <article className="serviceCard" key={service.title}>
               <span className="serviceIcon">
@@ -305,7 +288,7 @@ export function ToolsSection() {
       />
       <div className="toolGrid">
         {toolCards.map((card) => {
-          const Icon = card.icon;
+          const Icon = getPortfolioIcon(card.iconKey);
           return (
             <article className="toolCard" key={card.title}>
               <Icon size={20} />

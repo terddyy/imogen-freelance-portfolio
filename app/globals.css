@@ -508,6 +508,21 @@ html[data-theme="light"] .siteHeader {
   position: absolute;
   inset: 0;
   display: block;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  text-align: inherit;
+}
+
+.projectArchiveSection {
+  padding-top: clamp(36px, 6vw, 72px);
+}
+
+.projectArchiveSection .filterBar {
+  margin-bottom: 24px;
 }
 
 .chip,
@@ -601,14 +616,13 @@ html[data-theme="light"] .siteHeader {
   position: relative;
   z-index: 1;
   overflow: hidden;
-  min-height: clamp(220px, 32vh, 360px);
-  mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+  padding-block: 8px 20px;
+  mask-image: linear-gradient(90deg, transparent, black 2%, black 98%, transparent);
 }
 
 .featuredCarouselViewport {
   position: relative;
   width: 100%;
-  min-height: clamp(220px, 32vh, 360px);
   overflow: hidden;
   cursor: grab;
   touch-action: pan-y;
@@ -621,18 +635,18 @@ html[data-theme="light"] .siteHeader {
 
 .featuredCarouselTrack {
   display: flex;
+  align-items: stretch;
   width: max-content;
   gap: clamp(12px, 1.5vw, 18px);
-  min-height: clamp(220px, 32vh, 360px);
   will-change: transform;
 }
 
 .featuredCarouselCard {
-  --carousel-card-width: min(55vw, 1026px);
+  --carousel-card-width: min(26vw, 360px);
   position: relative;
   flex: 0 0 auto;
   width: var(--carousel-card-width);
-  height: clamp(220px, 32vh, 360px);
+  aspect-ratio: 756 / 1024;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
@@ -643,14 +657,24 @@ html[data-theme="light"] .siteHeader {
   pointer-events: auto;
 }
 
-.featuredCarouselCard a {
+.featuredCarouselCard a,
+.featuredCarouselCardButton {
   position: absolute;
   inset: 0;
   display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.featuredCarouselCardButton:focus-visible {
+  outline: 2px solid rgba(124, 255, 178, 0.85);
+  outline-offset: -2px;
 }
 
 .featuredCarouselImage {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .avatarStack {
@@ -674,22 +698,277 @@ html[data-theme="light"] .siteHeader {
   margin-left: -9px;
 }
 
-.marqueeSection {
+.proofSection {
+  padding: 16px 0 20px;
+}
+
+.proofHeader {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.proofHeader h2 {
+  max-width: 18ch;
+  font-size: clamp(24px, 6vw, 34px);
+  line-height: 1.08;
+}
+
+.proofGrid {
+  width: min(100% - 32px, 680px);
+  margin-inline: auto;
+  height: min(52svh, 400px);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.proofCell {
+  position: relative;
   overflow: hidden;
-  border-block: 1px solid var(--line);
-  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  margin: 0;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #08101a;
 }
 
-.marqueeTrack {
-  display: flex;
-  width: max-content;
+.proofCellButton {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  border-radius: inherit;
+  color: inherit;
+  text-align: left;
+}
+
+.proofCellButton:focus-visible {
+  outline: 2px solid rgba(124, 255, 178, 0.85);
+  outline-offset: 2px;
+}
+
+.proofCellButton:hover .proofImage,
+.proofCellButton:focus-visible .proofImage {
+  transform: scale(1.03);
+}
+
+.proofCell--hero {
+  grid-column: 1 / 5;
+  grid-row: 1 / 4;
+}
+
+.proofCell--tall {
+  grid-column: 5 / 7;
+  grid-row: 1 / 3;
+}
+
+.proofCell--default {
+  grid-column: 5 / 7;
+  grid-row: 3 / 4;
+}
+
+.proofCell--wide:nth-child(4) {
+  grid-column: 1 / 4;
+  grid-row: 4 / 5;
+}
+
+.proofCell--wide:nth-child(5) {
+  grid-column: 4 / 7;
+  grid-row: 4 / 5;
+}
+
+.proofImage {
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.proofCaption {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  z-index: 1;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(5, 8, 12, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.proofDialog {
+  width: min(100% - 24px, 720px);
+  max-width: 720px;
+  max-height: min(92dvh, 860px);
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(124, 255, 178, 0.22);
+  border-radius: 18px;
+  color: var(--text);
+  background: #070c12;
+  box-shadow: 0 36px 120px rgba(0, 0, 0, 0.64);
+}
+
+.proofDialog::backdrop {
+  background: rgba(2, 5, 9, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+html:has(.inquiryDialog[open]),
+html:has(.proofDialog[open]) {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body:has(.inquiryDialog[open]) .siteHeader,
+body:has(.inquiryDialog[open]) .whatsappContact,
+body:has(.inquiryDialog[open]) .mobileDock,
+body:has(.proofDialog[open]) .siteHeader,
+body:has(.proofDialog[open]) .whatsappContact,
+body:has(.proofDialog[open]) .mobileDock {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.proofDialogPanel {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 12px;
-  padding-block: 14px;
-  animation: marquee 30s linear infinite;
+  min-height: min(88dvh, 820px);
+  padding: clamp(16px, 3vw, 22px);
 }
 
-.skillChip small {
-  color: var(--dim);
+.proofDialogHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.proofDialogEyebrow {
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.proofDialogHeader h3 {
+  font-size: clamp(20px, 4vw, 26px);
+  line-height: 1.1;
+}
+
+.proofDialogClose,
+.proofDialogNavButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.proofDialogClose:hover,
+.proofDialogClose:focus-visible,
+.proofDialogNavButton:hover,
+.proofDialogNavButton:focus-visible {
+  border-color: rgba(124, 255, 178, 0.45);
+  outline: none;
+}
+
+.proofDialogImageWrap {
+  position: relative;
+  overflow: hidden;
+  min-height: min(52dvh, 520px);
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #08101a;
+}
+
+.proofDialogImage {
+  object-fit: contain;
+}
+
+.proofDialogCaption {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.proofDialogNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+}
+
+.proofDialogCounter {
+  min-width: 4.5rem;
+  color: var(--muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.projectPreviewPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: min(88dvh, 820px);
+}
+
+.projectPreviewTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.projectPreviewActions {
+  display: flex;
+}
+
+.projectPreviewVisit {
+  flex: 1;
+  justify-content: center;
+}
+
+@media (min-width: 761px) {
+  .proofSection {
+    padding: 24px 0 28px;
+  }
+
+  .proofHeader {
+    margin-bottom: 18px;
+  }
+
+  .proofHeader h2 {
+    max-width: none;
+    font-size: clamp(28px, 3vw, 38px);
+  }
+
+  .proofGrid {
+    width: min(100% - 48px, 960px);
+    height: min(42svh, 480px);
+    gap: 8px;
+  }
+
+  .proofCaption {
+    left: 10px;
+    bottom: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
 }
 
 .testimonialPreview,
@@ -937,6 +1216,68 @@ html[data-theme="light"] .siteHeader {
   font-size: 12px;
 }
 
+.footerBottom a {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footerBottom a:hover,
+.footerBottom a:focus-visible {
+  color: var(--text);
+  outline: none;
+}
+
+.contactPrivacyHint {
+  margin-top: 14px;
+  max-width: 36ch;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.contactPrivacyHint a {
+  color: var(--green);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.privacyContent {
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+}
+
+.privacyContent h2 {
+  margin-top: 12px;
+  font-size: clamp(20px, 3vw, 28px);
+}
+
+.privacyContent p,
+.privacyContent li {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.privacyContent ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 1.15rem;
+}
+
+.privacyMeta {
+  margin-top: 8px;
+  font-size: 12px;
+}
+
+.privacyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
 .whatsappContact {
   position: fixed;
   right: max(16px, env(safe-area-inset-right));
@@ -986,7 +1327,7 @@ html[data-theme="light"] .whatsappContact {
   background: #25d366;
 }
 
-.whatsappContactMain span:last-child {
+.whatsappContactCopy {
   display: grid;
   min-width: 0;
   gap: 3px;
@@ -1028,12 +1369,16 @@ html[data-theme="light"] .whatsappContact {
 }
 
 .routePage {
-  padding-top: clamp(42px, 7vw, 86px);
+  padding-top: clamp(88px, 10vw, 112px);
 }
 
 .routeHero,
 .routeSection {
   padding: clamp(42px, 7vw, 72px) 0;
+}
+
+.routePage:not(:has(.routeHero)) .routeSection {
+  padding-top: clamp(20px, 3.5vw, 32px);
 }
 
 .routeHero h1 {
@@ -1045,8 +1390,8 @@ html[data-theme="light"] .whatsappContact {
 .filterBar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
 .filterButton {
@@ -1055,8 +1400,9 @@ html[data-theme="light"] .whatsappContact {
   color: var(--muted);
   background: rgba(255, 255, 255, 0.05);
   cursor: pointer;
-  padding: 10px 13px;
-  font-weight: 800;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 650;
 }
 
 .filterButton.active,
@@ -1163,18 +1509,6 @@ html[data-theme="light"] .whatsappContact {
   backdrop-filter: blur(10px);
 }
 
-html:has(.inquiryDialog[open]) {
-  overflow: hidden;
-  overscroll-behavior: none;
-}
-
-body:has(.inquiryDialog[open]) .siteHeader,
-body:has(.inquiryDialog[open]) .whatsappContact,
-body:has(.inquiryDialog[open]) .mobileDock {
-  visibility: hidden;
-  pointer-events: none;
-}
-
 .inquiryModal {
   min-height: 540px;
   padding: clamp(24px, 4vw, 32px);
@@ -1190,11 +1524,11 @@ body:has(.inquiryDialog[open]) .mobileDock {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 26px;
-  padding: 13px 14px;
-  border: 1px solid rgba(124, 255, 178, 0.22);
-  border-radius: 14px;
-  background: rgba(124, 255, 178, 0.06);
+  margin-bottom: 18px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .inquiryDirectContact > div:first-child {
@@ -1229,10 +1563,10 @@ body:has(.inquiryDialog[open]) .mobileDock {
   gap: 6px;
   min-height: 34px;
   padding: 7px 10px;
-  border: 1px solid rgba(124, 255, 178, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 9px;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.05);
+  color: var(--muted);
+  background: transparent;
   font-size: 11px;
   font-weight: 800;
 }
@@ -1248,10 +1582,16 @@ body:has(.inquiryDialog[open]) .mobileDock {
 .inquirySuccess {
   display: grid;
   min-height: 448px;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
 }
 
-.inquiryHeader,
+.inquiryHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
 .inquiryActions {
   display: flex;
   align-items: center;
@@ -1259,21 +1599,34 @@ body:has(.inquiryDialog[open]) .mobileDock {
   gap: 16px;
 }
 
+.inquiryProgressWrap {
+  flex: 1;
+  min-width: 0;
+}
+
 .inquiryProgress {
   display: grid;
-  gap: 9px;
+  gap: 8px;
   color: var(--muted);
   font: 800 11px/1 var(--font-geist-mono), monospace;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
+.inquiryProgress small {
+  color: rgba(158, 175, 191, 0.72);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
 .inquiryProgress > div {
-  width: 128px;
-  height: 3px;
+  width: min(220px, 100%);
+  height: 4px;
   overflow: hidden;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .inquiryProgress i {
@@ -1311,8 +1664,16 @@ body:has(.inquiryDialog[open]) .mobileDock {
 }
 
 .inquiryQuestion {
-  align-self: center;
-  animation: inquiry-step-enter 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  align-self: start;
+  padding-top: 4px;
+}
+
+.inquiryQuestion[data-direction="forward"] {
+  animation: inquiry-step-forward 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.inquiryQuestion[data-direction="back"] {
+  animation: inquiry-step-back 280ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .inquiryQuestion h2,
@@ -1330,10 +1691,10 @@ body:has(.inquiryDialog[open]) .mobileDock {
 .inquiryChoices > p,
 .inquirySuccess > p {
   max-width: 58ch;
-  margin-top: 16px;
-  color: var(--muted);
+  margin-top: 10px;
+  color: rgba(196, 210, 224, 0.88);
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.6;
 }
 
 .inquiryField {
@@ -1474,9 +1835,9 @@ body:has(.inquiryDialog[open]) .mobileDock {
 }
 
 .inquiryProjectChoices > div {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .inquiryProjectChoices .inquiryChoice {
@@ -1484,11 +1845,30 @@ body:has(.inquiryDialog[open]) .mobileDock {
 }
 
 .inquiryProjectChoices .inquiryChoice > span {
+  position: relative;
   flex-direction: column;
   justify-content: center;
   gap: 8px;
-  padding: 10px;
+  padding: 12px 10px;
   text-align: center;
+}
+
+.inquiryProjectChoiceWide {
+  grid-column: 1 / -1;
+}
+
+.inquiryProjectChoiceCheck {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 50%;
+  color: #061017;
+  background: var(--green);
+  box-shadow: 0 0 12px rgba(124, 255, 178, 0.45);
 }
 
 .inquiryProjectChoiceIcon {
@@ -1503,35 +1883,75 @@ body:has(.inquiryDialog[open]) .mobileDock {
 .inquiryProjectChoices .inquiryChoice svg {
   width: 24px;
   height: 24px;
-  color: var(--green);
-  filter: drop-shadow(0 0 9px rgba(124, 255, 178, 0.2));
+  color: rgba(124, 255, 178, 0.42);
+  filter: none;
+  transition: color 180ms ease, filter 180ms ease;
 }
 
 .inquiryProjectChoices .inquiryChoice strong {
   max-width: 14ch;
+  color: rgba(214, 226, 238, 0.82);
   font-size: 13px;
   line-height: 1.2;
+  transition: color 180ms ease;
+}
+
+.inquiryProjectChoices .inquiryChoice input:checked + span {
+  border-color: rgba(124, 255, 178, 0.88);
+  color: var(--text);
+  background: rgba(124, 255, 178, 0.09);
+  box-shadow:
+    inset 0 0 0 1px rgba(124, 255, 178, 0.16),
+    0 0 20px rgba(124, 255, 178, 0.08);
+}
+
+.inquiryProjectChoices .inquiryChoice input:checked + span svg {
+  color: var(--green);
+  filter: drop-shadow(0 0 10px rgba(124, 255, 178, 0.45));
+}
+
+.inquiryProjectChoices .inquiryChoice input:checked + span strong {
+  color: var(--text);
 }
 
 .inquiryOptional {
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
-.inquiryOptional summary {
-  width: max-content;
-  color: var(--muted);
+.inquiryOptionalToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: rgba(196, 210, 224, 0.9);
+  background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
   font-size: 13px;
   font-weight: 800;
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease;
 }
 
-.inquiryOptional summary span {
+.inquiryOptionalToggle span {
   color: var(--dim);
   font-weight: 600;
 }
 
-.inquiryOptional[open] summary {
-  color: var(--green);
+.inquiryOptionalToggle:hover,
+.inquiryOptionalToggle:focus-visible {
+  border-color: rgba(124, 255, 178, 0.4);
+  color: var(--text);
+  outline: none;
+}
+
+.inquiryOptionalLabel {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(196, 210, 224, 0.88);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .inquiryOptional .inquiryField {
@@ -1566,6 +1986,45 @@ body:has(.inquiryDialog[open]) .mobileDock {
   outline: none;
 }
 
+.inquiryPrivacy {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.inquiryPrivacyNotice {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.inquiryPrivacyNotice a {
+  color: var(--green);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.inquiryConsent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.inquiryConsent input {
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+
+.inquiryTurnstile {
+  min-height: 65px;
+}
+
 .inquirySubmit {
   justify-content: center;
   min-width: 152px;
@@ -1573,7 +2032,11 @@ body:has(.inquiryDialog[open]) .mobileDock {
 
 .inquirySubmit:disabled {
   cursor: not-allowed;
-  opacity: 0.46;
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: none;
   transform: none;
 }
 
@@ -1623,9 +2086,14 @@ body:has(.inquiryDialog[open]) .mobileDock {
   white-space: nowrap;
 }
 
-@keyframes inquiry-step-enter {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes inquiry-step-forward {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes inquiry-step-back {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes inquiry-spin {
@@ -1652,8 +2120,9 @@ body:has(.inquiryDialog[open]) .mobileDock {
   }
 
   .inquiryProjectChoices > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    margin-top: 16px;
+    margin-top: 14px;
   }
 
   .inquiryProjectChoices .inquiryChoice {
@@ -1720,6 +2189,34 @@ body:has(.inquiryDialog[open]) .mobileDock {
     border-radius: 0;
   }
 
+  .proofDialog {
+    width: 100dvw;
+    max-width: none;
+    max-height: none;
+    height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .proofDialogPanel {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    height: 100%;
+    padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
+  }
+
+  .proofDialogImageWrap {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .projectPreviewPanel {
+    min-height: 100%;
+    height: 100%;
+  }
+
   .inquiryModal {
     display: flex;
     min-height: 0;
@@ -1752,7 +2249,11 @@ body:has(.inquiryDialog[open]) .mobileDock {
   }
 
   .inquiryProgress > div {
-    width: 96px;
+    width: min(180px, 100%);
+  }
+
+  .inquiryProgress small {
+    font-size: 9px;
   }
 
   .inquiryQuestion > p,
@@ -1810,6 +2311,10 @@ body:has(.inquiryDialog[open]) .mobileDock {
 
   .inquiryChoices > div {
     grid-template-columns: 1fr;
+  }
+
+  .inquiryProjectChoices > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .inquiryProjectChoices > div {
@@ -1897,18 +2402,11 @@ body:has(.inquiryDialog[open]) .mobileDock {
   }
 }
 
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  .marqueeTrack,
   .featuredCarouselTrack {
     width: auto;
     flex-wrap: wrap;
@@ -1956,7 +2454,33 @@ body:has(.inquiryDialog[open]) .mobileDock {
 
 @media (max-width: 980px) {
   .whatsappContact {
-    bottom: calc(92px + env(safe-area-inset-bottom));
+    right: max(14px, env(safe-area-inset-right));
+    left: auto;
+    bottom: calc(84px + env(safe-area-inset-bottom));
+    width: 52px;
+    height: 52px;
+    overflow: hidden;
+    border-radius: 999px;
+    box-shadow:
+      0 12px 32px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(124, 255, 178, 0.28);
+  }
+
+  .whatsappContactCopy,
+  .whatsappContactCall {
+    display: none;
+  }
+
+  .whatsappContactMain {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .whatsappContactIcon {
+    width: 52px;
+    height: 52px;
   }
 
   .mobileDock {
@@ -1971,11 +2495,10 @@ body:has(.inquiryDialog[open]) .mobileDock {
     padding: 7px;
     border: 1px solid rgba(140, 234, 196, 0.2);
     border-radius: 22px;
-    background: rgba(5, 10, 9, 0.9);
+    background: rgba(5, 10, 9, 0.96);
     box-shadow:
       0 18px 60px rgba(0, 0, 0, 0.5),
       inset 0 1px rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(22px) saturate(140%);
     transform: translateX(50%);
   }
 
@@ -2096,8 +2619,38 @@ body:has(.inquiryDialog[open]) .mobileDock {
 
   .projectCard,
   .projectCardFeatured {
-    grid-column: 1 / -1;
-    min-height: 360px;
+    grid-column: span 6;
+    min-height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .projectArchiveGrid {
+    gap: 10px;
+  }
+
+  .routeSection {
+    padding-bottom: calc(108px + env(safe-area-inset-bottom));
+  }
+
+  .filterBar {
+    flex-wrap: nowrap;
+    gap: 6px;
+    margin-bottom: 18px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filterBar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterButton {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    font-size: 10px;
+    font-weight: 600;
   }
 
   .footerGrid {
@@ -2130,14 +2683,6 @@ body:has(.inquiryDialog[open]) .mobileDock {
     font-size: 15px;
   }
 
-  .featuredCarouselShell,
-  .featuredCarouselViewport,
-  .featuredCarouselTrack,
-  .featuredCarouselCard {
-    min-height: 280px;
-    height: 280px;
-  }
-
   .featuredCarouselCard {
     --carousel-card-width: min(72vw, 300px);
   }
@@ -2163,8 +2708,9 @@ body:has(.inquiryDialog[open]) .mobileDock {
   }
 
   .whatsappContact {
-    right: 12px;
-    bottom: calc(88px + env(safe-area-inset-bottom));
+    right: max(12px, env(safe-area-inset-right));
+    left: auto;
+    bottom: calc(80px + env(safe-area-inset-bottom));
   }
 }
 
@@ -2313,6 +2859,10 @@ html[data-theme="light"] .siteHeader {
   display: flex;
   align-items: center;
   animation: hero-brand-float 5s ease-in-out infinite alternate;
+}
+
+.heroSection--animationsPaused .heroBrand {
+  animation-play-state: paused;
 }
 
 .heroBrand img {
@@ -2724,7 +3274,7 @@ html[data-theme="light"] .siteHeader {
 
 /* Selected work editorial update */
 .featuredProjectBand {
-  padding: clamp(24px, 3.5vh, 36px) 0 clamp(18px, 2.5vh, 28px);
+  padding: clamp(24px, 3.5vh, 36px) 0 clamp(40px, 5vh, 64px);
   background: #070807;
 }
 
@@ -2783,15 +3333,8 @@ html[data-theme="light"] .siteHeader {
   outline: none;
 }
 
-.featuredCarouselShell,
-.featuredCarouselViewport,
-.featuredCarouselTrack {
-  min-height: clamp(320px, 42vh, 460px);
-}
-
 .featuredCarouselCard {
-  --carousel-card-width: min(26vw, 340px);
-  height: clamp(320px, 42vh, 460px);
+  --carousel-card-width: min(26vw, 360px);
   border-color: rgba(255, 255, 255, 0.14);
   border-radius: 14px;
   background: #07100e;
@@ -2828,7 +3371,6 @@ html[data-theme="light"] .siteHeader {
 
   .featuredCarouselCard {
     --carousel-card-width: min(38vw, 300px);
-    height: clamp(300px, 48vh, 420px);
   }
 
 }
@@ -2850,14 +3392,6 @@ html[data-theme="light"] .siteHeader {
 
   .featuredProjectHeader h2 {
     font-size: clamp(30px, 7.5vw, 40px);
-  }
-
-  .featuredCarouselShell,
-  .featuredCarouselViewport,
-  .featuredCarouselTrack,
-  .featuredCarouselCard {
-    min-height: clamp(320px, 78vw, 400px);
-    height: clamp(320px, 78vw, 400px);
   }
 
   .featuredCarouselCard {
@@ -2970,6 +3504,7 @@ html[data-theme="light"] .siteHeader {
   .projectImage,
   .aboutVisual img,
   .routeImageFrame img,
+  .proofImage,
   .primaryButton svg,
   .secondaryButton svg,
   .sectionLink svg,

@@ -6,7 +6,7 @@ import { FolderKanban, House, Send, UserRound } from "lucide-react";
 
 const items = [
   { label: "Home", href: "/", icon: House },
-  { label: "Work", href: "/projects", icon: FolderKanban },
+  { label: "Projects", href: "/projects", icon: FolderKanban },
   { label: "About", href: "/about", icon: UserRound },
   { label: "Contact", href: "/contact", icon: Send },
 ];

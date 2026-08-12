@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { aboutHighlights, contactMethods } from "@/lib/portfolio-data";
+import { getPortfolioIcon } from "@/lib/portfolio-icons";
 
 export const metadata = {
   title: "About | Imogen Inocentes",
@@ -36,7 +37,7 @@ export default function AboutPage() {
         <section className="shell routeSection">
           <div className="serviceGrid">
             {aboutHighlights.map((item) => {
-              const Icon = item.icon;
+              const Icon = getPortfolioIcon(item.iconKey);
               return (
                 <article className="serviceCard" key={item.title}>
                   <span className="serviceIcon">
@@ -63,7 +64,7 @@ export default function AboutPage() {
           </div>
           <div className="contactMethodStack">
             {contactMethods.map((method) => {
-              const Icon = method.icon;
+              const Icon = getPortfolioIcon(method.iconKey);
               return (
                 <a href={method.href} key={method.label}>
                   <Icon size={17} />

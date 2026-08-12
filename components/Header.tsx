@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { ProjectInquiryTrigger } from "@/components/ProjectInquiry";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 
 const headerNav = [
   { label: "Home", href: "/" },

@@ -28,7 +28,7 @@ export function Footer() {
       </div>
       <div className="shell footerBottom">
         <span>Copyright 2026 Imogen Inocentes.</span>
-        <span>Placeholder images and content ready for replacement.</span>
+        <Link href="/privacy">Privacy</Link>
       </div>
     </footer>
   );
