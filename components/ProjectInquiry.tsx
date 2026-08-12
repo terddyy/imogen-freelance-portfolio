@@ -13,6 +13,7 @@ type Inquiry = {
   budget: string;
   thesisBudget: string;
   teamSize: string;
+  phone: string;
   email: string;
 };
 
@@ -22,7 +23,7 @@ type InquiryContextValue = {
 
 const InquiryContext = createContext<InquiryContextValue | null>(null);
 
-const emptyInquiry: Inquiry = { projectTypes: [], project: "", website: "", budget: "", thesisBudget: "", teamSize: "", email: "" };
+const emptyInquiry: Inquiry = { projectTypes: [], project: "", website: "", budget: "", thesisBudget: "", teamSize: "", phone: "", email: "" };
 const standardBudgets = ["Under ₱100k", "₱100k–₱350k", "₱350k–₱650k", "₱650k–₱1.2M", "₱1.2M+"];
 const thesisBudgets = ["Under ₱50k", "₱50k–₱100k", "₱100k–₱300k", "₱300k+"];
 const teamSizes = ["Solo founder", "2–5 people", "6–15 people", "16–50 people", "50+ people"];
@@ -61,11 +62,21 @@ function isEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function isPhone(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (digits.length < 8 || digits.length > 15) return false;
+  if (digits.startsWith("63") && digits.length === 12) return true;
+  if (digits.startsWith("0") && digits.length === 11) return true;
+  if (digits.length === 10 && digits.startsWith("9")) return true;
+  return value.trim().startsWith("+") && digits.length >= 8;
+}
+
 export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [inquiry, setInquiry] = useState<Inquiry>(emptyInquiry);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [useEmailInstead, setUseEmailInstead] = useState(false);
   const [error, setError] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
   const router = useRouter();
@@ -80,54 +91,35 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
 
     if (open && !dialog.open) dialog.showModal();
     if (!open && dialog.open) dialog.close();
-
-    // #region agent log
-    const header = document.querySelector(".siteHeader");
-    const closeBtn = dialog.querySelector(".inquiryClose");
-    const headerStyle = header ? getComputedStyle(header) : null;
-    const closeRect = closeBtn?.getBoundingClientRect();
-    const headerRect = header?.getBoundingClientRect();
-    const overlapsClose =
-      closeRect && headerRect
-        ? !(
-            closeRect.right < headerRect.left ||
-            closeRect.left > headerRect.right ||
-            closeRect.bottom < headerRect.top ||
-            closeRect.top > headerRect.bottom
-          )
-        : null;
-    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
-      body: JSON.stringify({
-        sessionId: "437646",
-        runId: "pre-fix",
-        hypothesisId: "A,C,E",
-        location: "ProjectInquiry.tsx:dialog-sync",
-        message: "dialog open state sync",
-        data: {
-          reactOpen: open,
-          dialogOpen: dialog.open,
-          hasOpenAttr: dialog.hasAttribute("open"),
-          viewportW: window.innerWidth,
-          headerVisibility: headerStyle?.visibility ?? null,
-          headerZIndex: headerStyle?.zIndex ?? null,
-          headerPointerEvents: headerStyle?.pointerEvents ?? null,
-          closeOverlapsHeader: overlapsClose,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
   }, [open]);
 
   useEffect(() => {
     if (!open) return;
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const scrollY = window.scrollY;
+    const { style: bodyStyle } = document.body;
+    const { style: htmlStyle } = document.documentElement;
+    const previous = {
+      bodyOverflow: bodyStyle.overflow,
+      bodyPosition: bodyStyle.position,
+      bodyTop: bodyStyle.top,
+      bodyWidth: bodyStyle.width,
+      htmlOverflow: htmlStyle.overflow,
+    };
+
+    htmlStyle.overflow = "hidden";
+    bodyStyle.overflow = "hidden";
+    bodyStyle.position = "fixed";
+    bodyStyle.top = `-${scrollY}px`;
+    bodyStyle.width = "100%";
+
     return () => {
-      document.body.style.overflow = previousOverflow;
+      bodyStyle.overflow = previous.bodyOverflow;
+      bodyStyle.position = previous.bodyPosition;
+      bodyStyle.top = previous.bodyTop;
+      bodyStyle.width = previous.bodyWidth;
+      htmlStyle.overflow = previous.htmlOverflow;
+      window.scrollTo(0, scrollY);
     };
   }, [open]);
 
@@ -140,88 +132,30 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
     return () => window.clearTimeout(timer);
   }, [open, step, status]);
 
-  const discardAndClose = useCallback(() => {
-    // #region agent log
-    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
-      body: JSON.stringify({
-        sessionId: "437646",
-        runId: "pre-fix",
-        hypothesisId: "C",
-        location: "ProjectInquiry.tsx:discardAndClose",
-        message: "discardAndClose called",
-        data: { dialogOpenBefore: dialogRef.current?.open ?? null },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-    setOpen(false);
+  const resetInquiry = useCallback(() => {
     setStep(0);
     setInquiry(emptyInquiry);
+    setUseEmailInstead(false);
     setStatus("idle");
     setError("");
   }, []);
 
+  const discardAndClose = useCallback(() => {
+    const dialog = dialogRef.current;
+    if (dialog?.open) dialog.close();
+    setOpen(false);
+    resetInquiry();
+  }, [resetInquiry]);
+
   const requestClose = useCallback(() => {
-    // #region agent log
-    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
-      body: JSON.stringify({
-        sessionId: "437646",
-        runId: "pre-fix",
-        hypothesisId: "B,D",
-        location: "ProjectInquiry.tsx:requestClose-entry",
-        message: "requestClose invoked",
-        data: {
-          hasAnswers,
-          reactOpen: open,
-          dialogOpen: dialogRef.current?.open ?? null,
-          viewportW: window.innerWidth,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
     if (hasAnswers) {
       const confirmed = window.confirm("Discard your project details?");
-      // #region agent log
-      fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
-        body: JSON.stringify({
-          sessionId: "437646",
-          runId: "pre-fix",
-          hypothesisId: "B",
-          location: "ProjectInquiry.tsx:requestClose-confirm",
-          message: "confirm dialog result",
-          data: { confirmed, hasAnswers },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
       if (!confirmed) return;
     }
     discardAndClose();
-  }, [discardAndClose, hasAnswers, open]);
+  }, [discardAndClose, hasAnswers]);
 
   const openInquiry = useCallback(() => {
-    // #region agent log
-    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
-      body: JSON.stringify({
-        sessionId: "437646",
-        runId: "pre-fix",
-        hypothesisId: "E",
-        location: "ProjectInquiry.tsx:openInquiry",
-        message: "openInquiry called",
-        data: { viewportW: window.innerWidth },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
     setOpen(true);
   }, []);
 
@@ -234,7 +168,9 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
           ? (!hasOtherProject || Boolean(inquiry.budget)) && (!hasThesis || Boolean(inquiry.thesisBudget))
           : step === 3
             ? Boolean(inquiry.teamSize)
-            : isEmail(inquiry.email);
+            : useEmailInstead
+              ? isEmail(inquiry.email)
+              : isPhone(inquiry.phone);
 
   function update(field: keyof Inquiry, value: string) {
     setInquiry((current) => ({ ...current, [field]: value }));
@@ -249,6 +185,7 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
         : [...current.projectTypes, value],
     }));
     setError("");
+    (document.activeElement as HTMLElement | null)?.blur();
   }
 
   async function submit() {
@@ -300,6 +237,10 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
         ref={dialogRef}
         className="inquiryDialog"
         aria-labelledby="inquiry-title"
+        onClose={() => {
+          setOpen(false);
+          resetInquiry();
+        }}
         onCancel={(event) => {
           event.preventDefault();
           requestClose();
@@ -331,7 +272,7 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
               <span className="inquirySuccessIcon"><Check size={25} aria-hidden="true" /></span>
               <p className="inquiryStep">Project inquiry sent</p>
               <h2 id="inquiry-title" data-inquiry-autofocus tabIndex={-1}>Your project is on my radar.</h2>
-              <p>Thanks for sharing the details. Check your inbox for the meeting link, and let&apos;s discuss how we can bring this to life.</p>
+              <p>{useEmailInstead ? "Thanks for sharing the details. Check your inbox for the meeting link, and let&apos;s discuss how we can bring this to life." : "Thanks for sharing the details. I&apos;ll text you the next steps for scheduling a quick call."}</p>
               <button
                 className="primaryButton inquirySubmit"
                 type="button"
@@ -354,34 +295,7 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
                 <button
                   className="inquiryClose"
                   type="button"
-                  onClick={(event) => {
-                    // #region agent log
-                    const target = event.currentTarget;
-                    const rect = target.getBoundingClientRect();
-                    const cx = rect.left + rect.width / 2;
-                    const cy = rect.top + rect.height / 2;
-                    const topEl = document.elementFromPoint(cx, cy);
-                    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
-                      body: JSON.stringify({
-                        sessionId: "437646",
-                        runId: "pre-fix",
-                        hypothesisId: "D",
-                        location: "ProjectInquiry.tsx:close-click",
-                        message: "close button clicked",
-                        data: {
-                          topElementTag: topEl?.tagName ?? null,
-                          topElementClass: topEl?.className ?? null,
-                          isCloseButton: topEl === target,
-                          viewportW: window.innerWidth,
-                        },
-                        timestamp: Date.now(),
-                      }),
-                    }).catch(() => {});
-                    // #endregion
-                    requestClose();
-                  }}
+                  onClick={requestClose}
                   aria-label="Close project inquiry"
                 >
                   <X size={19} aria-hidden="true" />
@@ -421,15 +335,29 @@ export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
                 {step === 3 ? <ChoiceStep dialogTitle title="How big is your team?" description="This helps me understand how the project will be managed and who I&apos;ll collaborate with." name="team" options={teamSizes} value={inquiry.teamSize} onChange={(value) => update("teamSize", value)} /> : null}
 
                 {step === 4 ? (
-                  <>
-                    <h2 id="inquiry-title">Where should I send the meeting link?</h2>
-                    <p>Enter your email and I&apos;ll send you the next steps for scheduling a quick call.</p>
-                    <label className="inquiryField">
-                      <span className="srOnly">Email address</span>
-                      <input data-inquiry-autofocus type="email" autoComplete="email" required value={inquiry.email} onChange={(event) => update("email", event.target.value)} placeholder="you@company.com" aria-invalid={inquiry.email.length > 0 && !isEmail(inquiry.email)} />
-                    </label>
-                    {inquiry.email && !isEmail(inquiry.email) ? <p className="inquiryValidation">Enter a valid email address.</p> : null}
-                  </>
+                  useEmailInstead ? (
+                    <>
+                      <h2 id="inquiry-title">Where should I send the meeting link?</h2>
+                      <p>Enter your email and I&apos;ll send you the next steps for scheduling a quick call.</p>
+                      <label className="inquiryField">
+                        <span className="srOnly">Email address</span>
+                        <input data-inquiry-autofocus type="email" autoComplete="email" required value={inquiry.email} onChange={(event) => update("email", event.target.value)} placeholder="you@company.com" aria-invalid={inquiry.email.length > 0 && !isEmail(inquiry.email)} />
+                      </label>
+                      {inquiry.email && !isEmail(inquiry.email) ? <p className="inquiryValidation">Enter a valid email address.</p> : null}
+                      <button className="inquirySkip" type="button" onClick={() => { update("email", ""); setUseEmailInstead(false); }}>Use phone instead</button>
+                    </>
+                  ) : (
+                    <>
+                      <h2 id="inquiry-title">What&apos;s the best number to reach you?</h2>
+                      <p>Share your mobile number and I&apos;ll text you the next steps for scheduling a quick call.</p>
+                      <label className="inquiryField">
+                        <span className="srOnly">Phone number</span>
+                        <input data-inquiry-autofocus type="tel" autoComplete="tel" inputMode="tel" required value={inquiry.phone} onChange={(event) => update("phone", event.target.value)} placeholder="+63 917 123 4567" aria-invalid={inquiry.phone.length > 0 && !isPhone(inquiry.phone)} />
+                      </label>
+                      {inquiry.phone && !isPhone(inquiry.phone) ? <p className="inquiryValidation">Enter a valid phone number.</p> : null}
+                      <button className="inquirySkip" type="button" onClick={() => { update("phone", ""); setUseEmailInstead(true); }}>Use email instead</button>
+                    </>
+                  )
                 ) : null}
               </div>
 
@@ -504,9 +432,9 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
     <fieldset className="inquiryChoices inquiryProjectChoices">
       <legend className="srOnly">Project type</legend>
       <div>
-        {projectTypes.map(({ label, icon: Icon }, index) => (
+        {projectTypes.map(({ label, icon: Icon }) => (
           <label className="inquiryChoice" key={label}>
-            <input data-inquiry-autofocus={index === 0 ? true : undefined} type="checkbox" name="projectTypes" value={label} checked={value.includes(label)} onChange={() => onChange(label)} />
+            <input type="checkbox" name="projectTypes" value={label} checked={value.includes(label)} onChange={() => onChange(label)} />
             <span><span className="inquiryProjectChoiceIcon"><Icon size={24} aria-hidden="true" /></span><strong>{label}</strong></span>
           </label>
         ))}

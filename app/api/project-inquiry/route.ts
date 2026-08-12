@@ -36,6 +36,15 @@ function normalizeWebsite(value: string) {
   return url.toString();
 }
 
+function normalizePhone(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (digits.startsWith("63") && digits.length === 12) return `+${digits}`;
+  if (digits.startsWith("0") && digits.length === 11) return `+63${digits.slice(1)}`;
+  if (digits.length === 10 && digits.startsWith("9")) return `+63${digits}`;
+  if (value.trim().startsWith("+") && digits.length >= 8 && digits.length <= 15) return `+${digits}`;
+  return "";
+}
+
 function json(body: unknown, status = 200, headers: HeadersInit = {}) {
   return Response.json(body, {
     status,
@@ -181,6 +190,7 @@ function buildNotificationContent(body: {
   budget: string;
   thesisBudget: string;
   teamSize: string;
+  phone: string;
   email: string;
 }) {
   const rows = [
@@ -189,15 +199,42 @@ function buildNotificationContent(body: {
     ["Existing website", body.website || "Not provided"],
     ["Budget", body.budget || body.thesisBudget || "Not provided"],
     ["Team size", body.teamSize],
-    ["Email", body.email],
+    ["Phone", body.phone || "Not provided"],
+    ["Email", body.email || "Not provided"],
   ] as const;
   const text = rows.map(([label, value]) => `${label}: ${value}`).join("\n");
   const html = rows.map(([label, value]) => `<tr><th align="left" valign="top">${escapeHtml(label)}</th><td>${escapeHtml(value).replace(/\n/g, "<br />")}</td></tr>`).join("");
   return { text, html: `<h1>New project inquiry</h1><table cellpadding="8" cellspacing="0">${html}</table>` };
 }
 
-async function sendNotifications(content: ReturnType<typeof buildNotificationContent>, email: string, config: NonNullable<ReturnType<typeof getDeliveryConfig>>) {
-  const idempotencyKey = createHash("sha256").update(`${email}\n${content.text}`).digest("hex");
+function buildSmsContent(body: {
+  projectTypes: string[];
+  teamSize: string;
+  budget: string;
+  thesisBudget: string;
+}) {
+  const projectLabel = body.projectTypes.slice(0, 2).join(", ");
+  const budgetLabel = (body.budget || body.thesisBudget).replace(/₱/g, "PHP ");
+  return `Portfolio inquiry: ${projectLabel}. ${body.teamSize}. ${budgetLabel}. See email for details.`.slice(0, 160);
+}
+
+async function sendNotifications(
+  content: ReturnType<typeof buildNotificationContent>,
+  smsBody: { projectTypes: string[]; teamSize: string; budget: string; thesisBudget: string },
+  contact: { phone: string; email: string },
+  config: NonNullable<ReturnType<typeof getDeliveryConfig>>,
+) {
+  const contactLabel = contact.phone || contact.email;
+  const idempotencyKey = createHash("sha256").update(`${contactLabel}\n${content.text}`).digest("hex");
+  const emailPayload: Record<string, unknown> = {
+    from: config.resendFromEmail,
+    to: ["terd@zentariph.com"],
+    subject: "New project inquiry",
+    html: content.html,
+    text: content.text,
+  };
+  if (contact.email) emailPayload.reply_to = contact.email;
+
   const [emailResponse, smsResponse] = await Promise.all([
     fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -208,14 +245,7 @@ async function sendNotifications(content: ReturnType<typeof buildNotificationCon
       },
       redirect: "error",
       signal: AbortSignal.timeout(8000),
-      body: JSON.stringify({
-        from: config.resendFromEmail,
-        to: ["terd@zentariph.com"],
-        reply_to: email,
-        subject: "New project inquiry",
-        html: content.html,
-        text: content.text,
-      }),
+      body: JSON.stringify(emailPayload),
     }),
     fetch("https://unismsapi.com/api/sms", {
       method: "POST",
@@ -228,7 +258,7 @@ async function sendNotifications(content: ReturnType<typeof buildNotificationCon
       body: JSON.stringify({
         recipient: config.unismsRecipient,
         sender_id: config.unismsSenderId,
-        content: `New inquiry from ${email}. ${content.text.replace(/\n/g, " | ").slice(0, 120)}`,
+        content: buildSmsContent(smsBody),
       }),
     }),
   ]);
@@ -285,11 +315,15 @@ export async function POST(request: Request) {
   const budget = getString(body.budget);
   const thesisBudget = getString(body.thesisBudget);
   const teamSize = getString(body.teamSize);
+  const phone = getString(body.phone);
   const email = getString(body.email);
+  const normalizedPhone = normalizePhone(phone);
+  const hasValidPhone = Boolean(normalizedPhone);
+  const hasValidEmail = emailPattern.test(email);
   const hasThesis = selectedProjectTypes.includes("Thesis / capstone");
   const hasOtherProject = selectedProjectTypes.some((type) => type !== "Thesis / capstone");
 
-  if (!selectedProjectTypes.length || selectedProjectTypes.some((type) => !projectTypes.has(type)) || project.length > 4000 || email.length > 320 || (hasOtherProject && !budgets.has(budget)) || (hasThesis && !thesisBudgets.has(thesisBudget)) || !teamSizes.has(teamSize) || !emailPattern.test(email)) {
+  if (!selectedProjectTypes.length || selectedProjectTypes.some((type) => !projectTypes.has(type)) || project.length > 4000 || phone.length > 20 || email.length > 320 || (hasOtherProject && !budgets.has(budget)) || (hasThesis && !thesisBudgets.has(thesisBudget)) || !teamSizes.has(teamSize) || (!hasValidPhone && !hasValidEmail)) {
     return json({ error: "Please complete the required project details." }, 400, rateLimitHeaders(rateLimit));
   }
 
@@ -306,8 +340,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const content = buildNotificationContent({ projectTypes: selectedProjectTypes, project, website: normalizedWebsite, budget, thesisBudget, teamSize, email });
-    await sendNotifications(content, email, deliveryConfig);
+    const content = buildNotificationContent({ projectTypes: selectedProjectTypes, project, website: normalizedWebsite, budget, thesisBudget, teamSize, phone: normalizedPhone, email });
+    await sendNotifications(content, { projectTypes: selectedProjectTypes, teamSize, budget, thesisBudget }, { phone: normalizedPhone, email }, deliveryConfig);
     return json({ ok: true }, 200, rateLimitHeaders(rateLimit));
   } catch {
     return json({ error: "Unable to send your inquiry right now. Please try again shortly." }, 502, rateLimitHeaders(rateLimit));

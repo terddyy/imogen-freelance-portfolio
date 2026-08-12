@@ -25,13 +25,13 @@ RESEND_API_KEY=re_...
 RESEND_FROM_EMAIL=Imogen Portfolio <notifications@your-verified-domain.com>
 UNISMS_API_KEY=sk_...
 UNISMS_RECIPIENT=+639xxxxxxxxx
-UNISMS_SENDER_ID=YourSenderID
+UNISMS_SENDER_ID=UnisoftSMS
 PUBLIC_SITE_ORIGIN=https://your-domain.example
 UPSTASH_REDIS_REST_URL=https://your-db.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-token
 ```
 
-`RESEND_FROM_EMAIL` must use a sender/domain verified in Resend. `UNISMS_RECIPIENT` must be your phone number in E.164 format, and `UNISMS_SENDER_ID` must be the sender ID UniSMS has enabled for your account. The route only reports success when both notifications are accepted by their providers.
+`RESEND_FROM_EMAIL` must use a sender/domain verified in Resend. `UNISMS_RECIPIENT` must be your phone number in E.164 format, and `UNISMS_SENDER_ID` must match an active sender ID on your UniSMS account (this project uses `UnisoftSMS`). The SMS is a short heads-up to you; full inquiry details go by email. The route only reports success when both notifications are accepted by their providers.
 
 For production, also set `PUBLIC_SITE_ORIGIN` to the public HTTPS origin and configure `UPSTASH_REDIS_REST_URL` plus `UPSTASH_REDIS_REST_TOKEN`. The inquiry route uses the Redis limiter for distributed protection and fails closed if Redis is missing or unavailable; it only uses an in-memory limiter during local development. The reverse proxy must overwrite, not pass through, `X-Forwarded-For`/`X-Real-IP` headers so the limiter sees the real client address.
 

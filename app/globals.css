@@ -504,31 +504,10 @@ html[data-theme="light"] .siteHeader {
   object-fit: cover;
 }
 
-.projectCard::after {
+.projectCardLink {
   position: absolute;
   inset: 0;
-  content: "";
-  background: linear-gradient(180deg, rgba(5, 7, 11, 0.1) 20%, rgba(5, 7, 11, 0.9));
-}
-
-.projectMeta {
-  position: absolute;
-  inset-inline: 16px;
-  bottom: 16px;
-  z-index: 1;
-  display: grid;
-  gap: 12px;
-}
-
-.projectMeta h3 {
-  font-size: clamp(22px, 3vw, 34px);
-  line-height: 1;
-}
-
-.projectMeta p {
-  margin-top: 8px;
-  color: rgba(243, 248, 255, 0.78);
-  line-height: 1.55;
+  display: block;
 }
 
 .chip,
@@ -672,42 +651,6 @@ html[data-theme="light"] .siteHeader {
 
 .featuredCarouselImage {
   object-fit: cover;
-}
-
-.featuredCarouselScrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(2, 7, 13, 0) 28%, rgba(2, 7, 13, 0.48) 58%, rgba(2, 7, 13, 0.94) 100%),
-    linear-gradient(90deg, rgba(2, 7, 13, 0.18), transparent 34%, rgba(2, 7, 13, 0.12));
-}
-
-.featuredCarouselCard:not(:hover) .featuredCarouselScrim {
-  background: rgba(2, 7, 13, 0.62);
-}
-
-.featuredCarouselMeta {
-  position: absolute;
-  left: 22px;
-  right: 22px;
-  bottom: 22px;
-  z-index: 1;
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.72);
-}
-
-.featuredCarouselMeta span {
-  display: inline-flex;
-  margin-bottom: 10px;
-  color: rgba(255, 255, 255, 0.7);
-  font: 800 12px/1 var(--font-geist-mono), monospace;
-  text-transform: uppercase;
-}
-
-.featuredCarouselMeta h3 {
-  max-width: 720px;
-  color: #fff;
-  font-size: clamp(24px, 2.4vw, 36px);
-  line-height: 1;
 }
 
 .avatarStack {
@@ -1220,6 +1163,11 @@ html[data-theme="light"] .whatsappContact {
   backdrop-filter: blur(10px);
 }
 
+html:has(.inquiryDialog[open]) {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 body:has(.inquiryDialog[open]) .siteHeader,
 body:has(.inquiryDialog[open]) .whatsappContact,
 body:has(.inquiryDialog[open]) .mobileDock {
@@ -1231,6 +1179,7 @@ body:has(.inquiryDialog[open]) .mobileDock {
   min-height: 540px;
   padding: clamp(24px, 4vw, 32px);
   overflow: auto;
+  overscroll-behavior: contain;
   background:
     radial-gradient(circle at 90% 0%, rgba(124, 255, 178, 0.14), transparent 34%),
     linear-gradient(145deg, #121d25, #070c14);
@@ -1504,12 +1453,17 @@ body:has(.inquiryDialog[open]) .mobileDock {
   transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease, transform 180ms ease;
 }
 
-.inquiryChoice:hover > span,
+@media (hover: hover) {
+  .inquiryChoice:hover > span {
+    border-color: rgba(124, 255, 178, 0.5);
+    color: var(--text);
+    transform: translateY(-1px);
+  }
+}
+
 .inquiryChoice input:focus-visible + span {
-  border-color: rgba(124, 255, 178, 0.5);
-  color: var(--text);
-  outline: none;
-  transform: translateY(-1px);
+  outline: 2px solid rgba(124, 255, 178, 0.55);
+  outline-offset: 2px;
 }
 
 .inquiryChoice input:checked + span {
@@ -1757,8 +1711,13 @@ body:has(.inquiryDialog[open]) .mobileDock {
   }
 
   .inquiryDialog {
-    display: flex;
-    flex-direction: column;
+    width: 100dvw;
+    max-width: none;
+    max-height: none;
+    height: 100dvh;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
   }
 
   .inquiryModal {
@@ -1774,6 +1733,13 @@ body:has(.inquiryDialog[open]) .mobileDock {
   .inquirySuccess {
     min-height: 0;
     flex: 1;
+  }
+
+  .inquiryQuestion {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
   }
 
   .inquiryHeader {
@@ -1840,28 +1806,6 @@ body:has(.inquiryDialog[open]) .mobileDock {
   .inquiryDirectLinks a {
     flex: 1;
     justify-content: center;
-  }
-
-  .inquiryDialog {
-    width: 100dvw;
-    max-width: none;
-    max-height: none;
-    height: 100dvh;
-    margin: 0;
-    border: 0;
-    border-radius: 0;
-  }
-
-  .inquiryModal {
-    min-height: 0;
-    height: 100%;
-    padding: max(14px, env(safe-area-inset-top)) 16px max(14px, env(safe-area-inset-bottom));
-  }
-
-  .inquiryForm,
-  .inquirySuccess {
-    min-height: 0;
-    flex: 1;
   }
 
   .inquiryChoices > div {
@@ -1948,8 +1892,7 @@ body:has(.inquiryDialog[open]) .mobileDock {
     transition: none;
   }
 
-  .inquiryChoice:hover span,
-  .inquiryChoice input:focus-visible + span {
+  .inquiryChoice:hover > span {
     transform: none;
   }
 }
@@ -2197,10 +2140,6 @@ body:has(.inquiryDialog[open]) .mobileDock {
 
   .featuredCarouselCard {
     --carousel-card-width: min(72vw, 300px);
-  }
-
-  .featuredCarouselMeta {
-    bottom: 74px;
   }
 }
 
@@ -2869,59 +2808,6 @@ html[data-theme="light"] .siteHeader {
   transform: scale(1.025);
 }
 
-.featuredCarouselScrim {
-  background:
-    linear-gradient(180deg, rgba(3, 8, 7, 0.04) 40%, rgba(3, 8, 7, 0.92) 100%);
-}
-
-.featuredCarouselTopline {
-  position: absolute;
-  top: 16px;
-  right: 18px;
-  left: 18px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.featuredCarouselTopline > span {
-  color: #8ceac4;
-  font: 800 13px/1 var(--font-geist-mono), monospace;
-}
-
-.featuredCarouselSize {
-  color: rgba(255, 255, 255, 0.56) !important;
-  font-size: 10px !important;
-  letter-spacing: 0.04em;
-  text-transform: none;
-}
-
-.featuredCarouselSizeTablet,
-.featuredCarouselSizeMobile {
-  display: none;
-}
-
-.featuredCarouselMeta {
-  right: auto;
-  bottom: clamp(16px, 2vw, 22px);
-  left: clamp(16px, 2vw, 22px);
-  max-width: min(620px, calc(100% - 40px));
-  text-shadow: none;
-}
-
-.featuredCarouselMeta > span {
-  margin-bottom: 10px;
-  color: #8ceac4;
-  letter-spacing: 0.1em;
-}
-
-.featuredCarouselMeta h3 {
-  font-size: clamp(18px, 2vw, 28px);
-  letter-spacing: -0.04em;
-}
-
 .featuredProjectFooter {
   position: relative;
   z-index: 2;
@@ -2945,13 +2831,6 @@ html[data-theme="light"] .siteHeader {
     height: clamp(300px, 48vh, 420px);
   }
 
-  .featuredCarouselSizeDesktop {
-    display: none;
-  }
-
-  .featuredCarouselSizeTablet {
-    display: inline;
-  }
 }
 
 @media (max-width: 760px) {
@@ -2983,30 +2862,6 @@ html[data-theme="light"] .siteHeader {
 
   .featuredCarouselCard {
     --carousel-card-width: min(62vw, 280px);
-  }
-
-  .featuredCarouselSizeTablet {
-    display: none;
-  }
-
-  .featuredCarouselSizeMobile {
-    display: inline;
-  }
-
-  .featuredCarouselMeta {
-    bottom: 16px;
-    left: 16px;
-    max-width: calc(100% - 32px);
-  }
-
-  .featuredCarouselMeta h3 {
-    font-size: clamp(17px, 4.8vw, 22px);
-  }
-
-  .featuredCarouselTopline {
-    top: 14px;
-    right: 14px;
-    left: 14px;
   }
 
   .featuredProjectFooter {
