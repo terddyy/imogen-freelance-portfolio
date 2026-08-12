@@ -71,11 +71,11 @@ export function ProofGallery() {
   return (
     <section className="proofSection" id="proof" aria-labelledby="proof-title">
       <div className="proofHeader shell">
-        <span className="sectionLabel">Trust</span>
-        <h2 id="proof-title">Proof you can rely on me.</h2>
+        <span className="sectionLabel">In practice</span>
+        <h2 id="proof-title">A few snapshots from recent work.</h2>
       </div>
 
-      <div className="proofGrid" role="list" aria-label="Proof of reliability">
+      <div className="proofGrid" role="list" aria-label="Work snapshots">
         {proofMoments.map((moment, index) => (
           <figure
             className={`proofCell proofCell--${moment.layout}`}
@@ -116,7 +116,7 @@ export function ProofGallery() {
           <div className="proofDialogPanel">
             <header className="proofDialogHeader">
               <div>
-                <p className="proofDialogEyebrow">Trust</p>
+                <p className="proofDialogEyebrow">In practice</p>
                 <h3 id="proof-dialog-title">{active.label}</h3>
               </div>
               <button

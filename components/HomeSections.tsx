@@ -77,7 +77,7 @@ export function HeroSection() {
             <em>Clear software.</em>
           </h1>
           <div className="heroMeta heroMetaInline">
-            <strong>Lead Full Stack Developer</strong>
+            <strong>Lead Full Stack Engineer</strong>
             <a href="https://nexvision.info/" target="_blank" rel="noreferrer">
               Nexvision Innovations
               <ArrowUpRight size={15} />

@@ -111,6 +111,7 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0);
   const isDraggingRef = useRef(false);
+  const pointerActiveRef = useRef(false);
   const didDragRef = useRef(false);
   const dragStartRef = useRef({ pointerX: 0, offset: 0 });
   const segmentRef = useRef<LoopSegment>({ start: 0, loopWidth: 0 });
@@ -209,24 +210,31 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
       return;
     }
 
-    isDraggingRef.current = true;
+    // ponytail: don't setPointerCapture until drag threshold — early capture steals click from card buttons.
+    pointerActiveRef.current = true;
+    isDraggingRef.current = false;
     didDragRef.current = false;
     dragStartRef.current = {
       pointerX: event.clientX,
       offset: offsetRef.current,
     };
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) {
+    if (!pointerActiveRef.current) {
       return;
     }
 
     const deltaX = event.clientX - dragStartRef.current.pointerX;
 
-    if (Math.abs(deltaX) > 4) {
+    if (!isDraggingRef.current) {
+      if (Math.abs(deltaX) <= 4) {
+        return;
+      }
+
+      isDraggingRef.current = true;
       didDragRef.current = true;
+      event.currentTarget.setPointerCapture(event.pointerId);
     }
 
     offsetRef.current = normalizeOffset(
@@ -237,10 +245,11 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
   };
 
   const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current) {
+    if (!pointerActiveRef.current) {
       return;
     }
 
+    pointerActiveRef.current = false;
     isDraggingRef.current = false;
 
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
