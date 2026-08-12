@@ -9,11 +9,13 @@ type ProjectCardProps = {
 };
 
 export function ProjectCard({ project, featured }: ProjectCardProps) {
+  const isExternal = project.href.startsWith("http");
+
   return (
     <article className={featured ? "projectCard projectCardFeatured" : "projectCard"}>
       <Image
         src={project.image}
-        alt={`${project.title} placeholder preview`}
+        alt={`${project.title} project preview`}
         fill
         sizes={featured ? "(max-width: 760px) 100vw, 50vw" : "(max-width: 760px) 100vw, 33vw"}
         className="projectImage"
@@ -32,12 +34,16 @@ export function ProjectCard({ project, featured }: ProjectCardProps) {
           <p>{project.summary}</p>
         </div>
         <div className="projectFooter">
-          <div className="avatarStack" aria-label="Placeholder collaborators">
+          <div className="avatarStack" aria-label="Project collaborators">
             {project.initials.map((initials) => (
               <span key={initials}>{initials}</span>
             ))}
           </div>
-          <Link href={project.href} aria-label={`View ${project.title}`}>
+          <Link
+            href={project.href}
+            aria-label={`View ${project.title}`}
+            {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}
+          >
             View <ArrowUpRight size={15} />
           </Link>
         </div>

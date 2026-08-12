@@ -1,0 +1,523 @@
+"use client";
+
+import { ArrowRight, Boxes, Check, ChevronLeft, CircleAlert, Ellipsis, Globe2, GraduationCap, LoaderCircle, MonitorSmartphone, PhoneCall, TrendingUp, X, type LucideProps } from "lucide-react";
+import { createContext, FormEvent, KeyboardEvent, ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { contactMethods } from "@/lib/portfolio-data";
+import { WhatsAppIcon } from "@/components/WhatsAppContact";
+
+type Inquiry = {
+  projectTypes: string[];
+  project: string;
+  website: string;
+  budget: string;
+  thesisBudget: string;
+  teamSize: string;
+  email: string;
+};
+
+type InquiryContextValue = {
+  openInquiry: () => void;
+};
+
+const InquiryContext = createContext<InquiryContextValue | null>(null);
+
+const emptyInquiry: Inquiry = { projectTypes: [], project: "", website: "", budget: "", thesisBudget: "", teamSize: "", email: "" };
+const standardBudgets = ["Under ₱100k", "₱100k–₱350k", "₱350k–₱650k", "₱650k–₱1.2M", "₱1.2M+"];
+const thesisBudgets = ["Under ₱50k", "₱50k–₱100k", "₱100k–₱300k", "₱300k+"];
+const teamSizes = ["Solo founder", "2–5 people", "6–15 people", "16–50 people", "50+ people"];
+function MobileAppIcon({ size = 24, ...props }: LucideProps) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <rect width="10" height="16" x="7" y="4" rx="2" ry="2" />
+    </svg>
+  );
+}
+
+const projectTypes = [
+  { label: "Website", icon: Globe2 },
+  { label: "Web app / SaaS", icon: MonitorSmartphone },
+  { label: "Mobile app", icon: MobileAppIcon },
+  { label: "Internal system", icon: Boxes },
+  { label: "Improve an existing product", icon: TrendingUp },
+  { label: "Thesis / capstone", icon: GraduationCap },
+  { label: "Something else", icon: Ellipsis },
+];
+const whatsappContact = contactMethods.find((method) => method.label === "WhatsApp");
+const phoneContact = contactMethods.find((method) => method.label === "Call");
+
+function isWebsite(value: string) {
+  if (!value.trim()) return true;
+
+  try {
+    const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
+    return (url.protocol === "http:" || url.protocol === "https:") && Boolean(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+function isEmail(value: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+export function ProjectInquiryProvider({ children }: { children: ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState(0);
+  const [inquiry, setInquiry] = useState<Inquiry>(emptyInquiry);
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [error, setError] = useState("");
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const router = useRouter();
+
+  const hasAnswers = inquiry.projectTypes.length > 0 || Object.entries(inquiry).some(([field, value]) => field !== "projectTypes" && Boolean(value));
+  const hasThesis = inquiry.projectTypes.includes("Thesis / capstone");
+  const hasOtherProject = inquiry.projectTypes.some((type) => type !== "Thesis / capstone");
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (open && !dialog.open) dialog.showModal();
+    if (!open && dialog.open) dialog.close();
+
+    // #region agent log
+    const header = document.querySelector(".siteHeader");
+    const closeBtn = dialog.querySelector(".inquiryClose");
+    const headerStyle = header ? getComputedStyle(header) : null;
+    const closeRect = closeBtn?.getBoundingClientRect();
+    const headerRect = header?.getBoundingClientRect();
+    const overlapsClose =
+      closeRect && headerRect
+        ? !(
+            closeRect.right < headerRect.left ||
+            closeRect.left > headerRect.right ||
+            closeRect.bottom < headerRect.top ||
+            closeRect.top > headerRect.bottom
+          )
+        : null;
+    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
+      body: JSON.stringify({
+        sessionId: "437646",
+        runId: "pre-fix",
+        hypothesisId: "A,C,E",
+        location: "ProjectInquiry.tsx:dialog-sync",
+        message: "dialog open state sync",
+        data: {
+          reactOpen: open,
+          dialogOpen: dialog.open,
+          hasOpenAttr: dialog.hasAttribute("open"),
+          viewportW: window.innerWidth,
+          headerVisibility: headerStyle?.visibility ?? null,
+          headerZIndex: headerStyle?.zIndex ?? null,
+          headerPointerEvents: headerStyle?.pointerEvents ?? null,
+          closeOverlapsHeader: overlapsClose,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const timer = window.setTimeout(() => {
+      dialogRef.current?.querySelector<HTMLElement>("[data-inquiry-autofocus]")?.focus();
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [open, step, status]);
+
+  const discardAndClose = useCallback(() => {
+    // #region agent log
+    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
+      body: JSON.stringify({
+        sessionId: "437646",
+        runId: "pre-fix",
+        hypothesisId: "C",
+        location: "ProjectInquiry.tsx:discardAndClose",
+        message: "discardAndClose called",
+        data: { dialogOpenBefore: dialogRef.current?.open ?? null },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+    setOpen(false);
+    setStep(0);
+    setInquiry(emptyInquiry);
+    setStatus("idle");
+    setError("");
+  }, []);
+
+  const requestClose = useCallback(() => {
+    // #region agent log
+    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
+      body: JSON.stringify({
+        sessionId: "437646",
+        runId: "pre-fix",
+        hypothesisId: "B,D",
+        location: "ProjectInquiry.tsx:requestClose-entry",
+        message: "requestClose invoked",
+        data: {
+          hasAnswers,
+          reactOpen: open,
+          dialogOpen: dialogRef.current?.open ?? null,
+          viewportW: window.innerWidth,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+    if (hasAnswers) {
+      const confirmed = window.confirm("Discard your project details?");
+      // #region agent log
+      fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
+        body: JSON.stringify({
+          sessionId: "437646",
+          runId: "pre-fix",
+          hypothesisId: "B",
+          location: "ProjectInquiry.tsx:requestClose-confirm",
+          message: "confirm dialog result",
+          data: { confirmed, hasAnswers },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
+      if (!confirmed) return;
+    }
+    discardAndClose();
+  }, [discardAndClose, hasAnswers, open]);
+
+  const openInquiry = useCallback(() => {
+    // #region agent log
+    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
+      body: JSON.stringify({
+        sessionId: "437646",
+        runId: "pre-fix",
+        hypothesisId: "E",
+        location: "ProjectInquiry.tsx:openInquiry",
+        message: "openInquiry called",
+        data: { viewportW: window.innerWidth },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+    setOpen(true);
+  }, []);
+
+  const validStep =
+    step === 0
+      ? inquiry.projectTypes.length > 0
+      : step === 1
+        ? isWebsite(inquiry.website)
+        : step === 2
+          ? (!hasOtherProject || Boolean(inquiry.budget)) && (!hasThesis || Boolean(inquiry.thesisBudget))
+          : step === 3
+            ? Boolean(inquiry.teamSize)
+            : isEmail(inquiry.email);
+
+  function update(field: keyof Inquiry, value: string) {
+    setInquiry((current) => ({ ...current, [field]: value }));
+    setError("");
+  }
+
+  function toggleProjectType(value: string) {
+    setInquiry((current) => ({
+      ...current,
+      projectTypes: current.projectTypes.includes(value)
+        ? current.projectTypes.filter((type) => type !== value)
+        : [...current.projectTypes, value],
+    }));
+    setError("");
+  }
+
+  async function submit() {
+    setStatus("loading");
+    setError("");
+
+    try {
+      const response = await fetch("/api/project-inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(inquiry),
+      });
+      const result = (await response.json()) as { error?: string; ok?: boolean };
+
+      if (!response.ok || !result.ok) throw new Error(result.error || "Unable to send your inquiry right now.");
+      setStatus("success");
+    } catch (reason) {
+      setStatus("error");
+      setError(reason instanceof Error ? reason.message : "Unable to send your inquiry right now.");
+    }
+  }
+
+  function continueOrSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!validStep || status === "loading") return;
+    if (step < 4) {
+      setStep((current) => current + 1);
+      return;
+    }
+    void submit();
+  }
+
+  function continueOnEnter(event: KeyboardEvent<HTMLFormElement>) {
+    if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
+    if (event.target instanceof HTMLButtonElement) return;
+    event.preventDefault();
+    if (!validStep || status === "loading") return;
+    if (step < 4) {
+      setStep((current) => current + 1);
+      return;
+    }
+    void submit();
+  }
+
+  return (
+    <InquiryContext.Provider value={{ openInquiry }}>
+      {children}
+      <dialog
+        ref={dialogRef}
+        className="inquiryDialog"
+        aria-labelledby="inquiry-title"
+        onCancel={(event) => {
+          event.preventDefault();
+          requestClose();
+        }}
+        onClick={(event) => {
+          if (event.target === dialogRef.current) requestClose();
+        }}
+      >
+        <div className="inquiryModal">
+          <aside className="inquiryDirectContact" aria-label="Direct contact">
+            <div>
+              <span>Prefer to talk directly?</span>
+              <strong>+63 960 250 6993</strong>
+              <small>Skip the questions and call or WhatsApp me.</small>
+            </div>
+            <div className="inquiryDirectLinks">
+              <a href={phoneContact?.href ?? "tel:+639602506993"} aria-label="Call Imogen">
+                <PhoneCall size={16} aria-hidden="true" />
+                Call
+              </a>
+              <a href={whatsappContact?.href ?? "https://wa.me/639602506993"} target="_blank" rel="noreferrer" aria-label="Message Imogen on WhatsApp">
+                <WhatsAppIcon size={16} />
+                WhatsApp
+              </a>
+            </div>
+          </aside>
+          {status === "success" ? (
+            <section className="inquirySuccess" aria-live="polite">
+              <span className="inquirySuccessIcon"><Check size={25} aria-hidden="true" /></span>
+              <p className="inquiryStep">Project inquiry sent</p>
+              <h2 id="inquiry-title" data-inquiry-autofocus tabIndex={-1}>Your project is on my radar.</h2>
+              <p>Thanks for sharing the details. Check your inbox for the meeting link, and let&apos;s discuss how we can bring this to life.</p>
+              <button
+                className="primaryButton inquirySubmit"
+                type="button"
+                onClick={() => {
+                  discardAndClose();
+                  router.push("/");
+                }}
+              >
+                Back to portfolio
+                <ArrowRight size={17} aria-hidden="true" />
+              </button>
+            </section>
+          ) : (
+            <form onSubmit={continueOrSubmit} onKeyDown={continueOnEnter} className="inquiryForm" noValidate>
+              <header className="inquiryHeader">
+                <div className="inquiryProgress" aria-label={`Step ${step + 1} of 5`}>
+                  <span>Step {step + 1} of 5</span>
+                  <div aria-hidden="true"><i style={{ width: `${((step + 1) / 5) * 100}%` }} /></div>
+                </div>
+                <button
+                  className="inquiryClose"
+                  type="button"
+                  onClick={(event) => {
+                    // #region agent log
+                    const target = event.currentTarget;
+                    const rect = target.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2;
+                    const cy = rect.top + rect.height / 2;
+                    const topEl = document.elementFromPoint(cx, cy);
+                    fetch("http://127.0.0.1:7411/ingest/d63c7caa-aafa-49e4-a5b8-059aebdef79a", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "437646" },
+                      body: JSON.stringify({
+                        sessionId: "437646",
+                        runId: "pre-fix",
+                        hypothesisId: "D",
+                        location: "ProjectInquiry.tsx:close-click",
+                        message: "close button clicked",
+                        data: {
+                          topElementTag: topEl?.tagName ?? null,
+                          topElementClass: topEl?.className ?? null,
+                          isCloseButton: topEl === target,
+                          viewportW: window.innerWidth,
+                        },
+                        timestamp: Date.now(),
+                      }),
+                    }).catch(() => {});
+                    // #endregion
+                    requestClose();
+                  }}
+                  aria-label="Close project inquiry"
+                >
+                  <X size={19} aria-hidden="true" />
+                </button>
+              </header>
+
+              <div className="inquiryQuestion" key={step}>
+                {step === 0 ? (
+                  <>
+                    <h2 id="inquiry-title">What are you building?</h2>
+                    <p>Choose one or more options that fit.</p>
+                    <ProjectTypeStep value={inquiry.projectTypes} onChange={toggleProjectType} />
+                    <details className="inquiryOptional">
+                      <summary>Add a note <span>(optional)</span></summary>
+                      <label className="inquiryField">
+                        <span className="srOnly">Project details</span>
+                        <textarea rows={3} value={inquiry.project} onChange={(event) => update("project", event.target.value)} placeholder="Anything else that would be helpful to know?" />
+                      </label>
+                    </details>
+                  </>
+                ) : null}
+
+                {step === 1 ? (
+                  <>
+                    <h2 id="inquiry-title">Do you already have a website?</h2>
+                    <p>Share the link if you have one. If not, you can skip this step.</p>
+                    <label className="inquiryField">
+                      <span className="srOnly">Existing website</span>
+                      <input data-inquiry-autofocus type="text" inputMode="url" autoComplete="url" value={inquiry.website} onChange={(event) => update("website", event.target.value)} placeholder="https://yourwebsite.com" aria-invalid={inquiry.website.length > 0 && !isWebsite(inquiry.website)} />
+                    </label>
+                    {inquiry.website && !isWebsite(inquiry.website) ? <p className="inquiryValidation">Enter a valid website address.</p> : null}
+                    <button className="inquirySkip" type="button" onClick={() => { update("website", ""); setStep(2); }}>Skip for now</button>
+                  </>
+                ) : null}
+
+                {step === 2 ? <BudgetStep hasOtherProject={hasOtherProject} hasThesis={hasThesis} budget={inquiry.budget} thesisBudget={inquiry.thesisBudget} onChange={update} /> : null}
+                {step === 3 ? <ChoiceStep dialogTitle title="How big is your team?" description="This helps me understand how the project will be managed and who I&apos;ll collaborate with." name="team" options={teamSizes} value={inquiry.teamSize} onChange={(value) => update("teamSize", value)} /> : null}
+
+                {step === 4 ? (
+                  <>
+                    <h2 id="inquiry-title">Where should I send the meeting link?</h2>
+                    <p>Enter your email and I&apos;ll send you the next steps for scheduling a quick call.</p>
+                    <label className="inquiryField">
+                      <span className="srOnly">Email address</span>
+                      <input data-inquiry-autofocus type="email" autoComplete="email" required value={inquiry.email} onChange={(event) => update("email", event.target.value)} placeholder="you@company.com" aria-invalid={inquiry.email.length > 0 && !isEmail(inquiry.email)} />
+                    </label>
+                    {inquiry.email && !isEmail(inquiry.email) ? <p className="inquiryValidation">Enter a valid email address.</p> : null}
+                  </>
+                ) : null}
+              </div>
+
+              {status === "error" ? <p className="inquiryError" role="alert"><CircleAlert size={17} aria-hidden="true" />{error}</p> : null}
+              <footer className="inquiryActions">
+                {step > 0 ? <button className="inquiryBack" type="button" onClick={() => setStep((current) => current - 1)}><ChevronLeft size={17} aria-hidden="true" />Back</button> : <span />}
+                <button className="primaryButton inquirySubmit" type="submit" disabled={!validStep || status === "loading"}>
+                  {status === "loading" ? <><LoaderCircle className="inquiryLoader" size={17} aria-hidden="true" />Sending…</> : step === 4 ? "Send me the meeting link" : <>Continue <ArrowRight size={17} aria-hidden="true" /></>}
+                </button>
+              </footer>
+            </form>
+          )}
+        </div>
+      </dialog>
+    </InquiryContext.Provider>
+  );
+}
+
+type ChoiceStepProps = {
+  dialogTitle?: boolean;
+  title: string;
+  description: string;
+  name: string;
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
+};
+
+function ChoiceStep({ dialogTitle, title, description, name, options, value, onChange }: ChoiceStepProps) {
+  return (
+    <fieldset className="inquiryChoices">
+      <legend id={dialogTitle ? "inquiry-title" : undefined}>{title}</legend>
+      {description ? <p>{description}</p> : null}
+      <div>
+        {options.map((option, index) => (
+          <label className="inquiryChoice" key={option}>
+            <input data-inquiry-autofocus={index === 0 ? true : undefined} type="radio" name={name} value={option} checked={value === option} onChange={() => onChange(option)} />
+            <span>{option}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+type BudgetStepProps = {
+  hasOtherProject: boolean;
+  hasThesis: boolean;
+  budget: string;
+  thesisBudget: string;
+  onChange: (field: keyof Inquiry, value: string) => void;
+};
+
+function BudgetStep({ hasOtherProject, hasThesis, budget, thesisBudget, onChange }: BudgetStepProps) {
+  return (
+    <section className="inquiryBudgetStep" aria-labelledby="inquiry-title">
+      <h2 id="inquiry-title">What budget range are you working with?</h2>
+      <p>A realistic range helps me recommend the right scope and approach. It won&apos;t lock you into anything.</p>
+      {hasOtherProject ? <ChoiceStep title="Project work" description="" name="budget" options={standardBudgets} value={budget} onChange={(value) => onChange("budget", value)} /> : null}
+      {hasThesis ? <ChoiceStep title="Thesis / capstone" description="" name="thesisBudget" options={thesisBudgets} value={thesisBudget} onChange={(value) => onChange("thesisBudget", value)} /> : null}
+    </section>
+  );
+}
+
+type ProjectTypeStepProps = {
+  value: string[];
+  onChange: (value: string) => void;
+};
+
+function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
+  return (
+    <fieldset className="inquiryChoices inquiryProjectChoices">
+      <legend className="srOnly">Project type</legend>
+      <div>
+        {projectTypes.map(({ label, icon: Icon }, index) => (
+          <label className="inquiryChoice" key={label}>
+            <input data-inquiry-autofocus={index === 0 ? true : undefined} type="checkbox" name="projectTypes" value={label} checked={value.includes(label)} onChange={() => onChange(label)} />
+            <span><span className="inquiryProjectChoiceIcon"><Icon size={24} aria-hidden="true" /></span><strong>{label}</strong></span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
+export function ProjectInquiryTrigger({ children, className }: { children: ReactNode; className?: string }) {
+  const context = useContext(InquiryContext);
+  if (!context) throw new Error("ProjectInquiryTrigger must be used within ProjectInquiryProvider.");
+
+  return <button type="button" className={className} onClick={context.openInquiry}>{children}</button>;
+}

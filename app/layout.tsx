@@ -3,8 +3,9 @@ import { Geist_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AssistantWidget } from "@/components/AssistantWidget";
+import { WhatsAppContact } from "@/components/WhatsAppContact";
 import { MobileNav } from "@/components/MobileNav";
+import { ProjectInquiryProvider } from "@/components/ProjectInquiry";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -30,11 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} data-theme="dark">
       <body>
-        <Header />
-        {children}
-        <Footer />
-        <AssistantWidget />
-        <MobileNav />
+        <ProjectInquiryProvider>
+          <Header />
+          {children}
+          <Footer />
+          <WhatsAppContact />
+          <MobileNav />
+        </ProjectInquiryProvider>
       </body>
     </html>
   );

@@ -190,6 +190,9 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
                     tabIndex={index >= projects.length ? -1 : 0}
                     aria-label={`View ${project.title}`}
                     draggable={false}
+                    {...(project.href.startsWith("http")
+                      ? { target: "_blank", rel: "noreferrer" }
+                      : {})}
                   >
                     <Image
                       src={project.image}

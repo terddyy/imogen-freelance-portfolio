@@ -2,7 +2,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
   Blocks,
-  Bot,
   CalendarCheck,
   Code2,
   FilePenLine,
@@ -11,7 +10,9 @@ import {
   Laptop,
   LayoutDashboard,
   Mail,
+  MessageCircle,
   Palette,
+  Phone,
   Rocket,
   SearchCheck,
   Settings2,
@@ -80,64 +81,74 @@ export const socials = [
 
 export const projects: Project[] = [
   {
-    title: "Local Service Website",
+    title: "SK Logistics",
     summary:
-      "A clean service-site concept with clear offers, appointment prompts, and mobile-first contact paths.",
-    category: "Websites",
-    tags: ["Next.js", "Responsive UI", "Contact CTA"],
-    image: "/placeholders/project-service.svg",
-    initials: ["II", "CL"],
-    href: "/projects",
-  },
-  {
-    title: "Personal Brand Portfolio",
-    summary:
-      "A polished personal site system for showcasing credibility, services, case studies, and inquiry flow.",
-    category: "Websites",
-    tags: ["Brand System", "Portfolio", "SEO"],
-    image: "/placeholders/project-portfolio.svg",
-    initials: ["II"],
-    href: "/projects",
-  },
-  {
-    title: "Online Booking Landing Page",
-    summary:
-      "A focused campaign page with concise copy, trust cues, calendar intent, and conversion-friendly sections.",
-    category: "Landing Pages",
-    tags: ["Landing Page", "Booking", "Forms"],
-    image: "/placeholders/project-booking.svg",
-    initials: ["II", "BK"],
-    href: "/projects",
-  },
-  {
-    title: "Product Catalog Mockup",
-    summary:
-      "A starter commerce catalog with featured items, simple filtering, and product cards that feel easy to scan.",
-    category: "Commerce",
-    tags: ["Catalog", "E-commerce", "Cards"],
-    image: "/placeholders/project-catalog.svg",
-    initials: ["II", "PM"],
-    href: "/projects",
-  },
-  {
-    title: "Event Promo Page",
-    summary:
-      "A promotional event page with schedule blocks, speaker highlights, and fast paths to registration.",
-    category: "Landing Pages",
-    tags: ["Events", "Campaign", "CTA"],
-    image: "/placeholders/project-event.svg",
-    initials: ["II", "EV"],
-    href: "/projects",
-  },
-  {
-    title: "Client Dashboard Concept",
-    summary:
-      "A compact dashboard concept for tracking requests, client updates, status, and project next steps.",
+      "Enterprise fleet command center for live GPS tracking, trip control, compliance, and financial performance.",
     category: "Dashboards",
-    tags: ["Dashboard", "UI System", "Status"],
-    image: "/placeholders/project-dashboard.svg",
-    initials: ["II", "UX"],
-    href: "/projects",
+    tags: ["Fleet Ops", "Live Tracking", "Analytics"],
+    image: "/projects/sk-logistics.png",
+    initials: ["SK", "II"],
+    href: "https://sk-logistics.nexvision.info",
+  },
+  {
+    title: "Ayyan Tech",
+    summary:
+      "Product showcase for Hi-Res Hybrid-ANC headphones with feature storytelling and quote-ready CTAs.",
+    category: "Commerce",
+    tags: ["Product Page", "Brand", "Campaign"],
+    image: "/projects/ayyan-tech.png",
+    initials: ["AY", "II"],
+    href: "https://ayyantech.net",
+  },
+  {
+    title: "Zentari Software",
+    summary:
+      "Agency site for custom software, web and mobile apps, and AI solutions built to scale with growing teams.",
+    category: "Websites",
+    tags: ["Agency", "SaaS", "Brand System"],
+    image: "/projects/zentari.png",
+    initials: ["ZS", "II"],
+    href: "https://zentariph.com",
+  },
+  {
+    title: "BalanceFlow",
+    summary:
+      "Receivables SaaS landing experience focused on balances, payment approvals, and organized collections.",
+    category: "Landing Pages",
+    tags: ["Fintech", "SaaS", "Conversion"],
+    image: "/projects/balanceflow.png",
+    initials: ["BF", "II"],
+    href: "https://balanceflow.zentariph.com",
+  },
+  {
+    title: "TerdAI",
+    summary:
+      "Friendly AI companion workspace for smart chats, creative ideas, and built-in image tools.",
+    category: "Websites",
+    tags: ["AI Product", "Chat UI", "Image Tools"],
+    image: "/projects/terdai.png",
+    initials: ["TA", "II"],
+    href: "https://terdai.app",
+  },
+  {
+    title: "WaterLinks",
+    summary:
+      "Asia-Pacific water and sanitation platform highlighting partnerships, utility training, and shared knowledge.",
+    category: "Websites",
+    tags: ["Nonprofit", "Partnerships", "WASH"],
+    image: "/projects/waterlinks.png",
+    initials: ["WL", "II"],
+    href: "https://waterlinks.org",
+  },
+  {
+    title: "NEXCRM",
+    summary:
+      "Multi-agent sales CRM that finds revenue leaks, guides teams, and executes approved pipeline actions.",
+    category: "Dashboards",
+    tags: ["CRM", "AI Agents", "Sales"],
+    image: "/projects/nexcrm.png",
+    initials: ["NX", "II"],
+    href: "https://nexcrm.terd.dev",
   },
 ];
 
@@ -310,12 +321,6 @@ export const testimonials: Testimonial[] = [
   },
 ];
 
-export const assistantPrompts = [
-  "What kind of websites does Imogen build?",
-  "Can I request a landing page?",
-  "How do project inquiries work?",
-];
-
 export const statCards = [
   { label: "Focus", value: "Solo freelance builds", icon: Sparkles },
   { label: "Deliverables", value: "Websites, landing pages, forms", icon: Blocks },
@@ -323,6 +328,18 @@ export const statCards = [
 ];
 
 export const contactMethods = [
+  {
+    label: "WhatsApp",
+    value: "+63 960 250 6993",
+    href: "https://wa.me/639602506993",
+    icon: MessageCircle,
+  },
+  {
+    label: "Call",
+    value: "+63 960 250 6993",
+    href: "tel:+639602506993",
+    icon: Phone,
+  },
   {
     label: "Email",
     value: "hello@imogeninocentes.dev",
@@ -368,5 +385,4 @@ export const toolCards = [
   { title: "Selected Code", description: "Placeholder area for public GitHub projects.", icon: Code2 },
   { title: "UI Systems", description: "Reusable components for consistent pages and cards.", icon: LayoutDashboard },
   { title: "Performance Care", description: "Lightweight, responsive pages with practical image handling.", icon: Gauge },
-  { title: "Portfolio Assistant", description: "A visual-only shell ready for future content grounding.", icon: Bot },
 ];

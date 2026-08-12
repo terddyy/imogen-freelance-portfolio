@@ -22,6 +22,7 @@ import {
 } from "@/lib/portfolio-data";
 import { FeaturedProjectCarousel } from "@/components/FeaturedProjectCarousel";
 import { TestimonialList } from "@/components/TestimonialList";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiry";
 
 export function HeroSection() {
   return (
@@ -90,10 +91,10 @@ export function HeroSection() {
             workflow automation.
           </p>
           <div className="buttonRow">
-            <Link className="primaryButton heroPrimary" href="/contact">
+            <ProjectInquiryTrigger className="primaryButton heroPrimary">
               Tell me what you&apos;re building
               <ArrowUpRight size={17} aria-hidden="true" />
-            </Link>
+            </ProjectInquiryTrigger>
             <Link className="secondaryButton heroSecondary" href="/projects">
               Explore the work
               <ArrowRight size={17} aria-hidden="true" />
@@ -326,10 +327,10 @@ export function FinalCta() {
         <h2>Have a project in mind?</h2>
         <p>Tell Imogen what you need and she&apos;ll reply with a clear next step for scope, timeline, and fit.</p>
       </div>
-      <Link className="primaryButton" href="/contact">
+      <ProjectInquiryTrigger className="primaryButton">
         Send Inquiry
         <ArrowRight size={17} />
-      </Link>
+      </ProjectInquiryTrigger>
     </section>
   );
 }

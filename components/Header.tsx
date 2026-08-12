@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiry";
 
 const headerNav = [
   { label: "Home", href: "/" },
@@ -36,10 +37,10 @@ export function Header() {
       </nav>
 
       <div className="headerActions">
-        <Link className="primaryButton headerCta" href="/contact">
+        <ProjectInquiryTrigger className="primaryButton headerCta">
           Start a project
           <ArrowUpRight size={16} aria-hidden="true" />
-        </Link>
+        </ProjectInquiryTrigger>
       </div>
     </header>
   );
