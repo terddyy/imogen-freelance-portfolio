@@ -28,14 +28,16 @@ export function HeroSection() {
   return (
     <section className="heroSection" id="hero" aria-label="Imogen Inocentes hero">
       <HeroAnimationController />
-      <Image
-        className="heroBackground"
-        src={heroBackground}
-        alt="Imogen Inocentes in a dark studio portrait"
-        fill
-        priority
-        sizes="(max-width: 768px) 100vw, 1440px"
-      />
+      <div className="heroBackgroundFrame" aria-hidden="true">
+        <Image
+          className="heroBackground"
+          src={heroBackground}
+          alt="Imogen Inocentes in a dark studio portrait"
+          fill
+          priority
+          sizes="(max-width: 768px) 100vw, 100vw"
+        />
+      </div>
       <div className="heroShade" />
 
       <div className="heroBrandCloud" aria-hidden="true">
@@ -77,7 +79,7 @@ export function HeroSection() {
             <em>Clear software.</em>
           </h1>
           <div className="heroMeta heroMetaInline">
-            <strong>Lead Full Stack Engineer</strong>
+            <strong className="heroRoleLine">Lead Full Stack Engineer</strong>
             <a href="https://nexvision.info/" target="_blank" rel="noreferrer">
               Nexvision Innovations
               <ArrowUpRight size={15} />
@@ -93,7 +95,7 @@ export function HeroSection() {
           </p>
           <div className="buttonRow">
             <ProjectInquiryTrigger className="primaryButton heroPrimary">
-              Tell me what you&apos;re building
+              Inquire a project
               <ArrowUpRight size={17} aria-hidden="true" />
             </ProjectInquiryTrigger>
             <Link className="secondaryButton heroSecondary" href="/projects">
@@ -102,13 +104,13 @@ export function HeroSection() {
             </Link>
           </div>
           <div className="socialRow heroSocials" aria-label="Social links">
-            <a href="https://www.linkedin.com/" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/terd/" aria-label="LinkedIn">
               <span className="socialGlyph">in</span>
             </a>
-            <a href="https://github.com/" aria-label="GitHub">
+            <a href="https://github.com/terddyy" aria-label="GitHub">
               <span className="socialGlyph">gh</span>
             </a>
-            <a href="mailto:hello@imogeninocentes.dev" aria-label="Email Imogen">
+            <a href="mailto:terd@zentariph.com" aria-label="Email Imogen">
               <Mail size={18} />
             </a>
           </div>

@@ -66,9 +66,9 @@ export const navItems = [
 ];
 
 export const socials = [
-  { label: "GitHub", href: "https://github.com/" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/" },
-  { label: "Email", href: "mailto:hello@imogeninocentes.dev" },
+  { label: "GitHub", href: "https://github.com/terddyy" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/terd/" },
+  { label: "Email", href: "mailto:terd@zentariph.com" },
 ];
 
 export const projects: Project[] = [
@@ -377,8 +377,8 @@ export const contactMethods: Array<{
   },
   {
     label: "Email",
-    value: "hello@imogeninocentes.dev",
-    href: "mailto:hello@imogeninocentes.dev",
+    value: "terd@zentariph.com",
+    href: "mailto:terd@zentariph.com",
     iconKey: "mail",
   },
   {
