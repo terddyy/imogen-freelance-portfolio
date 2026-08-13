@@ -10,8 +10,6 @@ const required = [
   { name: "NEXT_PUBLIC_TURNSTILE_SITE_KEY", hint: "Cloudflare Turnstile site key" },
   { name: "RESEND_API_KEY", hint: "Resend API key for inquiry email" },
   { name: "RESEND_FROM_EMAIL", hint: "Verified Resend sender" },
-  { name: "IPROG_SMS_API_TOKEN", hint: "IPROG SMS API token" },
-  { name: "IPROG_SMS_RECIPIENT", hint: "Operator phone for SMS alerts" },
 ];
 
 const missing = required.filter(({ name }) => !process.env[name]?.trim());

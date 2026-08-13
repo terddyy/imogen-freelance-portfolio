@@ -44,10 +44,6 @@ export default function PrivacyPage() {
               (`terd@zentariph.com`). If you provide an email, it may be set as the reply address.
             </li>
             <li>
-              <strong>IPROG SMS</strong> — sends a short alert to the operator&apos;s phone. The SMS does
-              not include your free-text project notes.
-            </li>
-            <li>
               <strong>Upstash Redis</strong> — stores rate-limit counters keyed by a hashed IP
               fingerprint, not your form answers.
             </li>
@@ -63,8 +59,8 @@ export default function PrivacyPage() {
 
           <h2>Retention</h2>
           <p>
-            This site does not keep an inquiry database. Details live in the operator&apos;s email inbox,
-            Resend delivery history, and IPROG SMS history until deleted there on request.
+            This site does not keep an inquiry database. Details live in the operator&apos;s email inbox
+            and Resend delivery history until deleted there on request.
           </p>
 
           <h2>Cookies and local storage</h2>
@@ -101,7 +97,7 @@ export default function PrivacyPage() {
 
           <h2>Deletion requests</h2>
           <p>
-            To ask for your inquiry details to be deleted from email/SMS records, email{" "}
+            To ask for your inquiry details to be deleted from email records, email{" "}
             <a href="mailto:terd@zentariph.com">terd@zentariph.com</a> from the address you used, or
             include the phone number you submitted.
           </p>

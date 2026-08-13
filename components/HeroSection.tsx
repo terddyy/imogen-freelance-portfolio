@@ -87,10 +87,10 @@ export function HeroSection() {
             </Link>
           </div>
           <div className={`socialRow ${styles.socials}`} aria-label="Social links">
-            <a href="https://www.linkedin.com/in/terd/" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/terd/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
               <span className="socialGlyph">in</span>
             </a>
-            <a href="https://github.com/terddyy" aria-label="GitHub">
+            <a href="https://github.com/terddyy" target="_blank" rel="noreferrer" aria-label="GitHub">
               <span className="socialGlyph">gh</span>
             </a>
             <a href="mailto:terd@zentariph.com" aria-label="Email Imogen">

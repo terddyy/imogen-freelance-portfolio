@@ -63,6 +63,7 @@ export type Testimonial = {
   name: string;
   role: string;
   quote: string;
+  theme: "gold" | "sage" | "navy";
 };
 
 export const navItems = [
@@ -345,21 +346,24 @@ export const testimonials: Testimonial[] = [
     name: "Client Note",
     role: "Placeholder feedback",
     quote:
-      "This space is reserved for a real client note once Imogen has approved feedback to publish. The design keeps the layout ready without inventing testimonials.",
+      "This space is reserved for a real client note once approved feedback is ready to publish.",
+    theme: "gold",
   },
   {
     initials: "PR",
     name: "Project Review",
     role: "Placeholder feedback",
     quote:
-      "Use this card for a short review about communication, design clarity, delivery, or launch support. Replace it only with permission from the client.",
+      "Use this card for a short review about communication, design clarity, or launch support.",
+    theme: "sage",
   },
   {
     initials: "FS",
     name: "Future Story",
     role: "Placeholder feedback",
     quote:
-      "A third placeholder keeps the carousel balanced while the portfolio is being prepared. It should be swapped for a real result or removed before public launch.",
+      "A third placeholder keeps the stack balanced while the portfolio is being prepared.",
+    theme: "navy",
   },
 ];
 

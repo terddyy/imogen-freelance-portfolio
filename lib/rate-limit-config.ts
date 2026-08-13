@@ -7,5 +7,5 @@ export const API_FLOOD_MAX = 30;
 /** Per-visitor inquiry submissions. */
 export const INQUIRY_RATE_LIMIT_MAX = 5;
 
-/** Site-wide inquiry cap to limit SMS/email cost abuse. */
+/** Site-wide inquiry cap to limit email abuse. */
 export const GLOBAL_INQUIRY_RATE_LIMIT_MAX = 25;

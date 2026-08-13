@@ -129,22 +129,12 @@ function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character] ?? character);
 }
 
-function formatPhilippineMobileNumber(value: string) {
-  const digits = value.replace(/\D/g, "");
-  if (digits.startsWith("63") && digits.length === 12) return digits;
-  if (digits.startsWith("0") && digits.length === 11) return `63${digits.slice(1)}`;
-  if (digits.length === 10 && digits.startsWith("9")) return `63${digits}`;
-  return "";
-}
-
 function getDeliveryConfig() {
   const resendApiKey = process.env.RESEND_API_KEY?.trim();
   const resendFromEmail = process.env.RESEND_FROM_EMAIL?.trim();
-  const iprogSmsApiToken = process.env.IPROG_SMS_API_TOKEN?.trim();
-  const iprogSmsRecipient = formatPhilippineMobileNumber(process.env.IPROG_SMS_RECIPIENT?.trim() ?? "");
 
-  if (!resendApiKey || !resendFromEmail || !iprogSmsApiToken || !iprogSmsRecipient) return null;
-  return { resendApiKey, resendFromEmail, iprogSmsApiToken, iprogSmsRecipient };
+  if (!resendApiKey || !resendFromEmail) return null;
+  return { resendApiKey, resendFromEmail };
 }
 
 function buildNotificationContent(body: {
@@ -175,38 +165,8 @@ function buildNotificationContent(body: {
   return { text, html: `<h1>New project inquiry</h1><table cellpadding="8" cellspacing="0">${html}</table>` };
 }
 
-function buildSmsContent(body: {
-  projectTypes: string[];
-  teamSize: string;
-  budget: string;
-  thesisBudget: string;
-}) {
-  const projectLabel = body.projectTypes.slice(0, 2).join(", ");
-  const budgetLabel = (body.budget || body.thesisBudget).replace(/₱/g, "PHP ");
-  return `Portfolio inquiry: ${projectLabel}. ${body.teamSize}. ${budgetLabel}. See email for details.`.slice(0, 160);
-}
-
-async function sendIprogSms(config: NonNullable<ReturnType<typeof getDeliveryConfig>>, message: string) {
-  const response = await fetch("https://www.iprogsms.com/api/v1/sms_messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    redirect: "error",
-    signal: AbortSignal.timeout(8000),
-    body: JSON.stringify({
-      api_token: config.iprogSmsApiToken,
-      phone_number: config.iprogSmsRecipient,
-      message,
-    }),
-  });
-  if (!response.ok) return false;
-
-  const result = (await response.json()) as { status?: number; message_id?: string };
-  return result.status === 200 && Boolean(result.message_id);
-}
-
-async function sendNotifications(
+async function sendInquiryEmail(
   content: ReturnType<typeof buildNotificationContent>,
-  smsBody: { projectTypes: string[]; teamSize: string; budget: string; thesisBudget: string },
   contact: { phone: string; email: string },
   config: NonNullable<ReturnType<typeof getDeliveryConfig>>,
 ) {
@@ -221,22 +181,19 @@ async function sendNotifications(
   };
   if (contact.email) emailPayload.reply_to = contact.email;
 
-  const [emailResponse, smsAccepted] = await Promise.all([
-    fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.resendApiKey}`,
-        "Content-Type": "application/json",
-        "Idempotency-Key": idempotencyKey,
-      },
-      redirect: "error",
-      signal: AbortSignal.timeout(8000),
-      body: JSON.stringify(emailPayload),
-    }),
-    sendIprogSms(config, buildSmsContent(smsBody)),
-  ]);
+  const emailResponse = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${config.resendApiKey}`,
+      "Content-Type": "application/json",
+      "Idempotency-Key": idempotencyKey,
+    },
+    redirect: "error",
+    signal: AbortSignal.timeout(8000),
+    body: JSON.stringify(emailPayload),
+  });
 
-  if (!emailResponse.ok || !smsAccepted) throw new Error("Notification delivery failed.");
+  if (!emailResponse.ok) throw new Error("Notification delivery failed.");
 }
 
 function tooManyRequestsHeaders(decision: RateLimitDecision, max: number) {
@@ -368,12 +325,7 @@ export async function POST(request: Request) {
       phone: normalizedPhone,
       email,
     });
-    await sendNotifications(
-      content,
-      { projectTypes: selectedProjectTypes, teamSize, budget, thesisBudget },
-      { phone: normalizedPhone, email },
-      deliveryConfig,
-    );
+    await sendInquiryEmail(content, { phone: normalizedPhone, email }, deliveryConfig);
     return json({ ok: true }, 200, inquiryHeaders);
   } catch {
     return json({ error: "Unable to send your inquiry right now. Please try again shortly." }, 502, inquiryHeaders);

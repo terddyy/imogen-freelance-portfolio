@@ -12,11 +12,11 @@ import {
   processSteps,
   projects,
   services,
-  testimonials,
   toolCards,
 } from "@/lib/portfolio-data";
 import { getPortfolioIcon } from "@/lib/portfolio-icons";
 import { FeaturedProjectCarousel } from "@/components/FeaturedProjectCarousel";
+import { HomeTestimonialsStack } from "@/components/HomeTestimonialsStack";
 export { HeroSection } from "@/components/HeroSection";
 import { TestimonialList } from "@/components/TestimonialList";
 
@@ -25,31 +25,7 @@ export function FeaturedProjects() {
 }
 
 export function HomeTestimonials() {
-  return (
-    <section className="shell pageSection" id="notes">
-      <SectionHeading
-        label="Client Notes"
-        title="Feedback space that does not invent client claims."
-        body="The section keeps the reference site's social-proof structure, but the copy stays explicitly placeholder-safe until real testimonials are approved."
-        href="/testimonials"
-        cta="See all"
-      />
-      <div className="testimonialPreview">
-        {testimonials.map((testimonial) => (
-          <article className="testimonialCard" key={testimonial.initials}>
-            <div className="testimonialHeader">
-              <span className="testimonialAvatar">{testimonial.initials}</span>
-              <div>
-                <h3>{testimonial.name}</h3>
-                <p>{testimonial.role}</p>
-              </div>
-            </div>
-            <p>{testimonial.quote}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
+  return <HomeTestimonialsStack />;
 }
 
 export function AboutSection() {

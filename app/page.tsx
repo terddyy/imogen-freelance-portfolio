@@ -2,12 +2,12 @@ import dynamic from "next/dynamic";
 import {
   FinalCta,
   HeroSection,
-  HomeTestimonials,
   ProcessSection,
   ServicesSection,
 } from "@/components/HomeSections";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import featuredStyles from "@/components/FeaturedProjectCarousel.module.css";
+import stackStyles from "@/components/HomeTestimonialsStack.module.css";
 import { projects } from "@/lib/portfolio-data";
 
 const FeaturedProjectCarousel = dynamic(
@@ -16,6 +16,14 @@ const FeaturedProjectCarousel = dynamic(
       default: module.FeaturedProjectCarousel,
     })),
   { loading: () => <div className={featuredStyles.bandPlaceholder} aria-hidden /> },
+);
+
+const HomeTestimonials = dynamic(
+  () =>
+    import("@/components/HomeTestimonialsStack").then((module) => ({
+      default: module.HomeTestimonialsStack,
+    })),
+  { loading: () => <div className={stackStyles.bandPlaceholder} aria-hidden /> },
 );
 
 const InquirySection = dynamic(
