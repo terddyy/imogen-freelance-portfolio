@@ -1,4 +1,7 @@
 import { createHash } from "node:crypto";
+import { hasAllowedRequestSource } from "@/lib/api-security";
+import { getClientAddress, getClientFingerprint } from "@/lib/client-ip";
+import { consumeRateLimit, rateLimitHeaders, type RateLimitDecision } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -6,18 +9,22 @@ const budgets = new Set(["Under ₱100k", "₱100k–₱350k", "₱350k–₱650
 const thesisBudgets = new Set(["Under ₱50k", "₱50k–₱100k", "₱100k–₱300k", "₱300k+"]);
 const teamSizes = new Set(["Solo founder", "2–5 people", "6–15 people", "16–50 people", "50+ people"]);
 const timelines = new Set(["ASAP", "1–2 months", "3–6 months", "6+ months", "Flexible"]);
-const projectTypes = new Set(["Website", "Web app / SaaS", "Mobile app", "Internal system", "Improve an existing product", "Thesis / capstone", "Something else", "Branding"]);
+const projectTypes = new Set([
+  "Website",
+  "Web app / SaaS",
+  "Mobile app",
+  "Internal system",
+  "Improve an existing product",
+  "Thesis / capstone",
+  "Something else",
+  "Branding",
+]);
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_BODY_BYTES = 16 * 1024;
-const RATE_LIMIT_MAX = 5;
-const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const memoryRateLimits = new Map<string, { count: number; resetAt: number }>();
-
-type RateLimitDecision = {
-  allowed: boolean;
-  remaining: number;
-  resetAt: number;
-};
+import {
+  GLOBAL_INQUIRY_RATE_LIMIT_MAX,
+  INQUIRY_RATE_LIMIT_MAX,
+} from "@/lib/rate-limit-config";
 
 class RequestBodyTooLargeError extends Error {}
 
@@ -33,7 +40,9 @@ function normalizeWebsite(value: string) {
   if (!value) return "";
   if (value.length > 2048) throw new Error("Enter a valid website address.");
   const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
-  if (!url.hostname || url.username || url.password || !["http:", "https:"].includes(url.protocol)) throw new Error("Enter a valid website address.");
+  if (!url.hostname || url.username || url.password || !["http:", "https:"].includes(url.protocol)) {
+    throw new Error("Enter a valid website address.");
+  }
   return url.toString();
 }
 
@@ -56,77 +65,11 @@ function json(body: unknown, status = 200, headers: HeadersInit = {}) {
   });
 }
 
-function getClientAddress(request: Request) {
-  const forwarded = request.headers.get("x-forwarded-for");
-  const addresses = forwarded?.split(",").map((value) => value.trim()).filter(Boolean);
-  return addresses?.at(-1) || request.headers.get("x-real-ip")?.trim() || "unknown";
-}
-
-function getClientFingerprint(request: Request) {
-  return createHash("sha256").update(getClientAddress(request)).digest("hex").slice(0, 32);
-}
-
-function createRateLimitDecision(count: number, now: number): RateLimitDecision {
-  const resetAt = (Math.floor(now / RATE_LIMIT_WINDOW_MS) + 1) * RATE_LIMIT_WINDOW_MS;
-  return {
-    allowed: count <= RATE_LIMIT_MAX,
-    remaining: Math.max(0, RATE_LIMIT_MAX - count),
-    resetAt,
-  };
-}
-
-function consumeMemoryRateLimit(key: string, now: number) {
-  if (memoryRateLimits.size > 10_000) {
-    for (const [storedKey, value] of memoryRateLimits) {
-      if (value.resetAt <= now) memoryRateLimits.delete(storedKey);
-    }
-  }
-
-  const current = memoryRateLimits.get(key);
-  const count = !current || current.resetAt <= now ? 1 : current.count + 1;
-  const resetAt = (Math.floor(now / RATE_LIMIT_WINDOW_MS) + 1) * RATE_LIMIT_WINDOW_MS;
-  memoryRateLimits.set(key, { count, resetAt });
-  return createRateLimitDecision(count, now);
-}
-
-async function consumeRateLimit(key: string): Promise<RateLimitDecision> {
-  const redisUrl = process.env.UPSTASH_REDIS_REST_URL?.trim().replace(/\/+$/, "");
-  const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
-  const now = Date.now();
-
-  if (Boolean(redisUrl) !== Boolean(redisToken)) throw new Error("Rate limiter configuration is incomplete.");
-
-  if (redisUrl && redisToken) {
-    const windowSeconds = Math.ceil(RATE_LIMIT_WINDOW_MS / 1000);
-    const bucket = Math.floor(now / RATE_LIMIT_WINDOW_MS);
-    const redisKey = `project-inquiry:rate:${bucket}:${key}`;
-    const script = "local count = redis.call('INCR', KEYS[1]); if count == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end; return count";
-    const response = await fetch(redisUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${redisToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(["EVAL", script, "1", redisKey, String(windowSeconds)]),
-      cache: "no-store",
-      signal: AbortSignal.timeout(1500),
-    });
-
-    if (!response.ok) throw new Error("Rate limiter request failed.");
-    const result = (await response.json()) as { result?: unknown };
-    const count = typeof result.result === "number" ? result.result : Number(result.result);
-    if (!Number.isInteger(count) || count < 1) throw new Error("Rate limiter returned an invalid result.");
-    return createRateLimitDecision(count, now);
-  }
-
-  if (process.env.NODE_ENV === "production") throw new Error("A distributed rate limiter is required in production.");
-  // ponytail: memory fallback is for local development only; production fails closed without Redis.
-  return consumeMemoryRateLimit(key, now);
-}
-
 async function readBody(request: Request) {
   const contentLength = request.headers.get("content-length");
-  if (contentLength && (!/^\d+$/.test(contentLength) || Number(contentLength) > MAX_BODY_BYTES)) throw new RequestBodyTooLargeError();
+  if (contentLength && (!/^\d+$/.test(contentLength) || Number(contentLength) > MAX_BODY_BYTES)) {
+    throw new RequestBodyTooLargeError();
+  }
 
   if (!request.body) return "";
   const reader = request.body.getReader();
@@ -157,29 +100,10 @@ async function readBody(request: Request) {
   return new TextDecoder("utf-8", { fatal: true }).decode(body);
 }
 
-function hasAllowedOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (!origin) return true;
-
-  try {
-    const expectedOrigin = process.env.PUBLIC_SITE_ORIGIN?.trim() || new URL(request.url).origin;
-    return new URL(origin).origin === new URL(expectedOrigin).origin;
-  } catch {
-    return false;
-  }
-}
-
-function hasAllowedRequestSource(request: Request) {
-  const secFetchSite = request.headers.get("sec-fetch-site")?.trim().toLowerCase();
-  if (secFetchSite === "cross-site") return false;
-  return hasAllowedOrigin(request);
-}
-
 async function verifyTurnstileToken(token: string, remoteIp: string) {
   const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
   if (!secret) {
     if (process.env.NODE_ENV === "production") throw new Error("Turnstile is required in production.");
-    // ponytail: local/dev may omit Turnstile; production fails closed without the secret.
     return true;
   }
 
@@ -245,7 +169,9 @@ function buildNotificationContent(body: {
     ["Email", body.email || "Not provided"],
   ] as const;
   const text = rows.map(([label, value]) => `${label}: ${value}`).join("\n");
-  const html = rows.map(([label, value]) => `<tr><th align="left" valign="top">${escapeHtml(label)}</th><td>${escapeHtml(value).replace(/\n/g, "<br />")}</td></tr>`).join("");
+  const html = rows
+    .map(([label, value]) => `<tr><th align="left" valign="top">${escapeHtml(label)}</th><td>${escapeHtml(value).replace(/\n/g, "<br />")}</td></tr>`)
+    .join("");
   return { text, html: `<h1>New project inquiry</h1><table cellpadding="8" cellspacing="0">${html}</table>` };
 }
 
@@ -313,59 +239,79 @@ async function sendNotifications(
   if (!emailResponse.ok || !smsAccepted) throw new Error("Notification delivery failed.");
 }
 
-function rateLimitHeaders(decision: RateLimitDecision) {
+function tooManyRequestsHeaders(decision: RateLimitDecision, max: number) {
   return {
-    "X-RateLimit-Limit": String(RATE_LIMIT_MAX),
-    "X-RateLimit-Remaining": String(decision.remaining),
-    "X-RateLimit-Reset": String(Math.ceil(decision.resetAt / 1000)),
+    ...rateLimitHeaders(decision, max),
+    "Retry-After": String(Math.max(1, Math.ceil((decision.resetAt - Date.now()) / 1000))),
   };
 }
 
 export async function POST(request: Request) {
-  if (!hasAllowedRequestSource(request)) return json({ error: "Invalid project inquiry origin." }, 403);
-  if (request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase() !== "application/json") {
-    return json({ error: "Project inquiry must be sent as JSON." }, 415);
+  if (!hasAllowedRequestSource(request.headers, request.url)) {
+    return json({ error: "Invalid project inquiry origin." }, 403);
   }
 
-  const clientAddress = getClientAddress(request);
-  let rateLimit: RateLimitDecision;
+  const clientAddress = getClientAddress(request.headers);
+  let clientFingerprint: string;
   try {
-    rateLimit = await consumeRateLimit(getClientFingerprint(request));
+    clientFingerprint = await getClientFingerprint(request.headers);
   } catch {
     return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503);
   }
 
-  if (!rateLimit.allowed) {
+  let inquiryRateLimit;
+  let globalRateLimit;
+  try {
+    inquiryRateLimit = await consumeRateLimit("project-inquiry", clientFingerprint, INQUIRY_RATE_LIMIT_MAX);
+    globalRateLimit = await consumeRateLimit("project-inquiry-global", "site", GLOBAL_INQUIRY_RATE_LIMIT_MAX);
+  } catch {
+    return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503);
+  }
+
+  if (!inquiryRateLimit.allowed) {
     return json(
       { error: "Too many project inquiries. Please try again later." },
       429,
-      {
-        ...rateLimitHeaders(rateLimit),
-        "Retry-After": String(Math.max(1, Math.ceil((rateLimit.resetAt - Date.now()) / 1000))),
-      },
+      tooManyRequestsHeaders(inquiryRateLimit, INQUIRY_RATE_LIMIT_MAX),
     );
   }
+
+  if (!globalRateLimit.allowed) {
+    return json(
+      { error: "Project inquiries are temporarily limited. Please try again later." },
+      429,
+      tooManyRequestsHeaders(globalRateLimit, GLOBAL_INQUIRY_RATE_LIMIT_MAX),
+    );
+  }
+
+  const inquiryHeaders = rateLimitHeaders(inquiryRateLimit, INQUIRY_RATE_LIMIT_MAX);
 
   let body: Record<string, unknown>;
   try {
     const rawBody = await readBody(request);
     const parsedBody = JSON.parse(rawBody) as unknown;
-    if (!parsedBody || typeof parsedBody !== "object" || Array.isArray(parsedBody)) throw new Error("Invalid project inquiry.");
+    if (!parsedBody || typeof parsedBody !== "object" || Array.isArray(parsedBody)) {
+      throw new Error("Invalid project inquiry.");
+    }
     body = parsedBody as Record<string, unknown>;
   } catch (error) {
-    if (error instanceof RequestBodyTooLargeError) return json({ error: "Project inquiry is too large." }, 413, rateLimitHeaders(rateLimit));
-    return json({ error: "Invalid project inquiry." }, 400, rateLimitHeaders(rateLimit));
+    if (error instanceof RequestBodyTooLargeError) {
+      return json({ error: "Project inquiry is too large." }, 413, inquiryHeaders);
+    }
+    return json({ error: "Invalid project inquiry." }, 400, inquiryHeaders);
   }
 
   if (body.consent !== true) {
-    return json({ error: "Please confirm the privacy notice before sending your inquiry." }, 400, rateLimitHeaders(rateLimit));
+    return json({ error: "Please confirm the privacy notice before sending your inquiry." }, 400, inquiryHeaders);
   }
 
   try {
     const captchaOk = await verifyTurnstileToken(getString(body.captchaToken), clientAddress);
-    if (!captchaOk) return json({ error: "Please complete the security check and try again." }, 400, rateLimitHeaders(rateLimit));
+    if (!captchaOk) {
+      return json({ error: "Please complete the security check and try again." }, 400, inquiryHeaders);
+    }
   } catch {
-    return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503, rateLimitHeaders(rateLimit));
+    return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503, inquiryHeaders);
   }
 
   const selectedProjectTypes = getStrings(body.projectTypes);
@@ -383,27 +329,53 @@ export async function POST(request: Request) {
   const hasThesis = selectedProjectTypes.includes("Thesis / capstone");
   const hasOtherProject = selectedProjectTypes.some((type) => type !== "Thesis / capstone");
 
-  if (!selectedProjectTypes.length || selectedProjectTypes.some((type) => !projectTypes.has(type)) || project.length > 4000 || phone.length > 20 || email.length > 320 || (hasOtherProject && !budgets.has(budget)) || (hasThesis && !thesisBudgets.has(thesisBudget)) || !teamSizes.has(teamSize) || !timelines.has(timeline) || (!hasValidPhone && !hasValidEmail)) {
-    return json({ error: "Please complete the required project details." }, 400, rateLimitHeaders(rateLimit));
+  if (
+    !selectedProjectTypes.length ||
+    selectedProjectTypes.some((type) => !projectTypes.has(type)) ||
+    project.length > 4000 ||
+    phone.length > 20 ||
+    email.length > 320 ||
+    (hasOtherProject && !budgets.has(budget)) ||
+    (hasThesis && !thesisBudgets.has(thesisBudget)) ||
+    !teamSizes.has(teamSize) ||
+    !timelines.has(timeline) ||
+    (!hasValidPhone && !hasValidEmail)
+  ) {
+    return json({ error: "Please complete the required project details." }, 400, inquiryHeaders);
   }
 
   let normalizedWebsite = "";
   try {
     normalizedWebsite = normalizeWebsite(website);
   } catch {
-    return json({ error: "Enter a valid website address." }, 400, rateLimitHeaders(rateLimit));
+    return json({ error: "Enter a valid website address." }, 400, inquiryHeaders);
   }
 
   const deliveryConfig = getDeliveryConfig();
   if (!deliveryConfig) {
-    return json({ error: "Project inquiry delivery is not configured yet. Please try again later." }, 503, rateLimitHeaders(rateLimit));
+    return json({ error: "Project inquiry delivery is not configured yet. Please try again later." }, 503, inquiryHeaders);
   }
 
   try {
-    const content = buildNotificationContent({ projectTypes: selectedProjectTypes, project, website: normalizedWebsite, budget, thesisBudget, teamSize, timeline, phone: normalizedPhone, email });
-    await sendNotifications(content, { projectTypes: selectedProjectTypes, teamSize, budget, thesisBudget }, { phone: normalizedPhone, email }, deliveryConfig);
-    return json({ ok: true }, 200, rateLimitHeaders(rateLimit));
+    const content = buildNotificationContent({
+      projectTypes: selectedProjectTypes,
+      project,
+      website: normalizedWebsite,
+      budget,
+      thesisBudget,
+      teamSize,
+      timeline,
+      phone: normalizedPhone,
+      email,
+    });
+    await sendNotifications(
+      content,
+      { projectTypes: selectedProjectTypes, teamSize, budget, thesisBudget },
+      { phone: normalizedPhone, email },
+      deliveryConfig,
+    );
+    return json({ ok: true }, 200, inquiryHeaders);
   } catch {
-    return json({ error: "Unable to send your inquiry right now. Please try again shortly." }, 502, rateLimitHeaders(rateLimit));
+    return json({ error: "Unable to send your inquiry right now. Please try again shortly." }, 502, inquiryHeaders);
   }
 }

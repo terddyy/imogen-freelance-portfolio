@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "check:production": "node --env-file=.env.local scripts/check-production-env.mjs",
     "analyze": "cross-env ANALYZE=true next build",
     "screenshot": "node scripts/screenshot.mjs"
   },
