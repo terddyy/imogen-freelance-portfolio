@@ -12,7 +12,11 @@ export function HeroAnimationController() {
     let visible = true;
 
     const setPaused = (paused: boolean) => {
-      section.classList.toggle("heroSection--animationsPaused", paused);
+      if (paused) {
+        section.dataset.animationsPaused = "true";
+      } else {
+        delete section.dataset.animationsPaused;
+      }
     };
 
     const observer = new IntersectionObserver(
@@ -34,7 +38,7 @@ export function HeroAnimationController() {
     return () => {
       observer.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
-      section.classList.remove("heroSection--animationsPaused");
+      section.removeAttribute("data-animations-paused");
     };
   }, []);
 

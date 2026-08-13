@@ -1,7 +1,5 @@
-"use client";
-
+import Link from "next/link";
 import type { ReactNode } from "react";
-import { prefetchInquiryModule, useInquiryContext } from "@/components/project-inquiry-context";
 
 type ProjectInquiryTriggerProps = {
   children: ReactNode;
@@ -9,17 +7,9 @@ type ProjectInquiryTriggerProps = {
 };
 
 export function ProjectInquiryTrigger({ children, className }: ProjectInquiryTriggerProps) {
-  const { openInquiry } = useInquiryContext();
-
   return (
-    <button
-      type="button"
-      className={className}
-      onClick={openInquiry}
-      onMouseEnter={prefetchInquiryModule}
-      onFocus={prefetchInquiryModule}
-    >
+    <Link href="/#inquire" className={className}>
       {children}
-    </button>
+    </Link>
   );
 }

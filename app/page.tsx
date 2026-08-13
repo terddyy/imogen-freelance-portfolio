@@ -1,15 +1,13 @@
 import dynamic from "next/dynamic";
 import {
-  AboutSection,
   FinalCta,
   HeroSection,
   HomeTestimonials,
-  PricingSection,
   ProcessSection,
   ServicesSection,
-  ToolsSection,
 } from "@/components/HomeSections";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import featuredStyles from "@/components/FeaturedProjectCarousel.module.css";
 import { projects } from "@/lib/portfolio-data";
 
 const FeaturedProjectCarousel = dynamic(
@@ -17,7 +15,15 @@ const FeaturedProjectCarousel = dynamic(
     import("@/components/FeaturedProjectCarousel").then((module) => ({
       default: module.FeaturedProjectCarousel,
     })),
-  { loading: () => <div className="featuredProjectBand featuredProjectBandPlaceholder" aria-hidden /> },
+  { loading: () => <div className={featuredStyles.bandPlaceholder} aria-hidden /> },
+);
+
+const InquirySection = dynamic(
+  () =>
+    import("@/components/InquirySection").then((module) => ({
+      default: module.InquirySection,
+    })),
+  { loading: () => <div className="inquiryViewport shell" aria-hidden /> },
 );
 
 const ProofGallery = dynamic(
@@ -32,7 +38,7 @@ export default function Home() {
   return (
     <main className="page">
       <HeroSection />
-      <AnimatedSection>
+      <AnimatedSection className="sectionStretch">
         <FeaturedProjectCarousel projects={projects} />
       </AnimatedSection>
       <AnimatedSection mode="fade">
@@ -42,23 +48,15 @@ export default function Home() {
         <HomeTestimonials />
       </AnimatedSection>
       <AnimatedSection>
-        <AboutSection />
-      </AnimatedSection>
-      <AnimatedSection>
         <ServicesSection />
       </AnimatedSection>
       <AnimatedSection>
         <ProcessSection />
       </AnimatedSection>
       <AnimatedSection>
-        <PricingSection />
-      </AnimatedSection>
-      <AnimatedSection>
-        <ToolsSection />
-      </AnimatedSection>
-      <AnimatedSection>
         <FinalCta />
       </AnimatedSection>
+      <InquirySection />
     </main>
   );
 }

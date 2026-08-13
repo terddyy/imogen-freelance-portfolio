@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 
 export const metadata: Metadata = {
   title: "Privacy | Imogen Inocentes",
@@ -83,7 +82,9 @@ export default function PrivacyPage() {
           <p className="privacyMeta">Last updated: August 12, 2026</p>
 
           <div className="privacyActions">
-            <ProjectInquiryTrigger className="primaryButton">Start a project</ProjectInquiryTrigger>
+            <Link href="/#inquire" className="primaryButton">
+              Start a project
+            </Link>
             <Link href="/contact" className="secondaryButton">
               Back to contact
             </Link>

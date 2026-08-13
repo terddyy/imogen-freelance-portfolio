@@ -1,0 +1,489 @@
+.section {
+  --hero-max-width: 1920px;
+  --hero-height: clamp(680px, 78svh, 760px);
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: var(--hero-height);
+  overflow: hidden;
+  isolation: isolate;
+  color: #fff;
+  background: #050505;
+}
+
+.stage {
+  position: absolute;
+  inset-block: 0;
+  left: 50%;
+  width: min(100%, var(--hero-max-width));
+  max-width: 100%;
+  transform: translateX(-50%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.backgroundFrame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.background {
+  object-fit: cover;
+  object-position: right top;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(5, 5, 5, 0.58) 0%, rgba(5, 5, 5, 0.34) 30%, rgba(5, 5, 5, 0.1) 54%, transparent 72%),
+    linear-gradient(180deg, rgba(5, 5, 5, 0) 62%, rgba(5, 5, 5, 0.9) 100%);
+}
+
+.brandCloud {
+  position: absolute;
+  top: 11%;
+  right: clamp(12px, 2vw, 72px);
+  bottom: 12%;
+  left: 42%;
+  container-type: inline-size;
+}
+
+.brand {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  animation: brand-float 5s ease-in-out infinite alternate;
+}
+
+.section[data-animations-paused="true"] .brand {
+  animation-play-state: paused;
+}
+
+.brand img {
+  display: block;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.48));
+}
+
+.brandAws {
+  top: 0;
+  left: 25%;
+  animation-delay: -0.4s;
+}
+
+.brandAws img {
+  width: clamp(88px, 9cqi, 144px);
+  filter: brightness(0) invert(1) drop-shadow(0 8px 12px rgba(0, 0, 0, 0.48));
+}
+
+.brandGoogle {
+  top: 2%;
+  right: 0;
+  animation-delay: -2.4s;
+}
+
+.brandGoogle img {
+  width: clamp(104px, 10cqi, 168px);
+}
+
+.brandMicrosoft {
+  top: 51%;
+  left: 17%;
+  animation-delay: -1.6s;
+}
+
+.brandMicrosoft img {
+  width: clamp(28px, 2.8cqi, 42px);
+}
+
+.brandOracle {
+  top: 32%;
+  right: 5%;
+  animation-delay: -3.2s;
+}
+
+.brandOracle img {
+  width: clamp(97px, 9.4cqi, 152px);
+}
+
+.brandIbm {
+  top: 74%;
+  left: 3%;
+  animation-delay: -1.2s;
+}
+
+.brandIbm img {
+  width: clamp(64px, 6.2cqi, 96px);
+}
+
+.brandAzure {
+  top: 59%;
+  right: 1%;
+  animation-delay: -0.7s;
+}
+
+.brandAzure img {
+  width: clamp(32px, 3.1cqi, 44px);
+}
+
+.brandAsu {
+  top: 31%;
+  left: 15%;
+  animation-delay: -1.8s;
+}
+
+.brandAsu img {
+  width: clamp(88px, 9cqi, 148px);
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  min-height: var(--hero-height);
+  width: min(100% - 48px, 1440px);
+  margin-inline: auto;
+  padding: clamp(158px, 19vh, 200px) 20px clamp(48px, 6vh, 64px) 20px;
+  box-sizing: border-box;
+}
+
+.copy {
+  display: grid;
+  width: min(100%, 700px);
+  gap: 14px;
+}
+
+.copy :global(.availability) {
+  padding: 5px 7px;
+  font-size: 9px;
+  border-color: rgba(0, 214, 146, 0.58);
+  color: #6ff7bd;
+  background: rgba(0, 214, 146, 0.06);
+  backdrop-filter: blur(12px);
+}
+
+.copy h1 {
+  display: grid;
+  max-width: 580px;
+  color: #fff;
+  font-size: clamp(38px, 4vw, 62px);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+  text-wrap: balance;
+}
+
+.copy h1 em {
+  color: #8ceac4;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.9em;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.54);
+  font: 700 8px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.kicker span {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid rgba(140, 234, 196, 0.38);
+  border-radius: 50%;
+  color: #8ceac4;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 11px;
+}
+
+.roleLine {
+  color: #fff;
+  font-size: 13px;
+}
+
+.meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #fff;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+  text-underline-offset: 4px;
+}
+
+.meta a:hover {
+  text-decoration-color: currentColor;
+}
+
+.intro {
+  max-width: 430px;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: clamp(13px, 0.9vw, 15px);
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primary {
+  min-width: 190px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-size: 12px;
+  border: 0;
+  color: #111;
+  background: #fff;
+  box-shadow: none;
+}
+
+.secondary {
+  min-width: 132px;
+  min-height: 38px;
+  padding: 8px 12px;
+  font-size: 12px;
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 2px;
+}
+
+.socials a {
+  color: #fff;
+}
+
+.scrollCue {
+  position: absolute;
+  right: 42px;
+  top: 56%;
+  z-index: 2;
+  display: grid;
+  gap: 0;
+  color: rgba(255, 255, 255, 0.64);
+}
+
+.scrollCue svg + svg {
+  margin-top: -12px;
+}
+
+.copy > * {
+  animation: line-enter 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.copy > :nth-child(2) {
+  animation-delay: 80ms;
+}
+
+.copy > :nth-child(3) {
+  animation-delay: 150ms;
+}
+
+.copy > :nth-child(4) {
+  animation-delay: 220ms;
+}
+
+.copy > :nth-child(n + 5) {
+  animation-delay: 290ms;
+}
+
+@keyframes brand-float {
+  from {
+    transform: translateY(-4px);
+  }
+
+  to {
+    transform: translateY(4px);
+  }
+}
+
+@keyframes line-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1200px) {
+  .brandCloud {
+    display: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .shade {
+    background:
+      linear-gradient(90deg, rgba(5, 5, 5, 0.98) 0%, rgba(5, 5, 5, 0.9) 44%, rgba(5, 5, 5, 0.44) 100%),
+      linear-gradient(180deg, rgba(5, 5, 5, 0) 56%, rgba(5, 5, 5, 0.96) 100%);
+  }
+
+  .copy {
+    width: min(62vw, 500px);
+  }
+
+  .copy h1 {
+    font-size: clamp(36px, 5.8vw, 54px);
+  }
+
+  .background {
+    object-position: 72% top;
+  }
+}
+
+@media (max-width: 700px) {
+  .section {
+    --hero-height: clamp(600px, 76svh, 660px);
+  }
+
+  .content {
+    align-items: flex-start;
+    min-height: var(--hero-height);
+    width: min(100% - 24px, 680px);
+    padding-top: clamp(196px, 28svh, 232px);
+    padding-inline: 14px 7px;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
+  }
+
+  .copy {
+    width: min(100%, 520px);
+    gap: 12px;
+  }
+
+  .copy h1 {
+    font-size: clamp(34px, 9vw, 44px);
+    line-height: 0.91;
+  }
+
+  .meta {
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .roleLine {
+    font-size: 13px;
+  }
+
+  .intro {
+    max-width: 36ch;
+    font-size: 13px;
+  }
+
+  .background {
+    object-position: 77% top;
+  }
+
+  .shade {
+    background:
+      linear-gradient(90deg, rgba(5, 5, 5, 0.62), rgba(5, 5, 5, 0.08)),
+      linear-gradient(180deg, rgba(5, 5, 5, 0.04) 18%, rgba(5, 5, 5, 0.82) 42%, #050505 60%);
+  }
+
+  .scrollCue {
+    display: none;
+  }
+
+  .kicker {
+    display: none;
+  }
+
+  .actions {
+    align-self: start;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .primary,
+  .secondary {
+    flex: 0 0 auto;
+    width: fit-content;
+    min-width: 0;
+    min-height: 36px;
+    padding: 8px 12px;
+    font-size: 11px;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .primary svg,
+  .secondary svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 430px) {
+  .meta {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .intro {
+    line-height: 1.55;
+  }
+
+  .socials {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 700px) {
+  .content {
+    padding-top: clamp(168px, 24svh, 196px);
+  }
+
+  .copy {
+    gap: 12px;
+  }
+
+  .copy h1 {
+    font-size: clamp(36px, 10.5vw, 44px);
+  }
+
+  .intro {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy > *,
+  .brand {
+    animation: none;
+  }
+}

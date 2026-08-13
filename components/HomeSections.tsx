@@ -1,13 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import heroBackground from "@/public/Hero-background.webp";
 import {
   ArrowRight,
   ArrowUpRight,
-  ChevronDown,
   Check,
-  CircleDot,
-  Mail,
 } from "lucide-react";
 import {
   aboutHighlights,
@@ -20,111 +16,8 @@ import {
 } from "@/lib/portfolio-data";
 import { getPortfolioIcon } from "@/lib/portfolio-icons";
 import { FeaturedProjectCarousel } from "@/components/FeaturedProjectCarousel";
-import { HeroAnimationController } from "@/components/HeroAnimationController";
+export { HeroSection } from "@/components/HeroSection";
 import { TestimonialList } from "@/components/TestimonialList";
-import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
-
-export function HeroSection() {
-  return (
-    <section className="heroSection" id="hero" aria-label="Imogen Inocentes hero">
-      <HeroAnimationController />
-      <div className="heroBackgroundFrame" aria-hidden="true">
-        <Image
-          className="heroBackground"
-          src={heroBackground}
-          alt="Imogen Inocentes in a dark studio portrait"
-          fill
-          priority
-          sizes="(max-width: 768px) 100vw, 100vw"
-        />
-      </div>
-      <div className="heroShade" />
-
-      <div className="heroBrandCloud" aria-hidden="true">
-        <span className="heroBrand heroBrandAws">
-          <Image src="/logos/aws.svg" alt="" width={160} height={88} loading="lazy" />
-        </span>
-        <span className="heroBrand heroBrandGoogle">
-          <Image src="/logos/google.svg" alt="" width={136} height={46} loading="lazy" />
-        </span>
-        <span className="heroBrand heroBrandMicrosoft">
-          <Image src="/logos/microsoft.svg" alt="" width={36} height={36} loading="lazy" />
-        </span>
-        <span className="heroBrand heroBrandOracle">
-          <Image src="/logos/oracle.svg" alt="" width={112} height={18} loading="lazy" />
-        </span>
-        <span className="heroBrand heroBrandIbm">
-          <Image src="/logos/ibm.svg" alt="" width={72} height={26} loading="lazy" />
-        </span>
-        <span className="heroBrand heroBrandAzure">
-          <Image src="/logos/azure.svg" alt="" width={36} height={36} loading="lazy" />
-        </span>
-        <span className="heroBrand heroBrandAsu">
-          <Image src="/logos/asu.svg" alt="" width={118} height={26} loading="lazy" />
-        </span>
-      </div>
-
-      <div className="shell heroContent">
-        <div className="heroCopy">
-          <p className="heroKicker">
-            <span>01</span>
-            Lead full-stack development · Scalable software
-          </p>
-          <span className="availability">
-            <CircleDot size={14} />
-            Available for select builds
-          </span>
-          <h1>
-            Complex problems.
-            <em>Clear software.</em>
-          </h1>
-          <div className="heroMeta heroMetaInline">
-            <strong className="heroRoleLine">Lead Full Stack Engineer</strong>
-            <a href="https://nexvision.info/" target="_blank" rel="noreferrer">
-              Nexvision Innovations
-              <ArrowUpRight size={15} />
-            </a>
-            <a href="https://www.facebook.com/zentarisoftwaresolution" target="_blank" rel="noreferrer">
-              Co-founder &amp; CEO, Zentari
-              <ArrowUpRight size={15} />
-            </a>
-          </div>
-          <p className="heroIntro">
-            5 years of experience building scalable software across web products, internal systems, and
-            workflow automation.
-          </p>
-          <div className="buttonRow">
-            <ProjectInquiryTrigger className="primaryButton heroPrimary">
-              Inquire a project
-              <ArrowUpRight size={17} aria-hidden="true" />
-            </ProjectInquiryTrigger>
-            <Link className="secondaryButton heroSecondary" href="/projects">
-              Explore the work
-              <ArrowRight size={17} aria-hidden="true" />
-            </Link>
-          </div>
-          <div className="socialRow heroSocials" aria-label="Social links">
-            <a href="https://www.linkedin.com/in/terd/" aria-label="LinkedIn">
-              <span className="socialGlyph">in</span>
-            </a>
-            <a href="https://github.com/terddyy" aria-label="GitHub">
-              <span className="socialGlyph">gh</span>
-            </a>
-            <a href="mailto:terd@zentariph.com" aria-label="Email Imogen">
-              <Mail size={18} />
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div className="scrollCue" aria-hidden="true">
-        <ChevronDown size={22} />
-        <ChevronDown size={22} />
-        <ChevronDown size={22} />
-      </div>
-    </section>
-  );
-}
 
 export function FeaturedProjects() {
   return <FeaturedProjectCarousel projects={projects} />;
@@ -312,10 +205,10 @@ export function FinalCta() {
         <h2>Have a project in mind?</h2>
         <p>Tell Imogen what you need and she&apos;ll reply with a clear next step for scope, timeline, and fit.</p>
       </div>
-      <ProjectInquiryTrigger className="primaryButton">
+      <Link className="primaryButton" href="/#inquire">
         Send Inquiry
         <ArrowRight size={17} />
-      </ProjectInquiryTrigger>
+      </Link>
     </section>
   );
 }

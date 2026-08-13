@@ -7,12 +7,14 @@ import { useInView, useReducedMotion } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Project } from "@/lib/portfolio-data";
 import { ProjectPreviewDialog } from "@/components/ProjectPreviewDialog";
+import styles from "@/components/FeaturedProjectCarousel.module.css";
 
 type FeaturedProjectCarouselProps = {
   projects: Project[];
 };
 
 const AUTO_SCROLL_PX_PER_SEC = 42;
+const CLONE_BUFFER = 3;
 
 type CarouselSlide = {
   project: Project;
@@ -25,6 +27,14 @@ type LoopSegment = {
   start: number;
   loopWidth: number;
 };
+
+function getCloneBuffer(projectCount: number) {
+  if (projectCount <= 1) {
+    return 0;
+  }
+
+  return Math.min(CLONE_BUFFER, projectCount);
+}
 
 function buildCarouselSlides(projects: Project[]): CarouselSlide[] {
   if (projects.length === 0) {
@@ -42,27 +52,29 @@ function buildCarouselSlides(projects: Project[]): CarouselSlide[] {
     ];
   }
 
-  const lastIndex = projects.length - 1;
+  const buffer = getCloneBuffer(projects.length);
+  const leadingProjects = projects.slice(-buffer);
+  const trailingProjects = projects.slice(0, buffer);
 
   return [
-    {
-      project: projects[lastIndex],
-      projectIndex: lastIndex,
-      slideKey: `clone-start-${projects[lastIndex].title}`,
+    ...leadingProjects.map((project, index) => ({
+      project,
+      projectIndex: (projects.length - buffer + index) % projects.length,
+      slideKey: `clone-start-${index}-${project.title}`,
       isClone: true,
-    },
+    })),
     ...projects.map((project, index) => ({
       project,
       projectIndex: index,
       slideKey: project.title,
       isClone: false,
     })),
-    {
-      project: projects[0],
-      projectIndex: 0,
-      slideKey: `clone-end-${projects[0].title}`,
+    ...trailingProjects.map((project, index) => ({
+      project,
+      projectIndex: index,
+      slideKey: `clone-end-${index}-${project.title}`,
       isClone: true,
-    },
+    })),
   ];
 }
 
@@ -71,9 +83,10 @@ function measureLoopSegment(track: HTMLDivElement, projectCount: number): LoopSe
     return { start: 0, loopWidth: track.scrollWidth };
   }
 
+  const buffer = getCloneBuffer(projectCount);
   const cards = Array.from(track.children) as HTMLElement[];
-  const firstReal = cards[1];
-  const lastReal = cards[cards.length - 2];
+  const firstReal = cards[buffer];
+  const lastReal = cards[cards.length - buffer - 1];
 
   if (!firstReal || !lastReal) {
     return { start: 0, loopWidth: track.scrollWidth };
@@ -173,6 +186,17 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
     }
     applyTransform();
   }, [applyTransform, projects.length, syncSegment]);
+
+  useEffect(() => {
+    const onResize = () => {
+      const segment = syncSegment();
+      offsetRef.current = normalizeOffset(offsetRef.current, segment);
+      applyTransform();
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [applyTransform, syncSegment]);
 
   useEffect(() => {
     if (shouldReduceMotion || !isInView) {
@@ -280,21 +304,21 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
   return (
     <section
       ref={sectionRef}
-      className="featuredProjectBand"
+      className={styles.band}
       id="projects"
       aria-labelledby="featured-projects-title"
     >
-      <div className="featuredGridOverlay" aria-hidden="true" />
-      <div className="featuredProjectHeader">
-        <div>
-          <p className="featuredEyebrow">Portfolio</p>
+      <div className={styles.gridOverlay} aria-hidden="true" />
+      <div className={styles.content}>
+        <div className={styles.header}>
+          <p className={styles.eyebrow}>Portfolio</p>
           <h2 id="featured-projects-title">Featured Projects</h2>
         </div>
       </div>
 
-      <div className="featuredCarouselShell" aria-label="Featured projects">
+      <div className={styles.carouselShell} aria-label="Featured projects">
         <div
-          className="featuredCarouselViewport"
+          className={styles.carouselViewport}
           aria-label="Featured projects. Drag horizontally to browse."
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -302,42 +326,44 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
           onPointerCancel={endDrag}
           onClickCapture={handleClickCapture}
         >
-          <div ref={trackRef} className="featuredCarouselTrack">
+          <div ref={trackRef} className={styles.carouselTrack}>
             {carouselSlides.map((slide, index) => (
-                <article
-                  className="featuredCarouselCard"
-                  key={slide.slideKey}
-                  aria-hidden={slide.isClone}
+              <article
+                className={styles.carouselCard}
+                key={slide.slideKey}
+                aria-hidden={slide.isClone}
+              >
+                <button
+                  type="button"
+                  className={styles.carouselCardButton}
+                  tabIndex={slide.isClone ? -1 : 0}
+                  onClick={() => openProject(slide.projectIndex)}
+                  aria-label={`Preview ${slide.project.title}`}
+                  draggable={false}
                 >
-                  <button
-                    type="button"
-                    className="featuredCarouselCardButton"
-                    tabIndex={slide.isClone ? -1 : 0}
-                    onClick={() => openProject(slide.projectIndex)}
-                    aria-label={`Preview ${slide.project.title}`}
+                  <Image
+                    src={slide.project.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 760px) 62vw, (max-width: 980px) 38vw, 320px"
+                    className={styles.carouselImage}
                     draggable={false}
-                  >
-                    <Image
-                      src={slide.project.image}
-                      alt=""
-                      fill
-                      sizes="(max-width: 760px) 62vw, (max-width: 980px) 38vw, 360px"
-                      className="featuredCarouselImage"
-                      draggable={false}
-                      loading={index <= 2 ? undefined : "lazy"}
-                    />
-                  </button>
-                </article>
-              ))}
+                    loading={index <= 2 ? undefined : "lazy"}
+                  />
+                </button>
+              </article>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="featuredProjectFooter">
-        <Link href="/projects" className="featuredProjectAll">
-          View all projects
-          <ArrowRight size={18} />
-        </Link>
+      <div className={styles.content}>
+        <div className={styles.footer}>
+          <Link href="/projects" className={styles.allLink}>
+            View all projects
+            <ArrowRight size={18} />
+          </Link>
+        </div>
       </div>
 
       <ProjectPreviewDialog

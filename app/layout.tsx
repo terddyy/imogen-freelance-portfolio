@@ -5,7 +5,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppContact } from "@/components/WhatsAppContact";
 import { MobileNav } from "@/components/MobileNav";
-import { ProjectInquiryRoot } from "@/components/ProjectInquiryRoot";
 import { getSiteOrigin } from "@/lib/site";
 
 const manrope = Manrope({
@@ -57,13 +56,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} data-theme="dark">
       <body>
-        <ProjectInquiryRoot>
-          <Header />
-          {children}
-          <Footer />
-          <WhatsAppContact />
-          <MobileNav />
-        </ProjectInquiryRoot>
+        <Header />
+        {children}
+        <Footer />
+        <WhatsAppContact />
+        <MobileNav />
       </body>
     </html>
   );
