@@ -2,6 +2,7 @@
 
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { isTurnstileConfigured } from "@/components/TurnstileField";
+import { grantInquirySecurityConsent } from "@/lib/inquiry-consent";
 import {
   emptyInquiry,
   isEmail,
@@ -44,6 +45,37 @@ export function useProjectInquiryForm() {
             : (useEmailInstead ? isEmail(inquiry.email) : isPhone(inquiry.phone)) &&
               consent &&
               (!turnstileRequired || Boolean(captchaToken));
+
+  const submitHint =
+    step !== 4 || status === "loading"
+      ? null
+      : useEmailInstead
+        ? !inquiry.email
+          ? "Add your email to receive the meeting link."
+          : !isEmail(inquiry.email)
+            ? "Enter a valid email address."
+            : !consent
+              ? "Confirm the privacy notice below to continue."
+              : turnstileRequired && !captchaToken
+                ? "Wait for the security check to finish above."
+                : null
+        : !inquiry.phone
+          ? "Add your phone number so we can reach you."
+          : !isPhone(inquiry.phone)
+            ? "Enter a valid mobile number (e.g. +63 9XX XXX XXXX)."
+            : !consent
+              ? "Confirm the privacy notice below to continue."
+              : turnstileRequired && !captchaToken
+                ? "Wait for the security check to finish above."
+                : null;
+
+  function setConsentWithSecurity(value: boolean) {
+    setConsent(value);
+    if (value) {
+      grantInquirySecurityConsent();
+    }
+    setError("");
+  }
 
   function update(field: keyof Inquiry, value: string) {
     setInquiry((current) => ({ ...current, [field]: value }));
@@ -130,8 +162,9 @@ export function useProjectInquiryForm() {
     stepDirection,
     error,
     consent,
-    setConsent,
+    setConsent: setConsentWithSecurity,
     setCaptchaToken,
+    submitHint,
     hasThesis,
     hasOtherProject,
     progressPercent,

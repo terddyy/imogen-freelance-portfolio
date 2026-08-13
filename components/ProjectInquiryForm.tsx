@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { TurnstileField, isTurnstileConfigured } from "@/components/TurnstileField";
+import { grantInquirySecurityConsent } from "@/lib/inquiry-consent";
 import { WhatsAppIcon } from "@/components/WhatsAppContact";
 import {
   emptyInquiry,
@@ -103,6 +104,37 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
             : (useEmailInstead ? isEmail(inquiry.email) : isPhone(inquiry.phone)) &&
               consent &&
               (!turnstileRequired || Boolean(captchaToken));
+
+  const submitHint =
+    step !== 4 || status === "loading"
+      ? null
+      : useEmailInstead
+        ? !inquiry.email
+          ? "Add your email to receive the meeting link."
+          : !isEmail(inquiry.email)
+            ? "Enter a valid email address."
+            : !consent
+              ? "Confirm the privacy notice below to continue."
+              : turnstileRequired && !captchaToken
+                ? "Wait for the security check to finish above."
+                : null
+        : !inquiry.phone
+          ? "Add your phone number so we can reach you."
+          : !isPhone(inquiry.phone)
+            ? "Enter a valid mobile number (e.g. +63 9XX XXX XXXX)."
+            : !consent
+              ? "Confirm the privacy notice below to continue."
+              : turnstileRequired && !captchaToken
+                ? "Wait for the security check to finish above."
+                : null;
+
+  function setConsentWithSecurity(value: boolean) {
+    setConsent(value);
+    if (value) {
+      grantInquirySecurityConsent();
+    }
+    setError("");
+  }
 
   function update(field: keyof Inquiry, value: string) {
     setInquiry((current) => ({ ...current, [field]: value }));
@@ -355,7 +387,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                 )}
                 <InquiryPrivacyControls
                   consent={consent}
-                  onConsentChange={setConsent}
+                  onConsentChange={setConsentWithSecurity}
                   onCaptchaTokenChange={setCaptchaToken}
                 />
               </>
@@ -363,6 +395,9 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
           </div>
 
           <footer className="inquiryActions">
+            {submitHint && !validStep && status !== "loading" ? (
+              <p className="inquirySubmitHint" role="status">{submitHint}</p>
+            ) : null}
             {status === "error" ? (
               <p className="inquiryError" role="alert">
                 <CircleAlert size={17} aria-hidden="true" />
@@ -382,7 +417,10 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                   Sending…
                 </>
               ) : step === 4 ? (
-                "Send me the meeting link"
+                <>
+                  <span className="inquirySubmitShort">Send meeting link</span>
+                  <span className="inquirySubmitLong">Send me the meeting link</span>
+                </>
               ) : (
                 "Continue"
               )}
@@ -440,7 +478,7 @@ function InquiryPrivacyControls({
   onCaptchaTokenChange: (token: string) => void;
 }) {
   return (
-    <div className="inquiryPrivacy">
+    <div className="inquiryPrivacy inquiryPrivacyPanel">
       <p className="inquiryPrivacyNotice">
         Contact details are only used to reply.{" "}
         <Link href="/privacy" target="_blank" rel="noreferrer">
@@ -449,9 +487,9 @@ function InquiryPrivacyControls({
       </p>
       <label className="inquiryConsent">
         <input type="checkbox" checked={consent} onChange={(event) => onConsentChange(event.target.checked)} />
-        <span>I understand and want to send this inquiry.</span>
+        <span>I understand the privacy notice and accept necessary cookies to send this inquiry securely.</span>
       </label>
-      <TurnstileField onTokenChange={onCaptchaTokenChange} />
+      <TurnstileField onTokenChange={onCaptchaTokenChange} inquiryConsent={consent} />
     </div>
   );
 }

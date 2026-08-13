@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function InquirePage() {
   return (
-    <main className="page overflow-x-clip pt-[88px] pb-3">
+    <main className="page overflow-x-clip pt-[64px] pb-[calc(80px+env(safe-area-inset-bottom,0px))] sm:pt-[88px] sm:pb-3">
       <InquireSection />
     </main>
   );

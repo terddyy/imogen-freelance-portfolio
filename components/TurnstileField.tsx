@@ -1,11 +1,15 @@
 "use client";
 
 import Script from "next/script";
+import { LoaderCircle, ShieldCheck } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
+import { grantInquirySecurityConsent } from "@/lib/inquiry-consent";
 import { hasCookieConsent, onCookieConsentChange } from "@/lib/cookie-consent";
 
 type TurnstileFieldProps = {
   onTokenChange: (token: string) => void;
+  /** Inquiry privacy checkbox — enables security check without a separate cookie banner step. */
+  inquiryConsent?: boolean;
 };
 
 type TurnstileApi = {
@@ -35,25 +39,37 @@ export function isTurnstileConfigured() {
   return Boolean(siteKey);
 }
 
-export function TurnstileField({ onTokenChange }: TurnstileFieldProps) {
+export function TurnstileField({ onTokenChange, inquiryConsent = false }: TurnstileFieldProps) {
   const elementId = useId().replace(/:/g, "");
   const widgetIdRef = useRef<string | null>(null);
   const onTokenChangeRef = useRef(onTokenChange);
-  const [consentGranted, setConsentGranted] = useState(false);
+  const [cookieConsentGranted, setCookieConsentGranted] = useState(false);
+  const [hasToken, setHasToken] = useState(false);
+
+  const canLoadSecurity = cookieConsentGranted || inquiryConsent;
 
   useEffect(() => {
-    onTokenChangeRef.current = onTokenChange;
+    onTokenChangeRef.current = (token: string) => {
+      setHasToken(Boolean(token));
+      onTokenChange(token);
+    };
   }, [onTokenChange]);
 
   useEffect(() => {
-    setConsentGranted(hasCookieConsent());
-    return onCookieConsentChange(() => {
-      setConsentGranted(hasCookieConsent());
-    });
+    const sync = () => setCookieConsentGranted(hasCookieConsent());
+    sync();
+    return onCookieConsentChange(sync);
   }, []);
 
   useEffect(() => {
-    if (!siteKey || !consentGranted) {
+    if (inquiryConsent) {
+      grantInquirySecurityConsent();
+    }
+  }, [inquiryConsent]);
+
+  useEffect(() => {
+    if (!siteKey || !canLoadSecurity) {
+      setHasToken(false);
       onTokenChangeRef.current("");
       return;
     }
@@ -90,20 +106,33 @@ export function TurnstileField({ onTokenChange }: TurnstileFieldProps) {
         widgetIdRef.current = null;
       }
     };
-  }, [consentGranted, elementId]);
+  }, [canLoadSecurity, elementId]);
 
   if (!siteKey) return null;
 
-  if (!consentGranted) {
+  if (!canLoadSecurity) {
     return (
-      <p className="inquiryTurnstileNote">
-        Accept necessary cookies on this site to load bot protection before submitting.
-      </p>
+      <div className="inquiryTurnstileGate">
+        <ShieldCheck size={18} aria-hidden="true" className="inquiryTurnstileGateIcon" />
+        <div>
+          <p className="inquiryTurnstileGateTitle">Security check required</p>
+          <p className="inquiryTurnstileGateText">
+            Confirm the privacy notice above to load bot protection. No ads or analytics — only what&apos;s needed to
+            send your inquiry safely.
+          </p>
+        </div>
+      </div>
     );
   }
 
   return (
     <div className="inquiryTurnstile">
+      {!hasToken ? (
+        <p className="inquiryTurnstileLoading">
+          <LoaderCircle size={15} className="inquiryLoader" aria-hidden="true" />
+          Loading security check…
+        </p>
+      ) : null}
       <Script
         src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
         strategy="afterInteractive"
