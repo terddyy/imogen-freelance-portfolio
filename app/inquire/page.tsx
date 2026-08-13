@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { InquirySection } from "@/components/InquirySection";
+import { InquireSection } from "@/components/inquire/InquireSection";
 
 export const metadata: Metadata = {
   title: "Inquire a Project | Imogen Inocentes",
@@ -8,8 +8,8 @@ export const metadata: Metadata = {
 
 export default function InquirePage() {
   return (
-    <main className="page inquiryPage inquiryPage--viewport">
-      <InquirySection page />
+    <main className="page overflow-x-clip pt-[88px] pb-3">
+      <InquireSection />
     </main>
   );
 }

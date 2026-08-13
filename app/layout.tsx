@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppContact } from "@/components/WhatsAppContact";
+import { CookieConsent } from "@/components/CookieConsent";
 import { MobileNav } from "@/components/MobileNav";
 import { getSiteOrigin } from "@/lib/site";
 
@@ -19,13 +20,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteOrigin()),
-  title: "Imogen Inocentes | Freelance Web Designer",
+  title: "Imogen Inocentes | Lead Developer | Full Stack/AI",
   description:
-    "Portfolio and freelance services for clean, responsive websites by Imogen Inocentes.",
+    "Portfolio of Imogen Inocentes — Lead Developer building full stack applications and AI-powered solutions.",
   openGraph: {
-    title: "Imogen Inocentes | Freelance Web Designer",
+    title: "Imogen Inocentes | Lead Developer | Full Stack/AI",
     description:
-      "Portfolio and freelance services for clean, responsive websites by Imogen Inocentes.",
+      "Portfolio of Imogen Inocentes — Lead Developer building full stack applications and AI-powered solutions.",
     url: "/",
     siteName: "Imogen Inocentes",
     locale: "en_US",
@@ -35,15 +36,15 @@ export const metadata: Metadata = {
         url: "/Hero-background.webp",
         width: 1920,
         height: 1080,
-        alt: "Imogen Inocentes freelance web design portfolio",
+        alt: "Imogen Inocentes portfolio — Lead Developer, Full Stack/AI",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Imogen Inocentes | Freelance Web Designer",
+    title: "Imogen Inocentes | Lead Developer | Full Stack/AI",
     description:
-      "Portfolio and freelance services for clean, responsive websites by Imogen Inocentes.",
+      "Portfolio of Imogen Inocentes — Lead Developer building full stack applications and AI-powered solutions.",
     images: ["/Hero-background.webp"],
   },
 };
@@ -60,6 +61,7 @@ export default function RootLayout({
         {children}
         <Footer />
         <WhatsAppContact />
+        <CookieConsent />
         <MobileNav />
       </body>
     </html>

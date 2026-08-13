@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { contactMethods } from "@/lib/portfolio-data";
 import { getPortfolioIcon } from "@/lib/portfolio-icons";
@@ -20,10 +21,10 @@ export default function ContactPage() {
             Use the channels below for a quick conversation, or send a structured inquiry when you are ready
             to share scope, budget, and timing.
           </p>
-          <Link className="primaryButton" href="/#inquire">
+          <ProjectInquiryTrigger className="primaryButton">
             Inquire a project
             <ArrowUpRight size={17} aria-hidden="true" />
-          </Link>
+          </ProjectInquiryTrigger>
           <p className="contactPrivacyHint">
             Inquiries share contact details only so Imogen can reply.{" "}
             <Link href="/privacy">Read the privacy notice</Link>.

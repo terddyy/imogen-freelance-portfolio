@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -205,10 +206,10 @@ export function FinalCta() {
         <h2>Have a project in mind?</h2>
         <p>Tell Imogen what you need and she&apos;ll reply with a clear next step for scope, timeline, and fit.</p>
       </div>
-      <Link className="primaryButton" href="/#inquire">
+      <ProjectInquiryTrigger className="primaryButton">
         Send Inquiry
         <ArrowRight size={17} />
-      </Link>
+      </ProjectInquiryTrigger>
     </section>
   );
 }

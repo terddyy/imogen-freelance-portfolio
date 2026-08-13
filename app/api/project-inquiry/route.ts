@@ -5,7 +5,8 @@ export const runtime = "nodejs";
 const budgets = new Set(["Under ₱100k", "₱100k–₱350k", "₱350k–₱650k", "₱650k–₱1.2M", "₱1.2M+"]);
 const thesisBudgets = new Set(["Under ₱50k", "₱50k–₱100k", "₱100k–₱300k", "₱300k+"]);
 const teamSizes = new Set(["Solo founder", "2–5 people", "6–15 people", "16–50 people", "50+ people"]);
-const projectTypes = new Set(["Website", "Web app / SaaS", "Mobile app", "Internal system", "Improve an existing product", "Thesis / capstone", "Something else"]);
+const timelines = new Set(["ASAP", "1–2 months", "3–6 months", "6+ months", "Flexible"]);
+const projectTypes = new Set(["Website", "Web app / SaaS", "Mobile app", "Internal system", "Improve an existing product", "Thesis / capstone", "Something else", "Branding"]);
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_BODY_BYTES = 16 * 1024;
 const RATE_LIMIT_MAX = 5;
@@ -229,6 +230,7 @@ function buildNotificationContent(body: {
   budget: string;
   thesisBudget: string;
   teamSize: string;
+  timeline: string;
   phone: string;
   email: string;
 }) {
@@ -238,6 +240,7 @@ function buildNotificationContent(body: {
     ["Existing website", body.website || "Not provided"],
     ["Budget", body.budget || body.thesisBudget || "Not provided"],
     ["Team size", body.teamSize],
+    ["Timeline", body.timeline || "Not provided"],
     ["Phone", body.phone || "Not provided"],
     ["Email", body.email || "Not provided"],
   ] as const;
@@ -371,6 +374,7 @@ export async function POST(request: Request) {
   const budget = getString(body.budget);
   const thesisBudget = getString(body.thesisBudget);
   const teamSize = getString(body.teamSize);
+  const timeline = getString(body.timeline);
   const phone = getString(body.phone);
   const email = getString(body.email);
   const normalizedPhone = normalizePhone(phone);
@@ -379,7 +383,7 @@ export async function POST(request: Request) {
   const hasThesis = selectedProjectTypes.includes("Thesis / capstone");
   const hasOtherProject = selectedProjectTypes.some((type) => type !== "Thesis / capstone");
 
-  if (!selectedProjectTypes.length || selectedProjectTypes.some((type) => !projectTypes.has(type)) || project.length > 4000 || phone.length > 20 || email.length > 320 || (hasOtherProject && !budgets.has(budget)) || (hasThesis && !thesisBudgets.has(thesisBudget)) || !teamSizes.has(teamSize) || (!hasValidPhone && !hasValidEmail)) {
+  if (!selectedProjectTypes.length || selectedProjectTypes.some((type) => !projectTypes.has(type)) || project.length > 4000 || phone.length > 20 || email.length > 320 || (hasOtherProject && !budgets.has(budget)) || (hasThesis && !thesisBudgets.has(thesisBudget)) || !teamSizes.has(teamSize) || !timelines.has(timeline) || (!hasValidPhone && !hasValidEmail)) {
     return json({ error: "Please complete the required project details." }, 400, rateLimitHeaders(rateLimit));
   }
 
@@ -396,7 +400,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const content = buildNotificationContent({ projectTypes: selectedProjectTypes, project, website: normalizedWebsite, budget, thesisBudget, teamSize, phone: normalizedPhone, email });
+    const content = buildNotificationContent({ projectTypes: selectedProjectTypes, project, website: normalizedWebsite, budget, thesisBudget, teamSize, timeline, phone: normalizedPhone, email });
     await sendNotifications(content, { projectTypes: selectedProjectTypes, teamSize, budget, thesisBudget }, { phone: normalizedPhone, email }, deliveryConfig);
     return json({ ok: true }, 200, rateLimitHeaders(rateLimit));
   } catch {

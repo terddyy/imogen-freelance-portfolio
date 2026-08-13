@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const metadata: Metadata = {
@@ -66,6 +67,32 @@ export default function PrivacyPage() {
             Resend delivery history, and IPROG SMS history until deleted there on request.
           </p>
 
+          <h2>Cookies and local storage</h2>
+          <p>
+            This site does not use analytics, advertising, or social-media tracking cookies. The only
+            storage used is for strictly necessary site functions:
+          </p>
+          <ul>
+            <li>
+              <strong>Theme preference</strong> — stored in your browser&apos;s local storage under{" "}
+              <code>imogen-theme</code> so your dark/light choice is remembered. It is saved only after
+              you accept necessary cookies.
+            </li>
+            <li>
+              <strong>Cookie consent</strong> — stored in local storage under{" "}
+              <code>imogen-cookie-consent</code> so the notice is not shown again.
+            </li>
+            <li>
+              <strong>Cloudflare Turnstile</strong> — loaded only on the inquiry form (after cookie
+              consent) to block bots. Cloudflare may set cookies or use similar identifiers as part of
+              that service.
+            </li>
+          </ul>
+          <p>
+            Submitting the inquiry form is separate: you must tick a checkbox confirming you understand
+            how your personal details will be used.
+          </p>
+
           <h2>Your choices</h2>
           <p>
             You can contact Imogen by phone or WhatsApp instead of the form. On the form, you must
@@ -79,12 +106,12 @@ export default function PrivacyPage() {
             include the phone number you submitted.
           </p>
 
-          <p className="privacyMeta">Last updated: August 12, 2026</p>
+          <p className="privacyMeta">Last updated: August 13, 2026</p>
 
           <div className="privacyActions">
-            <Link href="/#inquire" className="primaryButton">
+            <ProjectInquiryTrigger className="primaryButton">
               Start a project
-            </Link>
+            </ProjectInquiryTrigger>
             <Link href="/contact" className="secondaryButton">
               Back to contact
             </Link>

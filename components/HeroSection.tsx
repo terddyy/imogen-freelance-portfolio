@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import heroBackground from "@/public/Hero-background.webp";
 import { ArrowRight, ArrowUpRight, ChevronDown, CircleDot, Mail } from "lucide-react";
 import { HeroAnimationController } from "@/components/HeroAnimationController";
@@ -76,10 +77,10 @@ export function HeroSection() {
             workflow automation.
           </p>
           <div className={styles.actions}>
-          <Link className={`primaryButton ${styles.primary}`} href="/#inquire">
+          <ProjectInquiryTrigger className={`primaryButton ${styles.primary}`}>
             Inquire a project
             <ArrowUpRight size={17} aria-hidden="true" />
-          </Link>
+          </ProjectInquiryTrigger>
             <Link className={`secondaryButton ${styles.secondary}`} href="/projects">
               Explore the work
               <ArrowRight size={17} aria-hidden="true" />

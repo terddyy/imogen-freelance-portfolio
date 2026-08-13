@@ -12,11 +12,13 @@
     "screenshot": "node scripts/screenshot.mjs"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "lucide-react": "^1.17.0",
     "motion": "^12.40.0",
     "next": "16.2.12",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@next/bundle-analyzer": "16.2.12",

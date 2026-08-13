@@ -1,7 +1,8 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { hasCookieConsent, onCookieConsentChange } from "@/lib/cookie-consent";
 
 type TurnstileFieldProps = {
   onTokenChange: (token: string) => void;
@@ -38,13 +39,21 @@ export function TurnstileField({ onTokenChange }: TurnstileFieldProps) {
   const elementId = useId().replace(/:/g, "");
   const widgetIdRef = useRef<string | null>(null);
   const onTokenChangeRef = useRef(onTokenChange);
+  const [consentGranted, setConsentGranted] = useState(false);
 
   useEffect(() => {
     onTokenChangeRef.current = onTokenChange;
   }, [onTokenChange]);
 
   useEffect(() => {
-    if (!siteKey) {
+    setConsentGranted(hasCookieConsent());
+    return onCookieConsentChange(() => {
+      setConsentGranted(hasCookieConsent());
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!siteKey || !consentGranted) {
       onTokenChangeRef.current("");
       return;
     }
@@ -81,9 +90,17 @@ export function TurnstileField({ onTokenChange }: TurnstileFieldProps) {
         widgetIdRef.current = null;
       }
     };
-  }, [elementId]);
+  }, [consentGranted, elementId]);
 
   if (!siteKey) return null;
+
+  if (!consentGranted) {
+    return (
+      <p className="inquiryTurnstileNote">
+        Accept necessary cookies on this site to load bot protection before submitting.
+      </p>
+    );
+  }
 
   return (
     <div className="inquiryTurnstile">

@@ -3,7 +3,59 @@
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { proofMoments } from "@/lib/portfolio-data";
+import {
+  type ProofDesktopLayout,
+  type ProofMobileLayout,
+  type ProofMoment,
+  proofMoments,
+} from "@/lib/portfolio-data";
+import styles from "@/components/ProofGallery.module.css";
+
+const mobileLayoutClass: Record<ProofMobileLayout, string> = {
+  hero: styles.mobileHero,
+  tall: styles.mobileTall,
+  default: styles.mobileDefault,
+  team: styles.mobileTeam,
+  onsite: styles.mobileOnsite,
+};
+
+const desktopLayoutClass: Record<ProofDesktopLayout, string> = {
+  feature: styles.desktopFeature,
+  meeting: styles.desktopMeeting,
+  workshop: styles.desktopWorkshop,
+  team: styles.desktopTeam,
+  onsite: styles.desktopOnsite,
+};
+
+type ProofCellProps = {
+  moment: ProofMoment;
+  index: number;
+  layoutClass: string;
+  imageSizes: string;
+  onOpen: (index: number) => void;
+};
+
+function ProofCell({ moment, index, layoutClass, imageSizes, onOpen }: ProofCellProps) {
+  return (
+    <figure className={`${styles.cell} ${layoutClass}`} role="listitem">
+      <button
+        type="button"
+        className={styles.cellButton}
+        onClick={() => onOpen(index)}
+        aria-label={`View ${moment.label}: ${moment.alt}`}
+      >
+        <Image
+          className={styles.image}
+          src={moment.src}
+          alt=""
+          fill
+          sizes={imageSizes}
+        />
+        <span className={styles.caption}>{moment.label}</span>
+      </button>
+    </figure>
+  );
+}
 
 export function ProofGallery() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -69,36 +121,38 @@ export function ProofGallery() {
   }, [activeIndex, showNext, showPrevious]);
 
   return (
-    <section className="proofSection" id="proof" aria-labelledby="proof-title">
-      <div className="proofHeader shell">
-        <span className="sectionLabel">In practice</span>
-        <h2 id="proof-title">A few snapshots from recent work.</h2>
-      </div>
+    <section className={styles.section} id="proof" aria-labelledby="proof-title">
+      <div className={`${styles.inner} shell`}>
+        <div className={styles.header}>
+          <span className="sectionLabel">In practice</span>
+          <h2 id="proof-title">A few snapshots from recent work.</h2>
+        </div>
 
-      <div className="proofGrid" role="list" aria-label="Work snapshots">
-        {proofMoments.map((moment, index) => (
-          <figure
-            className={`proofCell proofCell--${moment.layout}`}
-            key={moment.id}
-            role="listitem"
-          >
-            <button
-              type="button"
-              className="proofCellButton"
-              onClick={() => setActiveIndex(index)}
-              aria-label={`View ${moment.label}: ${moment.alt}`}
-            >
-              <Image
-                className="proofImage"
-                src={moment.src}
-                alt=""
-                fill
-                sizes="(max-width: 760px) 45vw, 22vw"
-              />
-              <span className="proofCaption">{moment.label}</span>
-            </button>
-          </figure>
-        ))}
+        <div className={styles.gridMobile} role="list" aria-label="Work snapshots">
+          {proofMoments.map((moment, index) => (
+            <ProofCell
+              key={moment.id}
+              moment={moment}
+              index={index}
+              layoutClass={mobileLayoutClass[moment.layout]}
+              imageSizes="(max-width: 980px) 45vw, 22vw"
+              onOpen={setActiveIndex}
+            />
+          ))}
+        </div>
+
+        <div className={styles.gridDesktop} role="list" aria-label="Work snapshots">
+          {proofMoments.map((moment, index) => (
+            <ProofCell
+              key={`desktop-${moment.id}`}
+              moment={moment}
+              index={index}
+              layoutClass={desktopLayoutClass[moment.desktopLayout]}
+              imageSizes="(min-width: 981px) 32vw, 45vw"
+              onOpen={setActiveIndex}
+            />
+          ))}
+        </div>
       </div>
 
       <dialog

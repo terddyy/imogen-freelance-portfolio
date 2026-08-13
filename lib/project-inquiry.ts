@@ -7,6 +7,7 @@ export type Inquiry = {
   budget: string;
   thesisBudget: string;
   teamSize: string;
+  timeline: string;
   phone: string;
   email: string;
 };
@@ -18,6 +19,7 @@ export const emptyInquiry: Inquiry = {
   budget: "",
   thesisBudget: "",
   teamSize: "",
+  timeline: "",
   phone: "",
   email: "",
 };
@@ -33,12 +35,30 @@ export const teamSizes = [
   "50+ people",
 ] as const;
 
+export const timelines = [
+  "ASAP",
+  "1–2 months",
+  "3–6 months",
+  "6+ months",
+  "Flexible",
+] as const;
+
 export const inquirySteps = [
   "Getting started",
-  "Your website",
+  "Goals & scope",
   "Budget",
-  "Team size",
-  "Contact",
+  "Timeline",
+  "Your details",
+] as const;
+
+export const inquiryProjectTypes = [
+  { label: "Website", value: "Website" },
+  { label: "Web app / SaaS", value: "Web app / SaaS" },
+  { label: "Mobile app", value: "Mobile app" },
+  { label: "Internal system", value: "Internal system" },
+  { label: "Improve an existing product", value: "Improve an existing product" },
+  { label: "Thesis / capstone", value: "Thesis / capstone" },
+  { label: "Something else", value: "Something else" },
 ] as const;
 
 export const whatsappContact = contactMethods.find((method) => method.label === "WhatsApp");

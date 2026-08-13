@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 
@@ -18,10 +17,8 @@ export function Header() {
   return (
     <header className="siteHeader" aria-label="Primary navigation">
       <Link className="brandMark" href="/" aria-label="Imogen Inocentes home">
-        <strong>
-          IMOGEN<span aria-hidden="true">.</span>
-        </strong>
-        <small>INOCENTES</small>
+        <strong>IMOGEN</strong>
+        <small>INOCENTES.</small>
       </Link>
 
       <nav className="navLinks" aria-label="Main menu">
@@ -37,10 +34,7 @@ export function Header() {
       </nav>
 
       <div className="headerActions">
-        <ProjectInquiryTrigger className="primaryButton headerCta">
-          Start a project
-          <ArrowUpRight size={16} aria-hidden="true" />
-        </ProjectInquiryTrigger>
+        <ProjectInquiryTrigger className="primaryButton headerCta">Start a project</ProjectInquiryTrigger>
       </div>
     </header>
   );

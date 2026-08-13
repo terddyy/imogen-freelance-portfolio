@@ -21,14 +21,15 @@ import { TurnstileField, isTurnstileConfigured } from "@/components/TurnstileFie
 import { WhatsAppIcon } from "@/components/WhatsAppContact";
 import {
   emptyInquiry,
+  inquiryProjectTypes,
   inquirySteps,
   isEmail,
   isPhone,
-  isWebsite,
   phoneContact,
   standardBudgets,
   teamSizes,
   thesisBudgets,
+  timelines,
   whatsappContact,
   type Inquiry,
 } from "@/lib/project-inquiry";
@@ -53,15 +54,15 @@ function MobileAppIcon({ size = 24, ...props }: LucideProps) {
   );
 }
 
-const projectTypes = [
-  { label: "Website", icon: Globe2 },
-  { label: "Web app / SaaS", icon: MonitorSmartphone },
-  { label: "Mobile app", icon: MobileAppIcon },
-  { label: "Internal system", icon: Boxes },
-  { label: "Improve an existing product", icon: TrendingUp },
-  { label: "Thesis / capstone", icon: GraduationCap },
-  { label: "Something else", icon: Ellipsis },
-] as const;
+const projectTypeIcons = {
+  Website: Globe2,
+  "Web app / SaaS": MonitorSmartphone,
+  "Mobile app": MobileAppIcon,
+  "Internal system": Boxes,
+  "Improve an existing product": TrendingUp,
+  "Thesis / capstone": GraduationCap,
+  "Something else": Ellipsis,
+} as const;
 
 type ProjectInquiryFormProps = {
   compact?: boolean;
@@ -73,7 +74,6 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
   const [inquiry, setInquiry] = useState<Inquiry>(emptyInquiry);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [useEmailInstead, setUseEmailInstead] = useState(false);
-  const [noteOpen, setNoteOpen] = useState(false);
   const [stepDirection, setStepDirection] = useState<"forward" | "back">("forward");
   const [error, setError] = useState("");
   const [consent, setConsent] = useState(false);
@@ -82,6 +82,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
 
   const hasThesis = inquiry.projectTypes.includes("Thesis / capstone");
   const hasOtherProject = inquiry.projectTypes.some((type) => type !== "Thesis / capstone");
+  const progressPercent = Math.round(((step + 1) / 5) * 100);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -94,11 +95,11 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
     step === 0
       ? inquiry.projectTypes.length > 0
       : step === 1
-        ? isWebsite(inquiry.website)
+        ? Boolean(inquiry.teamSize)
         : step === 2
           ? (!hasOtherProject || Boolean(inquiry.budget)) && (!hasThesis || Boolean(inquiry.thesisBudget))
           : step === 3
-            ? Boolean(inquiry.teamSize)
+            ? Boolean(inquiry.timeline)
             : (useEmailInstead ? isEmail(inquiry.email) : isPhone(inquiry.phone)) &&
               consent &&
               (!turnstileRequired || Boolean(captchaToken));
@@ -162,6 +163,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
   function continueOnEnter(event: KeyboardEvent<HTMLFormElement>) {
     if (event.key !== "Enter" || event.shiftKey || event.nativeEvent.isComposing) return;
     if (event.target instanceof HTMLButtonElement) return;
+    if (event.target instanceof HTMLTextAreaElement) return;
     event.preventDefault();
     if (!validStep || status === "loading") return;
     if (step < 4) {
@@ -180,28 +182,28 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
   return (
     <div ref={panelRef} className={`inquiryPanel${compact ? " inquiryPanel--viewport" : ""}`}>
       {!compact ? (
-      <aside className="inquiryDirectContact" aria-label="Direct contact">
-        <div>
-          <span>Prefer to talk directly?</span>
-          <strong>+63 960 250 6993</strong>
-          <small>Skip the questions and call or WhatsApp me.</small>
-        </div>
-        <div className="inquiryDirectLinks">
-          <a href={phoneContact?.href ?? "tel:+639602506993"} aria-label="Call Imogen">
-            <PhoneCall size={16} aria-hidden="true" />
-            Call
-          </a>
-          <a
-            href={whatsappContact?.href ?? "https://wa.me/639602506993"}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Message Imogen on WhatsApp"
-          >
-            <WhatsAppIcon size={16} />
-            WhatsApp
-          </a>
-        </div>
-      </aside>
+        <aside className="inquiryDirectContact" aria-label="Direct contact">
+          <div>
+            <span>Prefer to talk directly?</span>
+            <strong>+63 960 250 6993</strong>
+            <small>Skip the questions and call or WhatsApp me.</small>
+          </div>
+          <div className="inquiryDirectLinks">
+            <a href={phoneContact?.href ?? "tel:+639602506993"} aria-label="Call Imogen">
+              <PhoneCall size={16} aria-hidden="true" />
+              Call
+            </a>
+            <a
+              href={whatsappContact?.href ?? "https://wa.me/639602506993"}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Message Imogen on WhatsApp"
+            >
+              <WhatsAppIcon size={16} />
+              WhatsApp
+            </a>
+          </div>
+        </aside>
       ) : null}
 
       {status === "success" ? (
@@ -218,7 +220,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
               ? "Thanks for sharing the details. Check your inbox for the meeting link, and let's discuss how we can bring this to life."
               : "Thanks for sharing the details. I'll text you the next steps for scheduling a quick call."}
           </p>
-          <Link className="primaryButton inquirySubmit" href="/">
+          <Link className="inquirySubmit inquirySubmit--full" href="/">
             Back to portfolio
             <ArrowRight size={17} aria-hidden="true" />
           </Link>
@@ -226,77 +228,42 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
       ) : (
         <form onSubmit={continueOrSubmit} onKeyDown={continueOnEnter} className="inquiryForm" noValidate>
           <header className="inquiryHeader">
-            <div className="inquiryProgressWrap">
-              <div className="inquiryProgress" aria-label={`Step ${step + 1} of 5`}>
-                <span>Step {String(step + 1).padStart(2, "0")} / 05</span>
-                <div aria-hidden="true">
-                  <i style={{ width: `${((step + 1) / 5) * 100}%` }} />
-                </div>
-                <small>{inquirySteps[step]}</small>
-              </div>
-            </div>
+            <InquiryStepper currentStep={step} progressPercent={progressPercent} />
           </header>
 
-          <div className="inquiryQuestion" key={step} data-direction={stepDirection}>
+          <div
+            className={`inquiryQuestion${step === 0 ? " inquiryQuestion--hero" : ""}`}
+            key={step}
+            data-direction={stepDirection}
+          >
             {step === 0 ? (
               <>
                 <h2 id="inquiry-title">Let&apos;s work together.</h2>
-                <p>Choose everything that applies.</p>
                 <ProjectTypeStep value={inquiry.projectTypes} onChange={toggleProjectType} />
-                <div className="inquiryOptional">
-                  <button
-                    className="inquiryOptionalToggle"
-                    type="button"
-                    aria-expanded={noteOpen}
-                    onClick={() => setNoteOpen((open) => !open)}
-                  >
-                    Add a note <span>(optional)</span>
-                  </button>
-                  {noteOpen ? (
-                    <label className="inquiryField">
-                      <span className="inquiryOptionalLabel">Additional details</span>
-                      <textarea
-                        rows={3}
-                        value={inquiry.project}
-                        onChange={(event) => update("project", event.target.value)}
-                        placeholder="Tell us anything important…"
-                      />
-                    </label>
-                  ) : null}
-                </div>
               </>
             ) : null}
 
             {step === 1 ? (
               <>
-                <h2 id="inquiry-title">Do you already have a website?</h2>
-                <p>Share the link if you have one. If not, you can skip this step.</p>
+                <h2 id="inquiry-title">What are you building?</h2>
                 <label className="inquiryField">
-                  <span className="srOnly">Existing website</span>
-                  <input
+                  <span className="srOnly">Project goals</span>
+                  <textarea
                     data-inquiry-autofocus
-                    type="text"
-                    inputMode="url"
-                    autoComplete="url"
-                    value={inquiry.website}
-                    onChange={(event) => update("website", event.target.value)}
-                    placeholder="https://yourwebsite.com"
-                    aria-invalid={inquiry.website.length > 0 && !isWebsite(inquiry.website)}
+                    rows={2}
+                    value={inquiry.project}
+                    onChange={(event) => update("project", event.target.value)}
+                    placeholder="Describe what you want to achieve…"
                   />
                 </label>
-                {inquiry.website && !isWebsite(inquiry.website) ? (
-                  <p className="inquiryValidation">Enter a valid website address.</p>
-                ) : null}
-                <button
-                  className="inquirySkip"
-                  type="button"
-                  onClick={() => {
-                    update("website", "");
-                    setStep(2);
-                  }}
-                >
-                  Skip for now
-                </button>
+                <ChoiceStep
+                  title="Team size"
+                  description=""
+                  name="team"
+                  options={[...teamSizes]}
+                  value={inquiry.teamSize}
+                  onChange={(value) => update("teamSize", value)}
+                />
               </>
             ) : null}
 
@@ -312,12 +279,13 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
 
             {step === 3 ? (
               <ChoiceStep
-                title="How big is your team?"
-                description="This helps me understand how the project will be managed and who I'll collaborate with."
-                name="team"
-                options={[...teamSizes]}
-                value={inquiry.teamSize}
-                onChange={(value) => update("teamSize", value)}
+                title="When do you need this?"
+                description=""
+                name="timeline"
+                options={[...timelines]}
+                value={inquiry.timeline}
+                onChange={(value) => update("timeline", value)}
+                asMainStep
               />
             ) : null}
 
@@ -326,7 +294,6 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                 {useEmailInstead ? (
                   <>
                     <h2 id="inquiry-title">Where should I send the meeting link?</h2>
-                    <p>Enter your email and I&apos;ll send you the next steps for scheduling a quick call.</p>
                     <label className="inquiryField">
                       <span className="srOnly">Email address</span>
                       <input
@@ -357,7 +324,6 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                 ) : (
                   <>
                     <h2 id="inquiry-title">What&apos;s the best number to reach you?</h2>
-                    <p>Share your mobile number and I&apos;ll text you the next steps for scheduling a quick call.</p>
                     <label className="inquiryField">
                       <span className="srOnly">Phone number</span>
                       <input
@@ -396,23 +362,20 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
             ) : null}
           </div>
 
-          {status === "error" ? (
-            <p className="inquiryError" role="alert">
-              <CircleAlert size={17} aria-hidden="true" />
-              {error}
-            </p>
-          ) : null}
-
           <footer className="inquiryActions">
+            {status === "error" ? (
+              <p className="inquiryError" role="alert">
+                <CircleAlert size={17} aria-hidden="true" />
+                {error}
+              </p>
+            ) : null}
             {step > 0 ? (
               <button className="inquiryBack" type="button" onClick={goBack}>
                 <ChevronLeft size={17} aria-hidden="true" />
                 Back
               </button>
-            ) : (
-              <span />
-            )}
-            <button className="primaryButton inquirySubmit" type="submit" disabled={!validStep || status === "loading"}>
+            ) : null}
+            <button className="inquirySubmit inquirySubmit--full" type="submit" disabled={!validStep || status === "loading"}>
               {status === "loading" ? (
                 <>
                   <LoaderCircle className="inquiryLoader" size={17} aria-hidden="true" />
@@ -421,15 +384,48 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
               ) : step === 4 ? (
                 "Send me the meeting link"
               ) : (
-                <>
-                  Continue
-                  <ArrowRight size={17} aria-hidden="true" />
-                </>
+                "Continue"
               )}
             </button>
           </footer>
         </form>
       )}
+    </div>
+  );
+}
+
+function InquiryStepper({
+  currentStep,
+  progressPercent,
+}: {
+  currentStep: number;
+  progressPercent: number;
+}) {
+  return (
+    <div className="inquiryStepper" aria-label={`Step ${currentStep + 1} of 5`}>
+      <ol className="inquiryStepperList">
+        {inquirySteps.map((label, index) => {
+          const active = index === currentStep;
+          const complete = index < currentStep;
+
+          return (
+            <li
+              key={label}
+              className={`inquiryStepperItem${active ? " inquiryStepperItem--active" : ""}${complete ? " inquiryStepperItem--complete" : ""}`}
+              aria-current={active ? "step" : undefined}
+            >
+              <span className="inquiryStepperNode">{String(index + 1).padStart(2, "0")}</span>
+              <span className="inquiryStepperLabel">{label}</span>
+            </li>
+          );
+        })}
+      </ol>
+      <div className="inquiryProgressBar" aria-hidden="true">
+        <div className="inquiryProgressBarTrack">
+          <div className="inquiryProgressBarFill" style={{ width: `${progressPercent}%` }} />
+        </div>
+        <span className="inquiryProgressBarPercent">{progressPercent}%</span>
+      </div>
     </div>
   );
 }
@@ -446,15 +442,14 @@ function InquiryPrivacyControls({
   return (
     <div className="inquiryPrivacy">
       <p className="inquiryPrivacyNotice">
-        Your contact details are only used to reply about this project. Read the{" "}
+        Contact details are only used to reply.{" "}
         <Link href="/privacy" target="_blank" rel="noreferrer">
-          privacy notice
-        </Link>{" "}
-        for subprocessors and deletion requests.
+          Privacy notice
+        </Link>
       </p>
       <label className="inquiryConsent">
         <input type="checkbox" checked={consent} onChange={(event) => onConsentChange(event.target.checked)} />
-        <span>I understand how my contact details will be used and want to send this inquiry.</span>
+        <span>I understand and want to send this inquiry.</span>
       </label>
       <TurnstileField onTokenChange={onCaptchaTokenChange} />
     </div>
@@ -468,12 +463,13 @@ type ChoiceStepProps = {
   options: string[];
   value: string;
   onChange: (value: string) => void;
+  asMainStep?: boolean;
 };
 
-function ChoiceStep({ title, description, name, options, value, onChange }: ChoiceStepProps) {
+function ChoiceStep({ title, description, name, options, value, onChange, asMainStep = false }: ChoiceStepProps) {
   return (
     <fieldset className="inquiryChoices">
-      <legend id="inquiry-title">{title}</legend>
+      <legend id={asMainStep ? "inquiry-title" : undefined}>{title}</legend>
       {description ? <p>{description}</p> : null}
       <div>
         {options.map((option, index) => (
@@ -506,7 +502,10 @@ function BudgetStep({ hasOtherProject, hasThesis, budget, thesisBudget, onChange
   return (
     <section className="inquiryBudgetStep" aria-labelledby="inquiry-title">
       <h2 id="inquiry-title">What budget range are you working with?</h2>
-      <p>A realistic range helps me recommend the right scope and approach. It won&apos;t lock you into anything.</p>
+      <p>
+        Be honest — there&apos;s no wrong answer here. An accurate range keeps us aligned so I can recommend the
+        right approach, not over- or under-scope your project.
+      </p>
       {hasOtherProject ? (
         <ChoiceStep
           title="Project work"
@@ -541,18 +540,19 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
     <fieldset className="inquiryChoices inquiryProjectChoices">
       <legend className="srOnly">Project type</legend>
       <div>
-        {projectTypes.map(({ label, icon: Icon }) => {
-          const selected = value.includes(label);
-          const wide = label === "Something else";
+        {inquiryProjectTypes.map(({ label, value: typeValue }) => {
+          const selected = value.includes(typeValue);
+          const Icon = projectTypeIcons[typeValue];
+          const wide = typeValue === "Something else";
 
           return (
-            <label className={`inquiryChoice${wide ? " inquiryProjectChoiceWide" : ""}`} key={label}>
+            <label className={`inquiryChoice${wide ? " inquiryProjectChoiceWide" : ""}`} key={typeValue}>
               <input
                 type="checkbox"
                 name="projectTypes"
-                value={label}
+                value={typeValue}
                 checked={selected}
-                onChange={() => onChange(label)}
+                onChange={() => onChange(typeValue)}
               />
               <span>
                 {selected ? (
@@ -561,7 +561,7 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
                   </span>
                 ) : null}
                 <span className="inquiryProjectChoiceIcon">
-                  <Icon size={24} aria-hidden="true" />
+                  <Icon size={28} strokeWidth={1.75} aria-hidden="true" />
                 </span>
                 <strong>{label}</strong>
               </span>

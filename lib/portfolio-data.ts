@@ -20,12 +20,19 @@ export type Skill = {
   group: "Design" | "Frontend" | "Tools" | "Workflow";
 };
 
+export type ProofMobileLayout = "hero" | "tall" | "default" | "team" | "onsite";
+
+export type ProofDesktopLayout = "feature" | "meeting" | "workshop" | "team" | "onsite";
+
 export type ProofMoment = {
   id: string;
   src: string;
   alt: string;
   label: string;
-  layout: "hero" | "tall" | "wide" | "default";
+  /** Mobile bento slot — used below 981px */
+  layout: ProofMobileLayout;
+  /** Desktop bento slot — used from 981px up */
+  desktopLayout: ProofDesktopLayout;
 };
 
 export type Service = {
@@ -166,6 +173,7 @@ export const proofMoments: ProofMoment[] = [
     alt: "Working at a desk during a build",
     label: "At the desk",
     layout: "hero",
+    desktopLayout: "feature",
   },
   {
     id: "with-clients",
@@ -173,6 +181,7 @@ export const proofMoments: ProofMoment[] = [
     alt: "Client meeting, discussing project goals",
     label: "Client meeting",
     layout: "tall",
+    desktopLayout: "meeting",
   },
   {
     id: "in-the-room",
@@ -180,20 +189,23 @@ export const proofMoments: ProofMoment[] = [
     alt: "Workshop session with collaborators in the room",
     label: "Workshop",
     layout: "default",
+    desktopLayout: "workshop",
   },
   {
     id: "team",
     src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1771775487/FB_IMG_1771773624608_grg6qp.jpg",
     alt: "Working alongside a team on a shared build",
     label: "Team session",
-    layout: "wide",
+    layout: "team",
+    desktopLayout: "team",
   },
   {
     id: "on-site",
     src: "/proof/aws.jpg",
     alt: "On site during a project handoff",
     label: "On site",
-    layout: "wide",
+    layout: "onsite",
+    desktopLayout: "onsite",
   },
 ];
 
