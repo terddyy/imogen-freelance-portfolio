@@ -74,8 +74,7 @@ export type Testimonial = {
 
 export const navItems = [
   { label: "Projects", href: "/projects" },
-  { label: "About", href: "/about" },
-  { label: "Notes", href: "/testimonials" },
+  { label: "Testimonials", href: "/testimonials" },
   { label: "Contact", href: "/contact" },
 ];
 
