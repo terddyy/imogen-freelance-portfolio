@@ -1,0 +1,41 @@
+.sectionPlaceholder {
+  min-height: clamp(520px, 72vh, 760px);
+  background: linear-gradient(180deg, #f7fafc 0%, #eef3f7 100%);
+}
+
+.section {
+  position: relative;
+  isolation: isolate;
+  width: min(1120px, calc(100% - 32px));
+  margin-inline: auto;
+  padding: clamp(56px, 8vw, 96px) 0;
+  padding-bottom: calc(clamp(56px, 8vw, 96px) + env(safe-area-inset-bottom, 0px));
+}
+
+.sectionPage {
+  width: min(1120px, calc(100% - 24px));
+  padding-top: clamp(24px, 4vw, 40px);
+}
+
+.layout {
+  display: grid;
+  gap: clamp(24px, 4vw, 40px);
+  align-items: start;
+}
+
+.formColumn {
+  min-width: 0;
+}
+
+@media (min-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    gap: clamp(32px, 4vw, 48px);
+  }
+}
+
+@media (max-width: 760px) {
+  .section {
+    padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px));
+  }
+}

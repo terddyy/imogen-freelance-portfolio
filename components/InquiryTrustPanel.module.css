@@ -1,0 +1,131 @@
+.panel {
+  display: grid;
+  gap: 18px;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid rgba(21, 128, 61, 0.28);
+  border-radius: 999px;
+  padding: 7px 14px;
+  background: rgba(21, 128, 61, 0.08);
+  color: #166534;
+  font: 600 12px/1 var(--font-geist-mono), monospace;
+}
+
+.title {
+  max-width: 18ch;
+  margin: 0;
+  color: #0f1720;
+  font-size: clamp(28px, 4.8vw, 38px);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.lead {
+  max-width: 42ch;
+  margin: 0;
+  color: #4b6072;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.trustList {
+  display: grid;
+  gap: 14px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trustItem {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.trustIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  color: #166534;
+  background: rgba(21, 128, 61, 0.1);
+}
+
+.trustItem strong {
+  display: block;
+  margin-bottom: 2px;
+  color: #101923;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.trustItem span span {
+  display: block;
+  color: #5a6b7a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.nextSteps {
+  padding: 16px 18px;
+  border: 1px solid rgba(16, 35, 55, 0.1);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.nextStepsTitle {
+  margin: 0 0 10px;
+  color: #101923;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.nextSteps ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+  color: #4b6072;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.privacy {
+  margin: 0;
+  color: #5a6b7a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.privacy a {
+  color: #166534;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.privacy a:hover,
+.privacy a:focus-visible {
+  color: #15803d;
+}
+
+@media (max-width: 899px) {
+  .title {
+    max-width: none;
+  }
+
+  .lead {
+    max-width: none;
+  }
+}

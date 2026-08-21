@@ -1,0 +1,302 @@
+[data-inquiry-theme="light"] {
+  --inquiry-text: #101923;
+  --inquiry-muted: #5a6b7a;
+  --inquiry-dim: #708294;
+  --inquiry-line: rgba(16, 35, 55, 0.12);
+  --inquiry-line-strong: rgba(16, 35, 55, 0.2);
+  --inquiry-accent: #15803d;
+  --inquiry-accent-strong: #166534;
+  --inquiry-accent-soft: rgba(21, 128, 61, 0.1);
+  --inquiry-surface: #ffffff;
+  --inquiry-surface-muted: #f8fafc;
+  color: var(--inquiry-text);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(21, 128, 61, 0.08), transparent 34%),
+    linear-gradient(180deg, #f7fafc 0%, #eef3f7 100%);
+}
+
+[data-inquiry-theme="light"]::before {
+  display: none;
+}
+
+[data-inquiry-theme="light"] .inquiryViewportIntro .sectionLabel {
+  border-color: rgba(21, 128, 61, 0.28);
+  color: var(--inquiry-accent-strong);
+  background: var(--inquiry-accent-soft);
+}
+
+[data-inquiry-theme="light"] .inquiryViewportIntro h1,
+[data-inquiry-theme="light"] .inquiryViewportIntro h2 {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryPanel {
+  border: 1px solid var(--inquiry-line);
+  border-radius: 24px;
+  color: var(--inquiry-text);
+  background: var(--inquiry-surface);
+  box-shadow:
+    0 1px 2px rgba(16, 35, 55, 0.04),
+    0 18px 48px rgba(46, 70, 92, 0.08);
+  backdrop-filter: none;
+}
+
+[data-inquiry-theme="light"] .inquiryStepperList::before {
+  background: var(--inquiry-line);
+}
+
+[data-inquiry-theme="light"] .inquiryStepperNode {
+  border-color: var(--inquiry-line-strong);
+  color: var(--inquiry-dim);
+  background: #fff;
+}
+
+[data-inquiry-theme="light"] .inquiryStepperItem--active .inquiryStepperNode {
+  border-color: var(--inquiry-accent);
+  color: #fff;
+  background: var(--inquiry-accent);
+  box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.12);
+}
+
+[data-inquiry-theme="light"] .inquiryStepperItem--complete .inquiryStepperNode {
+  border-color: rgba(21, 128, 61, 0.35);
+  color: var(--inquiry-accent-strong);
+  background: #fff;
+}
+
+[data-inquiry-theme="light"] .inquiryStepperLabel {
+  color: var(--inquiry-dim);
+}
+
+[data-inquiry-theme="light"] .inquiryStepperItem--active .inquiryStepperLabel {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryStepperItem--active .inquiryStepperLabel::after {
+  background: var(--inquiry-accent);
+  box-shadow: none;
+}
+
+[data-inquiry-theme="light"] .inquiryProgressBarTrack {
+  background: rgba(16, 35, 55, 0.08);
+}
+
+[data-inquiry-theme="light"] .inquiryProgressBarFill {
+  background: var(--inquiry-accent);
+  box-shadow: none;
+}
+
+[data-inquiry-theme="light"] .inquiryProgressBarPercent {
+  color: var(--inquiry-muted);
+}
+
+[data-inquiry-theme="light"] .inquiryQuestion h2,
+[data-inquiry-theme="light"] .inquiryChoices legend,
+[data-inquiry-theme="light"] .inquirySuccess h2,
+[data-inquiry-theme="light"] .inquiryBudgetStep .inquiryChoices legend {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryQuestion > p,
+[data-inquiry-theme="light"] .inquiryChoices > p,
+[data-inquiry-theme="light"] .inquirySuccess > p,
+[data-inquiry-theme="light"] .inquiryBudgetStep > p {
+  color: var(--inquiry-muted);
+}
+
+[data-inquiry-theme="light"] .inquiryPanel--viewport .inquiryQuestion > p,
+[data-inquiry-theme="light"] .inquiryPanel--viewport .inquiryChoices > p,
+[data-inquiry-theme="light"] .inquiryPanel--viewport .inquirySuccess > p {
+  display: block;
+}
+
+[data-inquiry-theme="light"] .inquiryPanel--viewport .inquiryBudgetStep > p {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+[data-inquiry-theme="light"] .inquiryField input,
+[data-inquiry-theme="light"] .inquiryField textarea {
+  border-color: var(--inquiry-line-strong);
+  color: var(--inquiry-text);
+  background: #fff;
+}
+
+[data-inquiry-theme="light"] .inquiryField input::placeholder,
+[data-inquiry-theme="light"] .inquiryField textarea::placeholder {
+  color: rgba(90, 107, 122, 0.72);
+}
+
+[data-inquiry-theme="light"] .inquiryField input:focus,
+[data-inquiry-theme="light"] .inquiryField textarea:focus {
+  border-color: rgba(21, 128, 61, 0.55);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.1);
+}
+
+[data-inquiry-theme="light"] .inquiryChoice > span {
+  border-color: var(--inquiry-line-strong);
+  color: var(--inquiry-muted);
+  background: var(--inquiry-surface-muted);
+}
+
+@media (hover: hover) {
+  [data-inquiry-theme="light"] .inquiryChoice:hover > span {
+    border-color: rgba(21, 128, 61, 0.4);
+    color: var(--inquiry-text);
+  }
+}
+
+[data-inquiry-theme="light"] .inquiryChoice input:checked + span {
+  border-color: rgba(21, 128, 61, 0.55);
+  color: var(--inquiry-accent-strong);
+  background: var(--inquiry-accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.12);
+}
+
+[data-inquiry-theme="light"] .inquiryProjectChoices .inquiryChoice > span {
+  border-color: var(--inquiry-line);
+  background: #fff;
+}
+
+[data-inquiry-theme="light"] .inquiryProjectChoices .inquiryChoice svg {
+  color: var(--inquiry-accent);
+  filter: none;
+}
+
+[data-inquiry-theme="light"] .inquiryProjectChoices .inquiryChoice strong {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryProjectChoices .inquiryChoice input:checked + span {
+  border-color: rgba(21, 128, 61, 0.5);
+  color: var(--inquiry-accent-strong);
+  background: var(--inquiry-accent-soft);
+  box-shadow:
+    inset 0 0 0 1px rgba(21, 128, 61, 0.14),
+    0 8px 24px rgba(21, 128, 61, 0.08);
+}
+
+[data-inquiry-theme="light"] .inquiryProjectChoices .inquiryChoice input:checked + span strong {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryProjectChoiceCheck {
+  color: #fff;
+  background: var(--inquiry-accent);
+  box-shadow: none;
+}
+
+[data-inquiry-theme="light"] .inquiryPrivacyPanel {
+  border-color: var(--inquiry-line);
+  background: var(--inquiry-surface-muted);
+}
+
+[data-inquiry-theme="light"] .inquiryPrivacyNotice {
+  color: var(--inquiry-muted);
+}
+
+[data-inquiry-theme="light"] .inquiryPrivacyNotice a {
+  color: var(--inquiry-accent-strong);
+}
+
+[data-inquiry-theme="light"] .inquiryConsent {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryTurnstileGate {
+  border-color: rgba(21, 128, 61, 0.24);
+  background: rgba(21, 128, 61, 0.04);
+}
+
+[data-inquiry-theme="light"] .inquiryTurnstileGateIcon {
+  color: var(--inquiry-accent-strong);
+}
+
+[data-inquiry-theme="light"] .inquiryTurnstileGateTitle {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryTurnstileGateText,
+[data-inquiry-theme="light"] .inquiryTurnstileNote,
+[data-inquiry-theme="light"] .inquiryTurnstileLoading,
+[data-inquiry-theme="light"] .inquirySubmitHint {
+  color: var(--inquiry-muted);
+}
+
+[data-inquiry-theme="light"] .inquiryBack,
+[data-inquiry-theme="light"] .inquirySkip {
+  color: var(--inquiry-muted);
+}
+
+[data-inquiry-theme="light"] .inquiryBack:hover,
+[data-inquiry-theme="light"] .inquiryBack:focus-visible,
+[data-inquiry-theme="light"] .inquirySkip:hover,
+[data-inquiry-theme="light"] .inquirySkip:focus-visible {
+  color: var(--inquiry-accent-strong);
+}
+
+[data-inquiry-theme="light"] .inquirySubmit--full {
+  color: #fff;
+  background: var(--inquiry-accent);
+  box-shadow: 0 12px 28px rgba(21, 128, 61, 0.22);
+}
+
+[data-inquiry-theme="light"] .inquirySubmit--full:hover,
+[data-inquiry-theme="light"] .inquirySubmit--full:focus-visible {
+  background: #16a34a;
+  box-shadow: 0 16px 32px rgba(21, 128, 61, 0.26);
+}
+
+[data-inquiry-theme="light"] .inquirySubmit--full:disabled {
+  color: rgba(16, 35, 55, 0.38);
+  background: rgba(16, 35, 55, 0.06);
+}
+
+[data-inquiry-theme="light"] .inquiryValidation,
+[data-inquiry-theme="light"] .inquiryError {
+  color: #c2410c;
+}
+
+[data-inquiry-theme="light"] .inquirySuccessIcon {
+  border-color: rgba(21, 128, 61, 0.28);
+  color: var(--inquiry-accent-strong);
+  background: var(--inquiry-accent-soft);
+}
+
+[data-inquiry-theme="light"] .inquiryStep {
+  color: var(--inquiry-accent-strong);
+}
+
+[data-inquiry-theme="light"] .inquiryBudgetStep .inquiryChoices + .inquiryChoices {
+  border-top-color: var(--inquiry-line);
+}
+
+[data-inquiry-theme="light"] .inquiryCustomBudget {
+  border-color: var(--inquiry-line);
+  background: rgba(255, 255, 255, 0.72);
+}
+
+[data-inquiry-theme="light"] .inquiryCustomBudget label {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryCustomBudgetField {
+  border-color: var(--inquiry-line);
+  background: #fff;
+}
+
+[data-inquiry-theme="light"] .inquiryCustomBudgetField span,
+[data-inquiry-theme="light"] .inquiryCustomBudgetHint {
+  color: var(--inquiry-muted);
+}
+
+[data-inquiry-theme="light"] .inquiryCustomBudgetField input {
+  color: var(--inquiry-text);
+}
+
+[data-inquiry-theme="light"] .inquiryLoader {
+  animation: inquiry-spin 800ms linear infinite;
+}

@@ -1,0 +1,183 @@
+/* Mobile-first: an accordion list of numbered steps that fits one viewport.
+   Isolated from the shared global .processCard rules on purpose. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  border-top: 1px solid var(--line);
+}
+
+.item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 15px 2px;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.badge {
+  flex: 0 0 44px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  border: 1px solid var(--line);
+  background: rgba(122, 215, 255, 0.08);
+  color: var(--cyan);
+  font: 900 15px/1 var(--font-geist-mono), monospace;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.item.active .badge {
+  border-color: transparent;
+  background: var(--cyan);
+  color: #05121b;
+}
+
+.meta {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.label {
+  display: block;
+  margin: 0 0 3px;
+  font: 800 11px/1 var(--font-geist-mono), monospace;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.title {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.2;
+  transition: color 0.25s ease;
+}
+
+.item.active .title {
+  color: var(--cyan);
+}
+
+.chevron {
+  flex: 0 0 auto;
+  color: var(--muted);
+  transition:
+    transform 0.3s ease,
+    color 0.25s ease;
+}
+
+.item.active .chevron {
+  color: var(--cyan);
+  transform: rotate(180deg);
+}
+
+/* Height animation via grid-template-rows 0fr -> 1fr (no magic max-height). */
+.panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+
+.item.active .panel {
+  grid-template-rows: 1fr;
+}
+
+.panelInner {
+  overflow: hidden;
+}
+
+.desc {
+  margin: 0;
+  /* align under the title: 44px badge + 14px gap + 2px header pad = 60px */
+  padding: 2px 2px 16px 60px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Desktop: the familiar row of numbered cards, all expanded, no accordion. */
+@media (min-width: 641px) {
+  .list {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(170px, 1fr));
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+  }
+
+  .item,
+  .item:last-child {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: var(--blur);
+    min-height: 260px;
+    padding: 16px;
+  }
+
+  .header {
+    display: block;
+    padding: 0;
+    cursor: default;
+  }
+
+  .badge {
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    place-items: start;
+    color: var(--cyan);
+    font: 900 32px/1 var(--font-geist-mono), monospace;
+  }
+
+  .item.active .badge {
+    background: none;
+    color: var(--cyan);
+  }
+
+  .label {
+    margin: 14px 0 20px;
+  }
+
+  .title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .item.active .title {
+    color: inherit;
+  }
+
+  .chevron {
+    display: none;
+  }
+
+  .panel,
+  .item.active .panel {
+    grid-template-rows: 1fr;
+  }
+
+  .desc {
+    padding: 0;
+  }
+}
