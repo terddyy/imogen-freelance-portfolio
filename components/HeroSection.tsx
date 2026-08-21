@@ -2,8 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import heroBackground from "@/public/Hero-background.webp";
-import { ArrowRight, ArrowUpRight, ChevronDown, CircleDot, Mail } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronDown, CircleDot } from "lucide-react";
 import { HeroAnimationController } from "@/components/HeroAnimationController";
+import { LinkedInIcon, GitHubIcon, FacebookIcon, EmailIcon } from "@/components/SocialIcons";
 import styles from "@/components/HeroSection.module.css";
 
 export function HeroSection() {
@@ -67,7 +68,7 @@ export function HeroSection() {
               Nexvision Innovations
               <ArrowUpRight size={15} />
             </a>
-            <a href="https://www.facebook.com/zentarisoftwaresolution" target="_blank" rel="noreferrer">
+            <a href="https://www.facebook.com/TERDTHEPRO/" target="_blank" rel="noreferrer">
               Co-founder &amp; CEO, Zentari
               <ArrowUpRight size={15} />
             </a>
@@ -87,14 +88,18 @@ export function HeroSection() {
             </Link>
           </div>
           <div className={`socialRow ${styles.socials}`} aria-label="Social links">
+            <a href="https://www.facebook.com/TERDTHEPRO/" target="_blank" rel="noreferrer" aria-label="Facebook" className={styles.facebookHighlight}>
+              <FacebookIcon size={20} />
+              <span>Facebook</span>
+            </a>
             <a href="https://www.linkedin.com/in/terd/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-              <span className="socialGlyph">in</span>
+              <LinkedInIcon size={18} />
             </a>
             <a href="https://github.com/terddyy" target="_blank" rel="noreferrer" aria-label="GitHub">
-              <span className="socialGlyph">gh</span>
+              <GitHubIcon size={18} />
             </a>
             <a href="mailto:terd@zentariph.com" aria-label="Email Imogen">
-              <Mail size={18} />
+              <EmailIcon size={18} />
             </a>
           </div>
         </div>

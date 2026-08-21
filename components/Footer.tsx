@@ -1,6 +1,14 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { navItems, socials } from "@/lib/portfolio-data";
+import { LinkedInIcon, GitHubIcon, FacebookIcon, EmailIcon } from "@/components/SocialIcons";
+
+const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
+  Facebook: FacebookIcon,
+  LinkedIn: LinkedInIcon,
+  GitHub: GitHubIcon,
+  Email: EmailIcon,
+};
 
 export function Footer() {
   return (
@@ -18,12 +26,16 @@ export function Footer() {
           ))}
         </div>
         <div className="footerLinks">
-          {socials.map((item) => (
-            <a href={item.href} key={item.label}>
-              {item.label}
-              <ArrowUpRight size={13} />
-            </a>
-          ))}
+          {socials.map((item) => {
+            const Icon = iconMap[item.label];
+            return (
+              <a href={item.href} key={item.label}>
+                {Icon && <Icon size={14} />}
+                {item.label}
+                <ArrowUpRight size={13} />
+              </a>
+            );
+          })}
         </div>
       </div>
       <div className="shell footerBottom">

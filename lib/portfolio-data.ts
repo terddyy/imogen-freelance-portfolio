@@ -39,6 +39,8 @@ export type Service = {
   title: string;
   description: string;
   iconKey: ServiceIconKey;
+  offerings: string[];
+  highlighted?: boolean;
 };
 
 export type ProcessStep = {
@@ -59,11 +61,15 @@ export type PricingTier = {
 };
 
 export type Testimonial = {
+  id: string;
   initials: string;
   name: string;
   role: string;
   quote: string;
   theme: "gold" | "sage" | "navy";
+  rating: number;
+  image?: string;
+  email?: string;
 };
 
 export const navItems = [
@@ -74,8 +80,9 @@ export const navItems = [
 ];
 
 export const socials = [
-  { label: "GitHub", href: "https://github.com/terddyy" },
+  { label: "Facebook", href: "https://www.facebook.com/TERDTHEPRO/" },
   { label: "LinkedIn", href: "https://www.linkedin.com/in/terd/" },
+  { label: "GitHub", href: "https://github.com/terddyy" },
   { label: "Email", href: "mailto:terd@zentariph.com" },
 ];
 
@@ -182,7 +189,7 @@ export const proofMoments: ProofMoment[] = [
     alt: "Client meeting, discussing project goals",
     label: "Client meeting",
     layout: "tall",
-    desktopLayout: "meeting",
+    desktopLayout: "workshop",
   },
   {
     id: "in-the-room",
@@ -190,7 +197,7 @@ export const proofMoments: ProofMoment[] = [
     alt: "Workshop session with collaborators in the room",
     label: "Workshop",
     layout: "default",
-    desktopLayout: "workshop",
+    desktopLayout: "meeting",
   },
   {
     id: "team",
@@ -212,40 +219,75 @@ export const proofMoments: ProofMoment[] = [
 
 export const services: Service[] = [
   {
-    title: "Portfolio & Business Websites",
+    title: "Custom Systems / Software",
     description:
-      "Readable, credible websites that introduce your work clearly and guide visitors toward an inquiry.",
-    iconKey: "laptop",
+      "The core offer: software built around how the business actually runs, not a generic template.",
+    iconKey: "puzzle",
+    highlighted: true,
+    offerings: [
+      "CRM (customer management)",
+      "Inventory & sales tracking",
+      "Booking & scheduling",
+      "School/clinic management",
+      "POS & transaction tracking",
+      "Employee monitoring/timekeeping",
+      "Admin dashboards with analytics",
+    ],
   },
   {
-    title: "Brand-Aligned Landing Pages",
-    description:
-      "Campaign pages with sharp messaging, visual consistency, and conversion-focused section flow.",
+    title: "Websites",
+    description: "Sites that introduce the work clearly and give visitors a next step.",
+    iconKey: "globe",
+    offerings: [
+      "Business websites",
+      "E-commerce stores",
+      "Booking systems",
+      "Portfolio & personal sites",
+      "Landing pages for marketing",
+    ],
+  },
+  {
+    title: "Applications",
+    description: "Apps for the devices people already use, with shared dashboards when the work spans more than one screen.",
+    iconKey: "smartphone",
+    offerings: [
+      "Mobile apps (Android/iOS)",
+      "Desktop apps (Windows/Mac)",
+      "Multi-device system dashboards",
+    ],
+  },
+  {
+    title: "Capstone Projects",
+    description: "Thesis and capstone systems scoped to defend well: working software, clear architecture, and a demo that holds up.",
+    iconKey: "graduationCap",
+    offerings: [
+      "Thesis and capstone builds",
+      "Documentation-ready architecture",
+      "Adviser-friendly scope",
+      "Defense-ready walkthroughs",
+    ],
+  },
+  {
+    title: "AI Integration",
+    description: "Practical AI inside the tools a team already uses — assistants, automation, and agent-style workflows.",
+    iconKey: "sparkles",
+    offerings: [
+      "AI assistants in existing systems",
+      "Document and workflow automation",
+      "Chat and image tools",
+      "Agent-style task support",
+    ],
+  },
+  {
+    title: "Branding & Design",
+    description: "Visual systems that stay consistent from the product UI to the posts around it.",
     iconKey: "palette",
-  },
-  {
-    title: "Content Updates & Site Care",
-    description:
-      "Practical site upkeep, page refreshes, content edits, and UI improvements without unnecessary rebuilds.",
-    iconKey: "wrench",
-  },
-  {
-    title: "Booking & Inquiry Forms",
-    description:
-      "Simple lead paths for bookings, requests, and project briefs that keep next steps clear.",
-    iconKey: "formInput",
-  },
-  {
-    title: "Simple E-commerce Setup",
-    description:
-      "Starter catalog and storefront experiences for small product lines, service add-ons, or launches.",
-    iconKey: "shoppingBag",
-  },
-  {
-    title: "Workflow Automation Support",
-    description:
-      "Lightweight automations that connect forms, messages, spreadsheets, and repeatable admin tasks.",
-    iconKey: "settings2",
+    offerings: [
+      "UI/UX design",
+      "Logo design",
+      "Social media graphics",
+      "Marketing materials",
+    ],
   },
 ];
 
@@ -342,28 +384,39 @@ export const pricingTiers: PricingTier[] = [
 
 export const testimonials: Testimonial[] = [
   {
-    initials: "CN",
-    name: "Client Note",
-    role: "Placeholder feedback",
+    id: "jayneil-pagalunan",
+    initials: "JP",
+    name: "Jayneil Pagalunan",
+    role: "Full Stack Developer at Nexvision Innovations INC",
     quote:
-      "This space is reserved for a real client note once approved feedback is ready to publish.",
-    theme: "gold",
-  },
-  {
-    initials: "PR",
-    name: "Project Review",
-    role: "Placeholder feedback",
-    quote:
-      "Use this card for a short review about communication, design clarity, or launch support.",
-    theme: "sage",
-  },
-  {
-    initials: "FS",
-    name: "Future Story",
-    role: "Placeholder feedback",
-    quote:
-      "A third placeholder keeps the stack balanced while the portfolio is being prepared.",
+      "Terd leads a team the way a strong full-stack lead should: clear priorities, no wasted motion, and fast unblocking when someone is stuck. He keeps people aligned without micromanaging, which is why delivery stays efficient even when the pressure is on.",
     theme: "navy",
+    rating: 5,
+    image: "/testimonials/jayneil-pagalunan.png",
+  },
+  {
+    id: "marc-lester",
+    initials: "ML",
+    name: "Marc Lester",
+    role: "App Client",
+    quote:
+      "We are happy sa kinalabasan ng project namin so far. Madali kausapin and tries his best to accommodate our requests. Bugs are also solved immediately. Will recommend him to those na need ng application or digital system.",
+    theme: "sage",
+    rating: 5,
+    image: "/testimonials/marc-lester.png",
+    email: "marc.cueto@yahoo.com",
+  },
+  {
+    id: "alexie-anoya",
+    initials: "AA",
+    name: "Alexie Anoya",
+    role: "Website client",
+    quote:
+      "I'm satisfied with the commissioned project. Sir Terd knows his stuff and works really well even with rush commissions. He is also straightforward and easy to talk to. Would definitely recommend him to people who need immediate outputs.",
+    theme: "gold",
+    rating: 5,
+    image: "/testimonials/alexie-anoya.png",
+    email: "alexieanoya@gmail.com",
   },
 ];
 

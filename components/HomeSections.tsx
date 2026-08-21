@@ -9,7 +9,6 @@ import {
 import {
   aboutHighlights,
   pricingTiers,
-  processSteps,
   projects,
   services,
   toolCards,
@@ -33,11 +32,10 @@ export function AboutSection() {
     <section className="shell pageSection aboutSection" id="about">
       <div>
         <span className="sectionLabel">About Imogen</span>
-        <h2>Independent freelancer, practical design partner, calm launch process.</h2>
+        <h2>Freelancer, design partner, calm launch process.</h2>
         <p>
-          Imogen Inocentes works with founders, service providers, and small teams who need a site
-          that is clear, usable, and easy to keep improving. The focus is simple: make the offer
-          understandable, make the next step obvious, and make the interface feel polished on every screen.
+          Works with founders, service providers, and small teams who need a clear, usable site
+          that is easy to keep improving.
         </p>
         <div className="highlightList">
           {aboutHighlights.map((item) => {
@@ -71,19 +69,31 @@ export function ServicesSection() {
     <section className="shell pageSection" id="services">
       <SectionHeading
         label="Services"
-        title="Freelance help for focused websites and simple digital workflows."
-        body="The services mirror the reference site's breadth while keeping the positioning solo, practical, and Imogen-specific."
+        title="Custom systems, websites, apps, and AI."
+        body="Software built around how your work actually runs."
       />
       <div className="serviceGrid">
         {services.map((service) => {
           const Icon = getPortfolioIcon(service.iconKey);
           return (
-            <article className="serviceCard" key={service.title}>
+            <article
+              className={service.highlighted ? "serviceCard serviceCardFeatured" : "serviceCard"}
+              key={service.title}
+            >
+              {service.highlighted ? <span className="planBadge">Core offer</span> : null}
               <span className="serviceIcon">
                 <Icon size={20} />
               </span>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
+              <ul>
+                {service.offerings.map((offering) => (
+                  <li key={offering}>
+                    <Check size={15} />
+                    {offering}
+                  </li>
+                ))}
+              </ul>
             </article>
           );
         })}
@@ -92,35 +102,15 @@ export function ServicesSection() {
   );
 }
 
-export function ProcessSection() {
-  return (
-    <section className="shell pageSection" id="process">
-      <SectionHeading
-        label="Process"
-        title="A clear path from first message to launch handoff."
-        body="Each phase gives both sides a concrete checkpoint, so the work stays scoped and the site has a reliable path to completion."
-      />
-      <div className="processGrid">
-        {processSteps.map((step) => (
-          <article className="processCard" key={step.number}>
-            <span>{step.number}</span>
-            <small>{step.label}</small>
-            <h3>{step.title}</h3>
-            <p>{step.description}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
+export { ProcessSection } from "@/components/ProcessSection";
 
 export function PricingSection() {
   return (
     <section className="shell pageSection" id="pricing">
       <SectionHeading
         label="Pricing"
-        title="Placeholder tiers for planning conversations."
-        body="The ranges are intentionally starter estimates, not final quotes. Real pricing should be confirmed against scope, content, and launch timeline."
+        title="Starter ranges to plan around."
+        body="Final pricing depends on scope, content, and timeline."
       />
       <div className="pricingGrid">
         {pricingTiers.map((tier) => (
@@ -154,9 +144,9 @@ export function ToolsSection() {
   return (
     <section className="shell pageSection" id="tools">
       <SectionHeading
-        label="Tools I Work With"
-        title="A GitHub-style area for public work when it is ready."
-        body="Instead of showing empty or private repositories, this section keeps the reference site's technical credibility area as honest placeholders."
+        label="Tools"
+        title="Tech stack and tools."
+        body="Languages, frameworks, and tools used across projects."
       />
       <div className="toolGrid">
         {toolCards.map((card) => {
@@ -180,7 +170,7 @@ export function FinalCta() {
       <div>
         <span className="sectionLabel">Start Here</span>
         <h2>Have a project in mind?</h2>
-        <p>Tell Imogen what you need and she&apos;ll reply with a clear next step for scope, timeline, and fit.</p>
+        <p>Tell us what you need — we&apos;ll reply with a clear next step.</p>
       </div>
       <ProjectInquiryTrigger className="primaryButton">
         Send Inquiry
