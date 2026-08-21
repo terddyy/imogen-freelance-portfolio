@@ -6,14 +6,14 @@ import { projects } from "@/lib/portfolio-data";
 import { ProjectCard } from "@/components/ProjectCard";
 import { ProjectPreviewDialog } from "@/components/ProjectPreviewDialog";
 
-const categories = ["All", ...Array.from(new Set(projects.map((project) => project.category)))] as const;
+const categories = ["All", "Websites", "App", "Custom", "Others"] as const;
 
 const categoryLabels: Record<(typeof categories)[number], string> = {
   All: "All",
   Websites: "Websites",
-  "Landing Pages": "Landing",
-  Commerce: "Commerce",
-  Dashboards: "Dashboards",
+  App: "App",
+  Custom: "Custom",
+  Others: "Others",
 };
 
 export function ProjectFilters() {

@@ -129,6 +129,8 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
   const dragStartRef = useRef({ pointerX: 0, offset: 0 });
   const segmentRef = useRef<LoopSegment>({ start: 0, loopWidth: 0 });
   const rafRef = useRef<number | null>(null);
+  const resumeAtRef = useRef<number>(0);
+  const RESUME_DELAY_MS = 2000;
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const isInView = useInView(sectionRef, { amount: 0.2 });
   const shouldReduceMotion = useReducedMotion();
@@ -206,7 +208,7 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
     let lastTime = performance.now();
 
     const tick = (now: number) => {
-      if (!isDraggingRef.current) {
+      if (!isDraggingRef.current && now >= resumeAtRef.current) {
         const delta = (now - lastTime) / 1000;
         const segment = syncSegment();
         offsetRef.current = normalizeOffset(
@@ -275,6 +277,11 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
 
     pointerActiveRef.current = false;
     isDraggingRef.current = false;
+
+    if (didDragRef.current) {
+      resumeAtRef.current = performance.now() + RESUME_DELAY_MS;
+      didDragRef.current = false;
+    }
 
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
       event.currentTarget.releasePointerCapture(event.pointerId);

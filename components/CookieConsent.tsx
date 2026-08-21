@@ -1,16 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { hasCookieDecision, setCookieConsent } from "@/lib/cookie-consent";
 
 export function CookieConsent() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     setVisible(!hasCookieDecision());
   }, []);
 
+  if (pathname === "/inquire") return null;
   if (!visible) return null;
 
   function decide(status: "accepted" | "rejected") {

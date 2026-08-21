@@ -8,7 +8,6 @@ import {
 import { AnimatedSection } from "@/components/AnimatedSection";
 import featuredStyles from "@/components/FeaturedProjectCarousel.module.css";
 import stackStyles from "@/components/HomeTestimonialsStack.module.css";
-import inquiryStyles from "@/components/InquirySection.module.css";
 import { projects } from "@/lib/portfolio-data";
 
 const FeaturedProjectCarousel = dynamic(
@@ -25,14 +24,6 @@ const HomeTestimonials = dynamic(
       default: module.HomeTestimonialsStack,
     })),
   { loading: () => <div className={stackStyles.bandPlaceholder} aria-hidden /> },
-);
-
-const InquirySection = dynamic(
-  () =>
-    import("@/components/InquirySection").then((module) => ({
-      default: module.InquirySection,
-    })),
-  { loading: () => <div className={inquiryStyles.sectionPlaceholder} aria-hidden /> },
 );
 
 const ProofGallery = dynamic(
@@ -65,7 +56,6 @@ export default function Home() {
       <AnimatedSection>
         <FinalCta />
       </AnimatedSection>
-      <InquirySection />
     </main>
   );
 }

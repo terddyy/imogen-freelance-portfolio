@@ -1,6 +1,11 @@
 "use client";
 
+import * as motion from "motion/react-client";
+import { useReducedMotion } from "motion/react";
+import { usePathname } from "next/navigation";
 import { contactMethods } from "@/lib/portfolio-data";
+import { motionTiming } from "@/lib/motion-presets";
+import { useScrollDirectionVisibility } from "@/hooks/useScrollDirectionVisibility";
 
 const whatsapp = contactMethods.find((method) => method.label === "WhatsApp");
 const phone = contactMethods.find((method) => method.label === "Call");
@@ -14,8 +19,35 @@ export function WhatsAppIcon({ size = 20 }: { size?: number }) {
 }
 
 export function WhatsAppContact() {
+  const pathname = usePathname();
+  const shouldReduceMotion = useReducedMotion();
+  const visible = useScrollDirectionVisibility();
+
+  if (pathname === "/inquire") return null;
+
   return (
-    <aside className="whatsappContact" aria-label="Direct contact">
+    <motion.aside
+      className="whatsappContact"
+      aria-label="Direct contact"
+      aria-hidden={!visible}
+      initial={false}
+      animate={{
+        opacity: visible ? 1 : 0,
+        y: visible ? 0 : 20,
+        scale: visible ? 1 : 0.94,
+        pointerEvents: visible ? "auto" : "none",
+      }}
+      transition={
+        shouldReduceMotion
+          ? { duration: 0 }
+          : {
+              opacity: { duration: motionTiming.fast, ease: motionTiming.ease },
+              y: { type: "spring", stiffness: 380, damping: 32, mass: 0.9 },
+              scale: { duration: motionTiming.fast, ease: motionTiming.ease },
+              pointerEvents: { duration: 0 },
+            }
+      }
+    >
       <a className="whatsappContactMain" href={whatsapp?.href ?? "https://wa.me/639602506993"} target="_blank" rel="noreferrer" aria-label="WhatsApp Imogen at +63 960 250 6993">
         <span className="whatsappContactIcon"><WhatsAppIcon size={21} /></span>
         <span className="whatsappContactCopy">
@@ -26,6 +58,6 @@ export function WhatsAppContact() {
       <a className="whatsappContactCall" href={phone?.href ?? "tel:+639602506993"} aria-label="Call Imogen at +63 960 250 6993">
         Call
       </a>
-    </aside>
+    </motion.aside>
   );
 }

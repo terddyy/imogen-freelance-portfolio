@@ -37,6 +37,8 @@ export function Header() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  if (pathname === "/inquire") return null;
+
   return (
     <motion.header
       className="siteHeader"

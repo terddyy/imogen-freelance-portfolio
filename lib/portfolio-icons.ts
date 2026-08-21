@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   BadgeCheck,
   Blocks,
+  Building2,
   CalendarCheck,
   Code2,
   FilePenLine,
@@ -11,7 +12,6 @@ import {
   LayoutDashboard,
   Mail,
   MessageCircle,
-  Palette,
   Phone,
   Puzzle,
   Rocket,
@@ -26,7 +26,7 @@ export const serviceIcons = {
   smartphone: Smartphone,
   graduationCap: GraduationCap,
   sparkles: Sparkles,
-  palette: Palette,
+  building: Building2,
 } as const;
 
 export const aboutHighlightIcons = {

@@ -1,26 +1,25 @@
 "use client";
 
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { ProjectInquiryForm } from "@/components/ProjectInquiryForm";
 
-type InquirySectionProps = {
-  id?: string;
-  page?: boolean;
-};
-
-export function InquirySection({ id = "inquire", page = false }: InquirySectionProps) {
-  const Heading = page ? "h1" : "h2";
-
+export function InquirySection() {
   return (
     <section
-      className={`inquiryViewport shell${page ? " inquiryViewport--page" : ""}`}
-      id={id}
+      className="inquiryViewport shell inquiryViewport--page"
+      id="inquire"
       aria-label="Project inquiry"
       data-inquiry-section
       data-inquiry-theme="light"
     >
+      <Link className="inquiryBackHome" href="/">
+        <ArrowLeft size={16} aria-hidden="true" />
+        Back to site
+      </Link>
       <div className="inquiryViewportIntro">
         <span className="sectionLabel">Project inquiry</span>
-        <Heading>Let&apos;s scope your next build.</Heading>
+        <h1>Let&apos;s scope your next build.</h1>
       </div>
       <ProjectInquiryForm compact />
     </section>

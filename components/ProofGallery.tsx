@@ -17,6 +17,11 @@ const mobileLayoutClass: Record<ProofMobileLayout, string> = {
   default: styles.mobileDefault,
   team: styles.mobileTeam,
   onsite: styles.mobileOnsite,
+  hero2: styles.mobileHero2,
+  tall2: styles.mobileTall2,
+  default2: styles.mobileDefault2,
+  team2: styles.mobileTeam2,
+  onsite2: styles.mobileOnsite2,
 };
 
 const desktopLayoutClass: Record<ProofDesktopLayout, string> = {
@@ -25,6 +30,11 @@ const desktopLayoutClass: Record<ProofDesktopLayout, string> = {
   workshop: styles.desktopWorkshop,
   team: styles.desktopTeam,
   onsite: styles.desktopOnsite,
+  feature2: styles.desktopFeature2,
+  meeting2: styles.desktopMeeting2,
+  workshop2: styles.desktopWorkshop2,
+  team2: styles.desktopTeam2,
+  onsite2: styles.desktopOnsite2,
 };
 
 type ProofCellProps = {
@@ -36,6 +46,7 @@ type ProofCellProps = {
 };
 
 function ProofCell({ moment, index, layoutClass, imageSizes, onOpen }: ProofCellProps) {
+  const isVideo = moment.kind === "video";
   return (
     <figure className={`${styles.cell} ${layoutClass}`} role="listitem">
       <button
@@ -44,13 +55,26 @@ function ProofCell({ moment, index, layoutClass, imageSizes, onOpen }: ProofCell
         onClick={() => onOpen(index)}
         aria-label={`View ${moment.label}: ${moment.alt}`}
       >
-        <Image
-          className={styles.image}
-          src={moment.src}
-          alt=""
-          fill
-          sizes={imageSizes}
-        />
+        {isVideo ? (
+          <video
+            className={styles.video}
+            src={moment.src}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label={moment.alt}
+          />
+        ) : (
+          <Image
+            className={styles.image}
+            src={moment.src}
+            alt=""
+            fill
+            sizes={imageSizes}
+          />
+        )}
         <span className={styles.caption}>{moment.label}</span>
       </button>
     </figure>
@@ -184,14 +208,27 @@ export function ProofGallery() {
             </header>
 
             <div className="proofDialogImageWrap">
-              <Image
-                className="proofDialogImage"
-                src={active.src}
-                alt={active.alt}
-                fill
-                sizes="100vw"
-                priority
-              />
+              {active.kind === "video" ? (
+                <video
+                  className="proofDialogImage"
+                  src={active.src}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  aria-label={active.alt}
+                />
+              ) : (
+                <Image
+                  className="proofDialogImage"
+                  src={active.src}
+                  alt={active.alt}
+                  fill
+                  sizes="100vw"
+                  priority
+                />
+              )}
             </div>
 
             <p className="proofDialogCaption">{active.alt}</p>

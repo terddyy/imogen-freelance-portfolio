@@ -8,7 +8,7 @@ import type {
 export type Project = {
   title: string;
   summary: string;
-  category: "Websites" | "Landing Pages" | "Commerce" | "Dashboards";
+  category: "Websites" | "App" | "Custom" | "Others";
   tags: string[];
   image: string;
   initials: string[];
@@ -20,15 +20,37 @@ export type Skill = {
   group: "Design" | "Frontend" | "Tools" | "Workflow";
 };
 
-export type ProofMobileLayout = "hero" | "tall" | "default" | "team" | "onsite";
+export type ProofMobileLayout =
+  | "hero"
+  | "tall"
+  | "default"
+  | "team"
+  | "onsite"
+  | "hero2"
+  | "tall2"
+  | "default2"
+  | "team2"
+  | "onsite2";
 
-export type ProofDesktopLayout = "feature" | "meeting" | "workshop" | "team" | "onsite";
+export type ProofDesktopLayout =
+  | "feature"
+  | "meeting"
+  | "workshop"
+  | "team"
+  | "onsite"
+  | "feature2"
+  | "meeting2"
+  | "workshop2"
+  | "team2"
+  | "onsite2";
 
 export type ProofMoment = {
   id: string;
   src: string;
   alt: string;
   label: string;
+  /** Media kind — defaults to image when omitted. */
+  kind?: "image" | "video";
   /** Mobile bento slot — used below 981px */
   layout: ProofMobileLayout;
   /** Desktop bento slot — used from 981px up */
@@ -86,26 +108,7 @@ export const socials = [
 ];
 
 export const projects: Project[] = [
-  {
-    title: "SK Logistics",
-    summary:
-      "Enterprise fleet command center for live GPS tracking, trip control, compliance, and financial performance.",
-    category: "Dashboards",
-    tags: ["Fleet Ops", "Live Tracking", "Analytics"],
-    image: "/projects/sk-logistics.webp",
-    initials: ["SK", "II"],
-    href: "https://sk-logistics.nexvision.info",
-  },
-  {
-    title: "Ayyan Tech",
-    summary:
-      "Product showcase for Hi-Res Hybrid-ANC headphones with feature storytelling and quote-ready CTAs.",
-    category: "Commerce",
-    tags: ["Product Page", "Brand", "Campaign"],
-    image: "/projects/ayyan-tech.webp",
-    initials: ["AY", "II"],
-    href: "https://ayyantech.net",
-  },
+  // Websites
   {
     title: "Zentari Software",
     summary:
@@ -115,16 +118,6 @@ export const projects: Project[] = [
     image: "/projects/zentari.webp",
     initials: ["ZS", "II"],
     href: "https://zentariph.com",
-  },
-  {
-    title: "BalanceFlow",
-    summary:
-      "Receivables SaaS landing experience focused on balances, payment approvals, and organized collections.",
-    category: "Landing Pages",
-    tags: ["Fintech", "SaaS", "Conversion"],
-    image: "/projects/balanceflow.webp",
-    initials: ["BF", "II"],
-    href: "https://balanceflow.zentariph.com",
   },
   {
     title: "TerdAI",
@@ -147,14 +140,87 @@ export const projects: Project[] = [
     href: "https://waterlinks.org",
   },
   {
+    title: "Kado Kōhi",
+    summary:
+      "Brand site for a Marikina matcha and specialty coffee shop with menu storytelling, bookings, and online ordering.",
+    category: "Websites",
+    tags: ["Brand", "Cafe", "Menu"],
+    image: "/projects/kadokohi.webp",
+    initials: ["KK", "II"],
+    href: "https://kadokohi.com",
+  },
+  {
+    title: "Alon",
+    summary:
+      "Slow-travel magazine for the Mimaropa islands — festivals, food, and faith across four island chapters.",
+    category: "Websites",
+    tags: ["Magazine", "Editorial", "Travel"],
+    image: "/projects/alon.webp",
+    initials: ["AL", "II"],
+    href: "https://alexie.vercel.app",
+  },
+  // App (mobile)
+  {
+    title: "Inventala",
+    summary:
+      "Construction inventory app that logs material usage, tracks wastage, and keeps sites stocked with predictive restocking.",
+    category: "App",
+    tags: ["Mobile App", "Inventory", "Construction"],
+    image: "/projects/inventala.webp",
+    initials: ["IN", "II"],
+    href: "https://drive.google.com/file/d/1KAnJQI580sZDmSQIcddntNGeHOTHXQTN/view?usp=sharing",
+  },
+  // Custom systems
+  {
+    title: "SK Logistics",
+    summary:
+      "Enterprise fleet command center for live GPS tracking, trip control, compliance, and financial performance.",
+    category: "Custom",
+    tags: ["Fleet Ops", "Live Tracking", "Analytics"],
+    image: "/projects/sk-logistics.webp",
+    initials: ["SK", "II"],
+    href: "https://sk-logistics.nexvision.info",
+  },
+  {
     title: "NEXCRM",
     summary:
       "Multi-agent sales CRM that finds revenue leaks, guides teams, and executes approved pipeline actions.",
-    category: "Dashboards",
+    category: "Custom",
     tags: ["CRM", "AI Agents", "Sales"],
     image: "/projects/nexcrm.webp",
     initials: ["NX", "II"],
     href: "https://nexcrm.terd.dev",
+  },
+  {
+    title: "eSerbisyo",
+    summary:
+      "Barangay resident workspace for documents, appointments, incident reports, and updates in one simple system.",
+    category: "Custom",
+    tags: ["Government", "Records", "Workspace"],
+    image: "/projects/eserbisyo.webp",
+    initials: ["ES", "II"],
+    href: "https://eserbisyo.vercel.app",
+  },
+  // Others
+  {
+    title: "Ayyan Tech",
+    summary:
+      "Product showcase for Hi-Res Hybrid-ANC headphones with feature storytelling and quote-ready CTAs.",
+    category: "Others",
+    tags: ["Product Page", "Brand", "Campaign"],
+    image: "/projects/ayyan-tech.webp",
+    initials: ["AY", "II"],
+    href: "https://ayyantech.net",
+  },
+  {
+    title: "BalanceFlow",
+    summary:
+      "Receivables SaaS landing experience focused on balances, payment approvals, and organized collections.",
+    category: "Others",
+    tags: ["Fintech", "SaaS", "Conversion"],
+    image: "/projects/balanceflow.webp",
+    initials: ["BF", "II"],
+    href: "https://balanceflow.zentariph.com",
   },
 ];
 
@@ -214,6 +280,48 @@ export const proofMoments: ProofMoment[] = [
     layout: "onsite",
     desktopLayout: "onsite",
   },
+  {
+    id: "in-motion",
+    src: "https://res.cloudinary.com/dqojscxhd/video/upload/v1787344225/copy_21012066-F52F-494D-9458-B2D1B3FACEF6_cqthvu.mov",
+    alt: "Short clip of recent client work captured on screen",
+    label: "In motion",
+    kind: "video",
+    layout: "tall2",
+    desktopLayout: "meeting2",
+  },
+  {
+    id: "behind-the-screen",
+    src: "https://res.cloudinary.com/dqojscxhd/video/upload/v1787344224/copy_4C7979BC-FAD6-44C2-A398-DFDE5E12EE47_tohkgk.mov",
+    alt: "Short clip of work in progress",
+    label: "Behind the screen",
+    kind: "video",
+    layout: "hero2",
+    desktopLayout: "feature2",
+  },
+  {
+    id: "on-the-floor",
+    src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1787344197/44aaf787dad2ad8c817ce89769fee27f_ndx7t8.jpg",
+    alt: "Recent project snapshot",
+    label: "On the floor",
+    layout: "default2",
+    desktopLayout: "workshop2",
+  },
+  {
+    id: "late-hours",
+    src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1774421921/IMG_20260317_232359_220_anupvj.jpg",
+    alt: "Building late into the night",
+    label: "Late hours",
+    layout: "team2",
+    desktopLayout: "team2",
+  },
+  {
+    id: "quiet-corner",
+    src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1774421921/IMG_20260313_223915_251_wc9hgy.jpg",
+    alt: "Working from a quiet spot",
+    label: "Quiet corner",
+    layout: "onsite2",
+    desktopLayout: "onsite2",
+  },
 ];
 
 export const services: Service[] = [
@@ -226,10 +334,7 @@ export const services: Service[] = [
     offerings: [
       "CRM (customer management)",
       "Inventory & sales tracking",
-      "Booking & scheduling",
-      "School/clinic management",
       "POS & transaction tracking",
-      "Employee monitoring/timekeeping",
       "Admin dashboards with analytics",
     ],
   },
@@ -238,10 +343,9 @@ export const services: Service[] = [
     description: "Sites that introduce the work clearly and give visitors a next step.",
     iconKey: "globe",
     offerings: [
-      "Business websites",
+      "Business & company websites",
       "E-commerce stores",
-      "Booking systems",
-      "Portfolio & personal sites",
+      "Booking & reservation systems",
       "Landing pages for marketing",
     ],
   },
@@ -252,6 +356,7 @@ export const services: Service[] = [
     offerings: [
       "Mobile apps (Android/iOS)",
       "Desktop apps (Windows/Mac)",
+      "Cross-platform apps",
       "Multi-device system dashboards",
     ],
   },
@@ -278,14 +383,14 @@ export const services: Service[] = [
     ],
   },
   {
-    title: "Branding & Design",
-    description: "Visual systems that stay consistent from the product UI to the posts around it.",
-    iconKey: "palette",
+    title: "Industry-Specific Software",
+    description: "Tailored systems built for how a specific industry works, with the right rules baked in.",
+    iconKey: "building",
     offerings: [
-      "UI/UX design",
-      "Logo design",
-      "Social media graphics",
-      "Marketing materials",
+      "Restaurant & food ordering systems",
+      "Real estate & property management",
+      "Clinic, pharmacy & healthcare tools",
+      "Learning management systems (LMS)",
     ],
   },
 ];
