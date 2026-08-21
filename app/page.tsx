@@ -8,6 +8,7 @@ import {
 import { AnimatedSection } from "@/components/AnimatedSection";
 import featuredStyles from "@/components/FeaturedProjectCarousel.module.css";
 import stackStyles from "@/components/HomeTestimonialsStack.module.css";
+import inquiryStyles from "@/components/InquirySection.module.css";
 import { projects } from "@/lib/portfolio-data";
 
 const FeaturedProjectCarousel = dynamic(
@@ -31,7 +32,7 @@ const InquirySection = dynamic(
     import("@/components/InquirySection").then((module) => ({
       default: module.InquirySection,
     })),
-  { loading: () => <div className="inquiryViewport shell" aria-hidden /> },
+  { loading: () => <div className={inquiryStyles.sectionPlaceholder} aria-hidden /> },
 );
 
 const ProofGallery = dynamic(

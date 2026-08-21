@@ -87,12 +87,18 @@ html {
   min-height: 100%;
   scroll-padding-top: 88px;
   scroll-behavior: smooth;
+  overflow-x: clip;
+  overscroll-behavior-x: contain;
 }
 
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+}
+
+body {
+  overflow-x: clip;
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -403,7 +409,6 @@ html[data-theme="light"] .siteHeader {
 .serviceCard,
 .testimonialCard,
 .pricingCard,
-.processCard,
 .contactMethodCard,
 .contactForm,
 .emptyState {
@@ -429,7 +434,6 @@ html[data-theme="light"] .siteHeader {
 }
 
 .statCard span,
-.processCard small,
 .pricingCard p,
 .serviceCard p,
 .toolCard p,
@@ -747,7 +751,6 @@ body:has(.proofDialog[open]) .mobileDock {
 .testimonialPreview,
 .testimonialGrid,
 .serviceGrid,
-.processGrid,
 .pricingGrid,
 .toolGrid,
 .contactMethodGrid {
@@ -896,56 +899,6 @@ body:has(.proofDialog[open]) .mobileDock {
 .toolCard p,
 .pricingCard p {
   line-height: 1.65;
-}
-
-.processGrid {
-  grid-template-columns: repeat(6, minmax(170px, 1fr));
-  overflow-x: auto;
-  padding-bottom: 6px;
-}
-
-.processCard {
-  min-height: 260px;
-  padding: 16px;
-}
-
-.processCardTop {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: default;
-}
-
-.processCardTop > span {
-  color: var(--cyan);
-  font: 900 32px/1 var(--font-geist-mono), monospace;
-}
-
-.processCardMeta {
-  display: block;
-  width: 100%;
-}
-
-.processCard small {
-  display: block;
-  margin: 14px 0 20px;
-  font: 800 11px/1 var(--font-geist-mono), monospace;
-}
-
-.processCard h3 {
-  margin-bottom: 10px;
-}
-
-.processCard p {
-  color: var(--muted);
-  line-height: 1.6;
 }
 
 .pricingCard {
@@ -2220,12 +2173,20 @@ html[data-theme="light"] .whatsappContact {
   justify-content: center;
 }
 
-.inquiryProjectChoices .inquiryChoice svg {
+.inquiryProjectChoiceImage {
   width: 28px;
   height: 28px;
-  color: #22c55e;
-  filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.35));
-  transition: color 180ms ease, filter 180ms ease;
+  display: block;
+  border-radius: 6px;
+  object-fit: cover;
+  filter: drop-shadow(0 0 6px rgba(34, 197, 94, 0.18));
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.inquiryProjectChoices .inquiryChoice:has(input:checked) .inquiryProjectChoiceImage,
+.inquiryProjectChoices .inquiryChoice:hover .inquiryProjectChoiceImage {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.35));
 }
 
 .inquiryProjectChoices .inquiryChoice strong {
@@ -3189,101 +3150,6 @@ html[data-theme="light"] .whatsappContact {
     font-size: 9px;
     padding: 4px 8px;
     margin-bottom: 8px;
-  }
-
-  /* Process becomes an interactive, single-viewport stepper on mobile */
-  .processGrid {
-    position: relative;
-    grid-template-columns: 1fr;
-    gap: 0;
-    overflow-x: visible;
-    padding-bottom: 0;
-  }
-
-  .processGrid::before {
-    content: "";
-    position: absolute;
-    left: 18px;
-    top: 24px;
-    bottom: 24px;
-    width: 2px;
-    background: linear-gradient(180deg, var(--cyan), rgba(122, 215, 255, 0.15));
-  }
-
-  .processCard {
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-    backdrop-filter: none;
-  }
-
-  .processCardTop {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    padding: 7px 0;
-    cursor: pointer;
-  }
-
-  .processCardTop > span {
-    z-index: 1;
-    flex: 0 0 38px;
-    display: grid;
-    place-items: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid var(--line);
-    background: var(--surface);
-    color: var(--muted);
-    font: 900 13px/1 var(--font-geist-mono), monospace;
-    transition: border-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
-  }
-
-  .processCard.isActive .processCardTop > span {
-    border-color: var(--cyan);
-    color: var(--cyan);
-    transform: scale(1.06);
-  }
-
-  .processCardMeta {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .processCardMeta small {
-    margin: 0 0 1px;
-  }
-
-  .processCardMeta h3 {
-    margin: 0;
-    font-size: 16px;
-    transition: color 0.25s ease;
-  }
-
-  .processCard.isActive .processCardMeta h3 {
-    color: var(--cyan);
-  }
-
-  .processCard p {
-    margin: 0 0 0 52px;
-    max-height: 0;
-    padding: 0;
-    opacity: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
-  }
-
-  .processCard.isActive p {
-    max-height: 180px;
-    padding: 4px 0 14px;
-    opacity: 1;
   }
 
   .shell {

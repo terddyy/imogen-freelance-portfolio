@@ -18,10 +18,14 @@ import Link from "next/link";
 import { TurnstileField } from "@/components/TurnstileField";
 import { useProjectInquiryForm } from "@/hooks/useProjectInquiryForm";
 import {
+  CUSTOM_BUDGET_OPTION,
+  formatCustomBudgetAmount,
   inquiryProjectTypes,
   inquirySteps,
+  isCustomBudget,
   isEmail,
   isPhone,
+  isValidCustomBudgetAmount,
   standardBudgets,
   teamSizes,
   thesisBudgets,
@@ -172,21 +176,25 @@ export function InquireForm() {
                   recommend the right approach, not over- or under-scope your project.
                 </p>
                 {hasOtherProject ? (
-                  <RadioGroup
+                  <BudgetRadioGroup
                     title="Project work"
                     name="budget"
-                    options={[...standardBudgets]}
+                    options={standardBudgets}
                     value={inquiry.budget}
+                    customAmount={inquiry.customBudgetAmount}
                     onChange={(value) => update("budget", value)}
+                    onCustomAmountChange={(value) => update("customBudgetAmount", value)}
                   />
                 ) : null}
                 {hasThesis ? (
-                  <RadioGroup
+                  <BudgetRadioGroup
                     title="Thesis / capstone"
                     name="thesisBudget"
-                    options={[...thesisBudgets]}
+                    options={thesisBudgets}
                     value={inquiry.thesisBudget}
+                    customAmount={inquiry.customThesisBudgetAmount}
                     onChange={(value) => update("thesisBudget", value)}
+                    onCustomAmountChange={(value) => update("customThesisBudgetAmount", value)}
                   />
                 ) : null}
               </div>
@@ -335,13 +343,13 @@ function ProjectTypeGrid({
   return (
     <fieldset>
       <legend className="sr-only">Project type</legend>
-      <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-3.5">
+      <div className="grid grid-cols-3 gap-1 sm:grid-cols-4 sm:gap-1.5">
         {inquiryProjectTypes.map(({ label, value: typeValue }) => {
           const selected = value.includes(typeValue);
           const Icon = projectTypeIcons[typeValue];
 
           return (
-            <label key={typeValue} className="relative min-h-[56px] cursor-pointer sm:min-h-[118px]">
+            <label key={typeValue} className="relative min-h-[44px] cursor-pointer sm:min-h-[72px]">
               <input
                 type="checkbox"
                 name="projectTypes"
@@ -351,39 +359,128 @@ function ProjectTypeGrid({
                 className="peer sr-only"
               />
               <span
-                className={`relative flex h-full flex-col items-center justify-center gap-1 rounded-lg border px-1.5 py-2 text-center transition sm:gap-3 sm:rounded-2xl sm:px-3 sm:py-4 ${
+                className={`relative flex h-full flex-col items-center justify-center gap-0.5 rounded-md border px-1 py-1.5 text-center transition sm:gap-1.5 sm:rounded-xl sm:px-2 sm:py-2.5 ${
                   selected
-                    ? "border-neon bg-neon/[0.06] shadow-[inset_0_0_0_1px_rgba(0,255,136,0.2),0_0_28px_rgba(0,255,136,0.18)]"
+                    ? "border-neon bg-neon/[0.06] shadow-[inset_0_0_0_1px_rgba(0,255,136,0.2),0_0_20px_rgba(0,255,136,0.18)]"
                     : "border-white/8 bg-white/[0.03] hover:border-white/15"
                 }`}
               >
                 {selected ? (
                   <span
-                    className="absolute top-1 right-1 grid size-4 place-items-center rounded-full bg-neon text-[#04120a] shadow-[0_0_14px_rgba(0,255,136,0.55)] sm:top-2.5 sm:right-2.5 sm:size-[22px]"
+                    className="absolute top-0.5 right-0.5 grid size-3 place-items-center rounded-full bg-neon text-[#04120a] shadow-[0_0_10px_rgba(0,255,136,0.55)] sm:top-1 sm:right-1 sm:size-4"
                     aria-hidden="true"
                   >
-                    <Check size={8} className="sm:hidden" />
-                    <Check size={12} className="hidden sm:block" />
+                    <Check size={7} className="sm:hidden" />
+                    <Check size={9} className="hidden sm:block" />
                   </span>
                 ) : null}
                 <Icon
-                  size={18}
+                  size={14}
                   strokeWidth={1.75}
                   aria-hidden="true"
-                  className={`sm:hidden ${selected ? "text-neon drop-shadow-[0_0_12px_rgba(0,255,136,0.55)]" : "text-neon/90 drop-shadow-[0_0_8px_rgba(0,255,136,0.35)]"}`}
+                  className={`sm:hidden ${selected ? "text-neon drop-shadow-[0_0_8px_rgba(0,255,136,0.55)]" : "text-neon/90 drop-shadow-[0_0_6px_rgba(0,255,136,0.35)]"}`}
                 />
                 <Icon
-                  size={28}
+                  size={20}
                   strokeWidth={1.75}
                   aria-hidden="true"
-                  className={`hidden sm:block ${selected ? "text-neon drop-shadow-[0_0_12px_rgba(0,255,136,0.55)]" : "text-neon/90 drop-shadow-[0_0_8px_rgba(0,255,136,0.35)]"}`}
+                  className={`hidden sm:block ${selected ? "text-neon drop-shadow-[0_0_8px_rgba(0,255,136,0.55)]" : "text-neon/90 drop-shadow-[0_0_6px_rgba(0,255,136,0.35)]"}`}
                 />
-                <strong className="text-[10px] font-semibold leading-tight text-white sm:text-sm">{label}</strong>
+                <strong className="text-[8px] font-semibold leading-tight text-white sm:text-[11px]">{label}</strong>
               </span>
             </label>
           );
         })}
       </div>
+    </fieldset>
+  );
+}
+
+function BudgetRadioGroup({
+  title,
+  name,
+  options,
+  value,
+  customAmount,
+  onChange,
+  onCustomAmountChange,
+}: {
+  title: string;
+  name: string;
+  options: readonly string[];
+  value: string;
+  customAmount: string;
+  onChange: (value: string) => void;
+  onCustomAmountChange: (value: string) => void;
+}) {
+  const choiceOptions = [...options, CUSTOM_BUDGET_OPTION];
+  const showCustomInput = isCustomBudget(value);
+  const formattedAmount = customAmount ? formatCustomBudgetAmount(customAmount) : "";
+
+  return (
+    <fieldset className="mt-1.5 border-0 text-left sm:mt-3">
+      <legend className="text-[10px] font-bold text-[#c4d2e0] sm:text-[12px]">{title}</legend>
+      <div className="mt-1 grid grid-cols-1 gap-1 sm:mt-2 sm:grid-cols-2 sm:gap-1.5 md:grid-cols-3">
+        {choiceOptions.map((option, index) => {
+          const checked = value === option;
+          const isWide = option === CUSTOM_BUDGET_OPTION;
+
+          return (
+            <label
+              key={option}
+              className={`relative min-h-7 cursor-pointer sm:min-h-8${isWide ? " sm:col-span-2 md:col-span-3" : ""}`}
+            >
+              <input
+                data-inquiry-autofocus={index === 0 ? true : undefined}
+                type="radio"
+                name={name}
+                value={option}
+                checked={checked}
+                onChange={() => onChange(option)}
+                className="peer sr-only"
+              />
+              <span
+                className={`flex h-full items-center rounded-md border px-2 py-1 text-[10px] font-extrabold transition sm:rounded-lg sm:px-3 sm:py-2 sm:text-[13px] ${
+                  checked
+                    ? "border-neon/70 bg-neon/10 text-neon shadow-[inset_0_0_0_1px_rgba(0,255,136,0.13)]"
+                    : "border-white/10 bg-white/[0.035] text-[#9eafbf] hover:border-neon/50 hover:text-white"
+                }`}
+              >
+                {option}
+              </span>
+            </label>
+          );
+        })}
+      </div>
+      {showCustomInput ? (
+        <div className="mt-2 rounded-lg border border-white/10 bg-white/[0.03] p-2.5 sm:mt-3 sm:p-3">
+          <label htmlFor={`${name}-amount`} className="text-[10px] font-bold text-[#c4d2e0] sm:text-[12px]">
+            Your budget amount
+          </label>
+          <div className="mt-1.5 flex items-center gap-1.5 rounded-lg border border-white/10 bg-[rgba(2,7,12,0.56)] px-2.5 py-1.5 sm:px-3 sm:py-2">
+            <span className="text-[11px] font-bold text-[#9eafbf] sm:text-[13px]" aria-hidden="true">
+              ₱
+            </span>
+            <input
+              id={`${name}-amount`}
+              data-inquiry-autofocus
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              value={customAmount}
+              onChange={(event) => onCustomAmountChange(event.target.value.replace(/\D/g, ""))}
+              placeholder="500000"
+              aria-describedby={`${name}-amount-hint`}
+              className="w-full bg-transparent text-[11px] text-white outline-none placeholder:text-[#9eafbf]/60 sm:text-[13px]"
+            />
+          </div>
+          <p id={`${name}-amount-hint`} className="mt-1.5 text-[10px] leading-relaxed text-[#9eafbf] sm:text-[12px]">
+            {formattedAmount && isValidCustomBudgetAmount(customAmount)
+              ? `We'll note your budget as ${formattedAmount}.`
+              : "Enter the amount in Philippine pesos (minimum ₱1,000)."}
+          </p>
+        </div>
+      ) : null}
     </fieldset>
   );
 }

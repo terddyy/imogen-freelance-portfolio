@@ -20,7 +20,7 @@ function json(body: unknown, status: number, headers: Record<string, string> = {
   });
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (request.method !== "POST") {
     return json({ error: "Method not allowed." }, 405);
   }

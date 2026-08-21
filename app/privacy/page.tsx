@@ -76,7 +76,8 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Cookie consent</strong> — stored in local storage under{" "}
-              <code>imogen-cookie-consent</code> so the notice is not shown again.
+              <code>imogen-cookie-consent</code> so your accept or reject choice is remembered and the
+              notice is not shown again.
             </li>
             <li>
               <strong>Cloudflare Turnstile</strong> — loaded only on the inquiry form (after cookie
@@ -91,8 +92,10 @@ export default function PrivacyPage() {
 
           <h2>Your choices</h2>
           <p>
-            You can contact Imogen by phone or WhatsApp instead of the form. On the form, you must
-            confirm you understand this notice before submitting.
+            On first visit you can accept necessary cookies or reject all. Rejecting still lets you
+            browse; theme preference is not saved, and the inquiry security check is not loaded until
+            you opt in on the form. You can also contact Imogen by phone or WhatsApp instead of the
+            form.
           </p>
 
           <h2>Deletion requests</h2>
@@ -102,7 +105,7 @@ export default function PrivacyPage() {
             include the phone number you submitted.
           </p>
 
-          <p className="privacyMeta">Last updated: August 13, 2026</p>
+          <p className="privacyMeta">Last updated: August 18, 2026</p>
 
           <div className="privacyActions">
             <ProjectInquiryTrigger className="primaryButton">

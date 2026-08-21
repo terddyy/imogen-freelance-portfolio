@@ -5,8 +5,12 @@ import { isTurnstileConfigured } from "@/components/TurnstileField";
 import { grantInquirySecurityConsent } from "@/lib/inquiry-consent";
 import {
   emptyInquiry,
+  isBudgetSelectionValid,
   isEmail,
   isPhone,
+  resolveBudgetValue,
+  standardBudgets,
+  thesisBudgets,
   type Inquiry,
 } from "@/lib/project-inquiry";
 
@@ -39,7 +43,14 @@ export function useProjectInquiryForm() {
       : step === 1
         ? Boolean(inquiry.teamSize)
         : step === 2
-          ? (!hasOtherProject || Boolean(inquiry.budget)) && (!hasThesis || Boolean(inquiry.thesisBudget))
+          ? (!hasOtherProject ||
+              isBudgetSelectionValid(inquiry.budget, inquiry.customBudgetAmount, standardBudgets)) &&
+            (!hasThesis ||
+              isBudgetSelectionValid(
+                inquiry.thesisBudget,
+                inquiry.customThesisBudgetAmount,
+                thesisBudgets,
+              ))
           : step === 3
             ? Boolean(inquiry.timeline)
             : (useEmailInstead ? isEmail(inquiry.email) : isPhone(inquiry.phone)) &&
@@ -107,7 +118,13 @@ export function useProjectInquiryForm() {
       const response = await fetch("/api/project-inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...inquiry, consent: true, captchaToken }),
+        body: JSON.stringify({
+          ...inquiry,
+          budget: resolveBudgetValue(inquiry.budget, inquiry.customBudgetAmount),
+          thesisBudget: resolveBudgetValue(inquiry.thesisBudget, inquiry.customThesisBudgetAmount),
+          consent: true,
+          captchaToken,
+        }),
       });
       const result = (await response.json()) as { error?: string; ok?: boolean };
 

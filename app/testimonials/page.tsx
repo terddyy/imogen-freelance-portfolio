@@ -3,7 +3,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const metadata = {
   title: "Client Notes | Imogen Inocentes",
-  description: "Placeholder-safe client notes for Imogen Inocentes portfolio.",
+  description: "Client feedback and reviews for Imogen Inocentes portfolio work.",
 };
 
 export default function TestimonialsPage() {
@@ -12,10 +12,10 @@ export default function TestimonialsPage() {
       <AnimatedSection>
         <section className="shell routeHero">
           <span className="sectionLabel">Client Notes</span>
-          <h1>Social proof layout without invented testimonials.</h1>
+          <h1>What clients say about working together.</h1>
           <p>
-            These cards intentionally avoid pretending that placeholder feedback is real. Replace them
-            with approved client quotes, or remove this page before launch if testimonials are not ready.
+            Real feedback from commissioned projects — communication, delivery speed, and the quality
+            of the final output.
           </p>
         </section>
       </AnimatedSection>

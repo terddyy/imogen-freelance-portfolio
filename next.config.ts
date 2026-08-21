@@ -39,6 +39,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     proxyClientMaxBodySize: "16kb",
+    optimizePackageImports: ["lucide-react", "motion"],
   },
   async headers() {
     const headers = [

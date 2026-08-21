@@ -6,6 +6,8 @@ export type Inquiry = {
   website: string;
   budget: string;
   thesisBudget: string;
+  customBudgetAmount: string;
+  customThesisBudgetAmount: string;
   teamSize: string;
   timeline: string;
   phone: string;
@@ -18,6 +20,8 @@ export const emptyInquiry: Inquiry = {
   website: "",
   budget: "",
   thesisBudget: "",
+  customBudgetAmount: "",
+  customThesisBudgetAmount: "",
   teamSize: "",
   timeline: "",
   phone: "",
@@ -26,6 +30,42 @@ export const emptyInquiry: Inquiry = {
 
 export const standardBudgets = ["Under ₱100k", "₱100k–₱350k", "₱350k–₱650k", "₱650k–₱1.2M", "₱1.2M+"];
 export const thesisBudgets = ["Under ₱50k", "₱50k–₱100k", "₱100k–₱300k", "₱300k+"];
+export const CUSTOM_BUDGET_OPTION = "Enter specific amount";
+
+export function isCustomBudget(value: string) {
+  return value === CUSTOM_BUDGET_OPTION;
+}
+
+export function isValidCustomBudgetAmount(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (!digits) return false;
+
+  const amount = Number(digits);
+  return Number.isFinite(amount) && amount >= 1_000 && amount <= 999_999_999;
+}
+
+export function formatCustomBudgetAmount(value: string) {
+  const digits = value.replace(/\D/g, "");
+  const amount = Number(digits);
+  if (!Number.isFinite(amount) || amount <= 0) return "";
+
+  return `₱${amount.toLocaleString("en-PH")}`;
+}
+
+export function isBudgetSelectionValid(selection: string, customAmount: string, presets: readonly string[]) {
+  if (!selection) return false;
+  if (isCustomBudget(selection)) return isValidCustomBudgetAmount(customAmount);
+  return presets.includes(selection);
+}
+
+export function resolveBudgetValue(selection: string, customAmount: string) {
+  if (isCustomBudget(selection)) return formatCustomBudgetAmount(customAmount);
+  return selection;
+}
+
+export function isAcceptedBudgetValue(value: string, presets: readonly string[]) {
+  return presets.includes(value) || /^₱[\d,]+$/.test(value);
+}
 
 export const teamSizes = [
   "Solo founder",

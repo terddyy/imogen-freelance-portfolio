@@ -16,6 +16,7 @@ export function InquirySection({ id = "inquire", page = false }: InquirySectionP
       id={id}
       aria-label="Project inquiry"
       data-inquiry-section
+      data-inquiry-theme="light"
     >
       <div className="inquiryViewportIntro">
         <span className="sectionLabel">Project inquiry</span>

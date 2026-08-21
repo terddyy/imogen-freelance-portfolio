@@ -2,21 +2,15 @@
 
 import {
   ArrowRight,
-  Boxes,
   Check,
   ChevronLeft,
   CircleAlert,
-  Ellipsis,
-  Globe2,
-  GraduationCap,
   LoaderCircle,
-  MonitorSmartphone,
   PhoneCall,
-  TrendingUp,
-  type LucideProps,
 } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { BudgetChoiceGroup } from "@/components/BudgetChoiceGroup";
 import { TurnstileField, isTurnstileConfigured } from "@/components/TurnstileField";
 import { grantInquirySecurityConsent } from "@/lib/inquiry-consent";
 import { WhatsAppIcon } from "@/components/WhatsAppContact";
@@ -24,9 +18,11 @@ import {
   emptyInquiry,
   inquiryProjectTypes,
   inquirySteps,
+  isBudgetSelectionValid,
   isEmail,
   isPhone,
   phoneContact,
+  resolveBudgetValue,
   standardBudgets,
   teamSizes,
   thesisBudgets,
@@ -35,35 +31,15 @@ import {
   type Inquiry,
 } from "@/lib/project-inquiry";
 
-function MobileAppIcon({ size = 24, ...props }: LucideProps) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      {...props}
-    >
-      <rect width="10" height="16" x="7" y="4" rx="2" ry="2" />
-    </svg>
-  );
-}
-
-const projectTypeIcons = {
-  Website: Globe2,
-  "Web app / SaaS": MonitorSmartphone,
-  "Mobile app": MobileAppIcon,
-  "Internal system": Boxes,
-  "Improve an existing product": TrendingUp,
-  "Thesis / capstone": GraduationCap,
-  "Something else": Ellipsis,
-} as const;
+const projectTypeIconPaths: Record<string, string> = {
+  Website: "/icons/project-types/website.png",
+  "Web app / SaaS": "/icons/project-types/webapp-saas.png",
+  "Mobile app": "/icons/project-types/mobile-app.png",
+  "Internal system": "/icons/project-types/internal-system.png",
+  "Improve an existing product": "/icons/project-types/improve-product.png",
+  "Thesis / capstone": "/icons/project-types/thesis-capstone.png",
+  "Something else": "/icons/project-types/something-else.png",
+};
 
 type ProjectInquiryFormProps = {
   compact?: boolean;
@@ -98,7 +74,14 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
       : step === 1
         ? Boolean(inquiry.teamSize)
         : step === 2
-          ? (!hasOtherProject || Boolean(inquiry.budget)) && (!hasThesis || Boolean(inquiry.thesisBudget))
+          ? (!hasOtherProject ||
+              isBudgetSelectionValid(inquiry.budget, inquiry.customBudgetAmount, standardBudgets)) &&
+            (!hasThesis ||
+              isBudgetSelectionValid(
+                inquiry.thesisBudget,
+                inquiry.customThesisBudgetAmount,
+                thesisBudgets,
+              ))
           : step === 3
             ? Boolean(inquiry.timeline)
             : (useEmailInstead ? isEmail(inquiry.email) : isPhone(inquiry.phone)) &&
@@ -166,7 +149,13 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
       const response = await fetch("/api/project-inquiry", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...inquiry, consent: true, captchaToken }),
+        body: JSON.stringify({
+          ...inquiry,
+          budget: resolveBudgetValue(inquiry.budget, inquiry.customBudgetAmount),
+          thesisBudget: resolveBudgetValue(inquiry.thesisBudget, inquiry.customThesisBudgetAmount),
+          consent: true,
+          captchaToken,
+        }),
       });
       const result = (await response.json()) as { error?: string; ok?: boolean };
 
@@ -305,6 +294,8 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                 hasThesis={hasThesis}
                 budget={inquiry.budget}
                 thesisBudget={inquiry.thesisBudget}
+                customBudgetAmount={inquiry.customBudgetAmount}
+                customThesisBudgetAmount={inquiry.customThesisBudgetAmount}
                 onChange={update}
               />
             ) : null}
@@ -487,7 +478,7 @@ function InquiryPrivacyControls({
       </p>
       <label className="inquiryConsent">
         <input type="checkbox" checked={consent} onChange={(event) => onConsentChange(event.target.checked)} />
-        <span>I understand the privacy notice and accept necessary cookies to send this inquiry securely.</span>
+        <span>I&apos;ve read the privacy notice and agree to share my contact details so Imogen can reply.</span>
       </label>
       <TurnstileField onTokenChange={onCaptchaTokenChange} inquiryConsent={consent} />
     </div>
@@ -533,10 +524,20 @@ type BudgetStepProps = {
   hasThesis: boolean;
   budget: string;
   thesisBudget: string;
+  customBudgetAmount: string;
+  customThesisBudgetAmount: string;
   onChange: (field: keyof Inquiry, value: string) => void;
 };
 
-function BudgetStep({ hasOtherProject, hasThesis, budget, thesisBudget, onChange }: BudgetStepProps) {
+function BudgetStep({
+  hasOtherProject,
+  hasThesis,
+  budget,
+  thesisBudget,
+  customBudgetAmount,
+  customThesisBudgetAmount,
+  onChange,
+}: BudgetStepProps) {
   return (
     <section className="inquiryBudgetStep" aria-labelledby="inquiry-title">
       <h2 id="inquiry-title">What budget range are you working with?</h2>
@@ -545,23 +546,25 @@ function BudgetStep({ hasOtherProject, hasThesis, budget, thesisBudget, onChange
         right approach, not over- or under-scope your project.
       </p>
       {hasOtherProject ? (
-        <ChoiceStep
+        <BudgetChoiceGroup
           title="Project work"
-          description=""
           name="budget"
-          options={[...standardBudgets]}
+          options={standardBudgets}
           value={budget}
-          onChange={(value) => onChange("budget", value)}
+          customAmount={customBudgetAmount}
+          onSelect={(value) => onChange("budget", value)}
+          onCustomAmountChange={(value) => onChange("customBudgetAmount", value)}
         />
       ) : null}
       {hasThesis ? (
-        <ChoiceStep
+        <BudgetChoiceGroup
           title="Thesis / capstone"
-          description=""
           name="thesisBudget"
-          options={[...thesisBudgets]}
+          options={thesisBudgets}
           value={thesisBudget}
-          onChange={(value) => onChange("thesisBudget", value)}
+          customAmount={customThesisBudgetAmount}
+          onSelect={(value) => onChange("thesisBudget", value)}
+          onCustomAmountChange={(value) => onChange("customThesisBudgetAmount", value)}
         />
       ) : null}
     </section>
@@ -580,7 +583,7 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
       <div>
         {inquiryProjectTypes.map(({ label, value: typeValue }) => {
           const selected = value.includes(typeValue);
-          const Icon = projectTypeIcons[typeValue];
+          const iconSrc = projectTypeIconPaths[typeValue];
           const wide = typeValue === "Something else";
 
           return (
@@ -599,7 +602,18 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
                   </span>
                 ) : null}
                 <span className="inquiryProjectChoiceIcon">
-                  <Icon size={28} strokeWidth={1.75} aria-hidden="true" />
+                  {/* Plain <img> for tiny static PNG; Next/Image needs per-instance width/height and a loader config — overkill at 28px. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={iconSrc}
+                    alt=""
+                    width={28}
+                    height={28}
+                    loading="lazy"
+                    decoding="async"
+                    className="inquiryProjectChoiceImage"
+                    aria-hidden="true"
+                  />
                 </span>
                 <strong>{label}</strong>
               </span>

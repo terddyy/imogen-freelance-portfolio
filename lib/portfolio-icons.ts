@@ -5,29 +5,28 @@ import {
   CalendarCheck,
   Code2,
   FilePenLine,
-  FormInput,
   Gauge,
-  Laptop,
+  Globe,
+  GraduationCap,
   LayoutDashboard,
   Mail,
   MessageCircle,
   Palette,
   Phone,
+  Puzzle,
   Rocket,
   SearchCheck,
-  Settings2,
-  ShoppingBag,
+  Smartphone,
   Sparkles,
-  Wrench,
 } from "lucide-react";
 
 export const serviceIcons = {
-  laptop: Laptop,
+  puzzle: Puzzle,
+  globe: Globe,
+  smartphone: Smartphone,
+  graduationCap: GraduationCap,
+  sparkles: Sparkles,
   palette: Palette,
-  wrench: Wrench,
-  formInput: FormInput,
-  shoppingBag: ShoppingBag,
-  settings2: Settings2,
 } as const;
 
 export const aboutHighlightIcons = {

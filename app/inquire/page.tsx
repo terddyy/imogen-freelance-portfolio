@@ -1,15 +1,14 @@
-import type { Metadata } from "next";
-import { InquireSection } from "@/components/inquire/InquireSection";
+import { InquirySection } from "@/components/InquirySection";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Inquire a Project | Imogen Inocentes",
-  description: "Share your project details and get a clear next step for scope, timing, and fit.",
+  description: "Start a project inquiry with Imogen Inocentes — clear scope, budget, and timeline in five steps.",
 };
 
 export default function InquirePage() {
   return (
-    <main className="page overflow-x-clip pt-[64px] pb-[calc(80px+env(safe-area-inset-bottom,0px))] sm:pt-[88px] sm:pb-3">
-      <InquireSection />
+    <main className="page overflow-x-clip pt-[64px] sm:pt-[88px]">
+      <InquirySection page id="inquire-page" />
     </main>
   );
 }

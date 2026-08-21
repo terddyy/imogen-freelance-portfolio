@@ -35,7 +35,11 @@ export function ThemeToggle() {
   useEffect(() => {
     setTheme(readStoredTheme());
     return onCookieConsentChange(() => {
-      persistCurrentThemeIfNeeded();
+      if (hasCookieConsent()) {
+        persistCurrentThemeIfNeeded();
+      } else {
+        window.localStorage.removeItem(THEME_STORAGE_KEY);
+      }
       setTheme(readStoredTheme());
     });
   }, []);

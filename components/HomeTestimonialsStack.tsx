@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, User } from "lucide-react";
 import { useReducedMotion } from "motion/react";
 import { useCallback, useRef, useState } from "react";
+import { StarRating } from "@/components/StarRating";
 import { testimonials } from "@/lib/portfolio-data";
 import styles from "@/components/HomeTestimonialsStack.module.css";
 
@@ -103,12 +105,12 @@ export function HomeTestimonialsStack() {
 
               return (
                 <button
-                  key={testimonial.initials}
+                  key={testimonial.id}
                   type="button"
                   className={styles.card}
                   data-theme={testimonial.theme}
                   data-stack={stackPosition}
-                  aria-label={`${testimonial.name}, ${testimonial.role}. ${testimonial.quote}`}
+                  aria-label={`${testimonial.name}, ${testimonial.role}. ${testimonial.rating} out of 5 stars. ${testimonial.quote}`}
                   aria-pressed={isActive}
                   onClick={() => handleCardClick(index)}
                   style={{
@@ -120,9 +122,12 @@ export function HomeTestimonialsStack() {
                 >
                   <div className={styles.cardSurface}>
                     <div className={styles.cardContent}>
-                      <span className={styles.quoteMark} aria-hidden="true">
-                        &ldquo;&rdquo;
-                      </span>
+                      <div className={styles.cardLead}>
+                        <span className={styles.quoteMark} aria-hidden="true">
+                          &ldquo;&rdquo;
+                        </span>
+                        <StarRating className={styles.stars} rating={testimonial.rating} size={13} />
+                      </div>
                       <p className={styles.quote}>{testimonial.quote}</p>
                       <footer className={styles.author}>
                         <span className={styles.initialsBadge}>{testimonial.initials}</span>
@@ -135,11 +140,21 @@ export function HomeTestimonialsStack() {
 
                     <div
                       className={styles.portrait}
-                      data-mask={testimonial.theme === "gold" ? "wave" : "round"}
+                      data-mask={testimonial.image ? "wave" : "round"}
                       aria-hidden="true"
                     >
                       <div className={styles.portraitInner}>
-                        <User className={styles.portraitIcon} size={36} strokeWidth={1.25} />
+                        {testimonial.image ? (
+                          <Image
+                            src={testimonial.image}
+                            alt=""
+                            fill
+                            className={styles.portraitImage}
+                            sizes="(max-width: 768px) 42vw, 200px"
+                          />
+                        ) : (
+                          <User className={styles.portraitIcon} size={36} strokeWidth={1.25} />
+                        )}
                       </div>
                     </div>
                   </div>
@@ -154,7 +169,7 @@ export function HomeTestimonialsStack() {
 
               return (
                 <button
-                  key={testimonial.initials}
+                  key={testimonial.id}
                   type="button"
                   role="tab"
                   className={`${styles.dot} ${isActive ? styles.dotActive : ""}`}

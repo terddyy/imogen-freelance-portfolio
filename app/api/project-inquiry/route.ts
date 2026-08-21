@@ -2,11 +2,10 @@ import { createHash } from "node:crypto";
 import { hasAllowedRequestSource } from "@/lib/api-security";
 import { getClientAddress, getClientFingerprint } from "@/lib/client-ip";
 import { consumeRateLimit, rateLimitHeaders, type RateLimitDecision } from "@/lib/rate-limit";
+import { isAcceptedBudgetValue, standardBudgets, thesisBudgets } from "@/lib/project-inquiry";
 
 export const runtime = "nodejs";
 
-const budgets = new Set(["Under ₱100k", "₱100k–₱350k", "₱350k–₱650k", "₱650k–₱1.2M", "₱1.2M+"]);
-const thesisBudgets = new Set(["Under ₱50k", "₱50k–₱100k", "₱100k–₱300k", "₱300k+"]);
 const teamSizes = new Set(["Solo founder", "2–5 people", "6–15 people", "16–50 people", "50+ people"]);
 const timelines = new Set(["ASAP", "1–2 months", "3–6 months", "6+ months", "Flexible"]);
 const projectTypes = new Set([
@@ -292,8 +291,8 @@ export async function POST(request: Request) {
     project.length > 4000 ||
     phone.length > 20 ||
     email.length > 320 ||
-    (hasOtherProject && !budgets.has(budget)) ||
-    (hasThesis && !thesisBudgets.has(thesisBudget)) ||
+    (hasOtherProject && !isAcceptedBudgetValue(budget, standardBudgets)) ||
+    (hasThesis && !isAcceptedBudgetValue(thesisBudget, thesisBudgets)) ||
     !teamSizes.has(teamSize) ||
     !timelines.has(timeline) ||
     (!hasValidPhone && !hasValidEmail)
