@@ -146,37 +146,37 @@ export function ProofGallery() {
 
   return (
     <section className={styles.section} id="proof" aria-labelledby="proof-title">
-      <div className={`${styles.inner} shell`}>
+      <div className={`${styles.headerBlock} shell`}>
         <div className={styles.header}>
           <span className="sectionLabel">In practice</span>
           <h2 id="proof-title">A few snapshots from recent work.</h2>
         </div>
+      </div>
 
-        <div className={styles.gridMobile} role="list" aria-label="Work snapshots">
-          {proofMoments.map((moment, index) => (
-            <ProofCell
-              key={moment.id}
-              moment={moment}
-              index={index}
-              layoutClass={mobileLayoutClass[moment.layout]}
-              imageSizes="(max-width: 980px) 45vw, 22vw"
-              onOpen={setActiveIndex}
-            />
-          ))}
-        </div>
+      <div className={styles.gridMobile} role="list" aria-label="Work snapshots">
+        {proofMoments.map((moment, index) => (
+          <ProofCell
+            key={moment.id}
+            moment={moment}
+            index={index}
+            layoutClass={mobileLayoutClass[moment.layout]}
+            imageSizes="68vw"
+            onOpen={setActiveIndex}
+          />
+        ))}
+      </div>
 
-        <div className={styles.gridDesktop} role="list" aria-label="Work snapshots">
-          {proofMoments.map((moment, index) => (
-            <ProofCell
-              key={`desktop-${moment.id}`}
-              moment={moment}
-              index={index}
-              layoutClass={desktopLayoutClass[moment.desktopLayout]}
-              imageSizes="(min-width: 981px) 32vw, 45vw"
-              onOpen={setActiveIndex}
-            />
-          ))}
-        </div>
+      <div className={styles.gridDesktop} role="list" aria-label="Work snapshots">
+        {proofMoments.map((moment, index) => (
+          <ProofCell
+            key={`desktop-${moment.id}`}
+            moment={moment}
+            index={index}
+            layoutClass={desktopLayoutClass[moment.desktopLayout]}
+            imageSizes="(min-width: 761px) 22vw, 68vw"
+            onOpen={setActiveIndex}
+          />
+        ))}
       </div>
 
       <dialog

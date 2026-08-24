@@ -2,9 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import {
+  ArrowDownLeft,
   ArrowRight,
   ArrowUpRight,
   Check,
+  Rocket,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Zap,
 } from "lucide-react";
 import {
   aboutHighlights,
@@ -18,6 +24,15 @@ import { FeaturedProjectCarousel } from "@/components/FeaturedProjectCarousel";
 import { HomeTestimonialsStack } from "@/components/HomeTestimonialsStack";
 export { HeroSection } from "@/components/HeroSection";
 import { TestimonialList } from "@/components/TestimonialList";
+import styles from "@/components/StartHere.module.css";
+
+const startHereTrust = [
+  { icon: ShieldCheck, label: "Trusted by clients" },
+  { icon: Zap, label: "Fast response" },
+  { icon: Users, label: "Tailored solutions" },
+] as const;
+
+const laptopRows = [0, 1, 2] as const;
 
 export function FeaturedProjects() {
   return <FeaturedProjectCarousel projects={projects} />;
@@ -166,16 +181,83 @@ export function ToolsSection() {
 
 export function FinalCta() {
   return (
-    <section className="shell finalCta" id="contact">
-      <div>
-        <span className="sectionLabel">Start Here</span>
-        <h2>Have a project in mind?</h2>
-        <p>Tell us what you need — we&apos;ll reply with a clear next step.</p>
+    <section className="shell" id="contact" aria-label="Start your project">
+      <div className={styles.section}>
+        <div className={styles.grid}>
+          <div>
+            <span className={styles.eyebrow}>
+              <Sparkles size={14} aria-hidden="true" />
+              Let&apos;s Build Something Great
+            </span>
+            <h2 className={styles.heading}>
+              Turn your ideas into <span className={styles.gradient}>real impact</span>.
+            </h2>
+            <p className={styles.lead}>
+              Share your project with us and get a tailored solution that{" "}
+              <span className={styles.gradient}>drives results</span>.
+            </p>
+            <ul className={styles.trustList} aria-label="Why work with us">
+              {startHereTrust.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.label} className={styles.trustItem}>
+                    <Icon size={18} aria-hidden="true" />
+                    {item.label}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          <div className={styles.right}>
+            <span className={styles.floatNote} aria-hidden="true">
+              Let&apos;s make it happen.
+              <ArrowDownLeft size={14} />
+            </span>
+
+            <div className={styles.scene} aria-hidden="true">
+              <div className={styles.laptop}>
+                <div className={styles.laptopScreen}>
+                  <div className={styles.laptopHeader}>
+                    <span className={styles.laptopDot} />
+                    <span className={styles.laptopDot} />
+                    <span className={styles.laptopDot} />
+                  </div>
+                  <p className={styles.laptopTitle}>
+                    Your project,<br />
+                    <em>our expertise.</em>
+                  </p>
+                  <ul className={styles.laptopList}>
+                    {laptopRows.map((row) => (
+                      <li key={row} className={styles.laptopRow}>
+                        <Check size={14} />
+                        <span className={styles.laptopBar} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={styles.laptopBase} />
+              </div>
+              <div className={styles.rocketOrbit}>
+                <div className={styles.rocketCube}>
+                  <Rocket aria-hidden="true" />
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.ctaRow}>
+              <ProjectInquiryTrigger className={`primaryButton ${styles.primary}`}>
+                Start Your Project
+                <ArrowRight size={18} aria-hidden="true" />
+              </ProjectInquiryTrigger>
+              <p className={styles.ctaHint}>
+                <ArrowDownLeft size={14} aria-hidden="true" />
+                Send us your inquiry — we&apos;ll handle the rest.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-      <ProjectInquiryTrigger className="primaryButton">
-        Send Inquiry
-        <ArrowRight size={17} />
-      </ProjectInquiryTrigger>
     </section>
   );
 }

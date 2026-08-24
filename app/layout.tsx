@@ -4,8 +4,10 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppContact } from "@/components/WhatsAppContact";
+import { PortfolioChatbot } from "@/components/PortfolioChatbot";
 import { CookieConsent } from "@/components/CookieConsent";
 import { MobileNav } from "@/components/MobileNav";
+import { SiteEntryLoader } from "@/components/SiteEntryLoader";
 import { getSiteOrigin } from "@/lib/site";
 
 const manrope = Manrope({
@@ -69,9 +71,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} data-theme="dark">
       <body>
+        <SiteEntryLoader />
         <Header />
         {children}
         <Footer />
+        <PortfolioChatbot />
         <WhatsAppContact />
         <CookieConsent />
         <MobileNav />
