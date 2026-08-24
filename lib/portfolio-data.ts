@@ -189,7 +189,7 @@ export const projects: Project[] = [
     tags: ["CRM", "AI Agents", "Sales"],
     image: "/projects/nexcrm.webp",
     initials: ["NX", "II"],
-    href: "https://nexcrm.terd.dev",
+    href: "https://nexcrm.nexvision.info",
   },
   {
     title: "eSerbisyo",
