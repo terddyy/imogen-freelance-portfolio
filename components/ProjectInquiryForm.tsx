@@ -8,6 +8,7 @@ import {
   LoaderCircle,
   PhoneCall,
 } from "lucide-react";
+import clsx from "clsx";
 import Link from "next/link";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { BudgetChoiceGroup } from "@/components/BudgetChoiceGroup";
@@ -30,6 +31,7 @@ import {
   whatsappContact,
   type Inquiry,
 } from "@/lib/project-inquiry";
+import styles from "@/components/ProjectInquiryForm.module.css";
 
 const projectTypeIconPaths: Record<string, string> = {
   Website: "/icons/project-types/website.png",
@@ -200,16 +202,16 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
     setStep((current) => current - 1);
   }
 
-  return (
-    <div ref={panelRef} className={`inquiryPanel${compact ? " inquiryPanel--viewport" : ""}`}>
+return (
+    <div ref={panelRef} className={clsx(styles.panel, compact && styles.panelViewport)}>
       {!compact ? (
-        <aside className="inquiryDirectContact" aria-label="Direct contact">
+        <aside className={styles.directContact} aria-label="Direct contact">
           <div>
             <span>Prefer to talk directly?</span>
             <strong>+63 960 250 6993</strong>
             <small>Skip the questions and call or WhatsApp me.</small>
           </div>
-          <div className="inquiryDirectLinks">
+          <div className={styles.directLinks}>
             <a href={phoneContact?.href ?? "tel:+639602506993"} aria-label="Call Imogen">
               <PhoneCall size={16} aria-hidden="true" />
               Call
@@ -228,11 +230,11 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
       ) : null}
 
       {status === "success" ? (
-        <section className="inquirySuccess" aria-live="polite">
-          <span className="inquirySuccessIcon">
+        <section className={styles.success} aria-live="polite">
+          <span className={styles.successIcon}>
             <Check size={25} aria-hidden="true" />
           </span>
-          <p className="inquiryStep">Project inquiry sent</p>
+          <p className={styles.step}>Project inquiry sent</p>
           <h2 id="inquiry-title" data-inquiry-autofocus tabIndex={-1}>
             Your project is on my radar.
           </h2>
@@ -241,19 +243,19 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
               ? "Thanks for sharing the details. Check your inbox for the meeting link, and let's discuss how we can bring this to life."
               : "Thanks for sharing the details. I'll text you the next steps for scheduling a quick call."}
           </p>
-          <Link className="inquirySubmit inquirySubmit--full" href="/">
+          <Link className={clsx(styles.submit, styles.submitFull)} href="/">
             Back to portfolio
             <ArrowRight size={17} aria-hidden="true" />
           </Link>
         </section>
       ) : (
-        <form onSubmit={continueOrSubmit} onKeyDown={continueOnEnter} className="inquiryForm" noValidate>
-          <header className="inquiryHeader">
+        <form onSubmit={continueOrSubmit} onKeyDown={continueOnEnter} className={styles.form} noValidate>
+          <header className={styles.header}>
             <InquiryStepper currentStep={step} progressPercent={progressPercent} />
           </header>
 
           <div
-            className={`inquiryQuestion${step === 0 ? " inquiryQuestion--hero" : ""}`}
+            className={clsx(styles.question, step === 0 && styles.questionHero)}
             key={step}
             data-direction={stepDirection}
           >
@@ -267,7 +269,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
             {step === 1 ? (
               <>
                 <h2 id="inquiry-title">What are you building?</h2>
-                <label className="inquiryField">
+                <label className={styles.field}>
                   <span className="srOnly">Project goals</span>
                   <textarea
                     data-inquiry-autofocus
@@ -317,7 +319,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                 {useEmailInstead ? (
                   <>
                     <h2 id="inquiry-title">Where should I send the meeting link?</h2>
-                    <label className="inquiryField">
+                    <label className={styles.field}>
                       <span className="srOnly">Email address</span>
                       <input
                         data-inquiry-autofocus
@@ -331,10 +333,10 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                       />
                     </label>
                     {inquiry.email && !isEmail(inquiry.email) ? (
-                      <p className="inquiryValidation">Enter a valid email address.</p>
+                      <p className={styles.validation}>Enter a valid email address.</p>
                     ) : null}
                     <button
-                      className="inquirySkip"
+                      className={styles.skip}
                       type="button"
                       onClick={() => {
                         update("email", "");
@@ -347,7 +349,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                 ) : (
                   <>
                     <h2 id="inquiry-title">What&apos;s the best number to reach you?</h2>
-                    <label className="inquiryField">
+                    <label className={styles.field}>
                       <span className="srOnly">Phone number</span>
                       <input
                         data-inquiry-autofocus
@@ -362,10 +364,10 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
                       />
                     </label>
                     {inquiry.phone && !isPhone(inquiry.phone) ? (
-                      <p className="inquiryValidation">Enter a valid phone number.</p>
+                      <p className={styles.validation}>Enter a valid phone number.</p>
                     ) : null}
                     <button
-                      className="inquirySkip"
+                      className={styles.skip}
                       type="button"
                       onClick={() => {
                         update("phone", "");
@@ -385,32 +387,32 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
             ) : null}
           </div>
 
-          <footer className="inquiryActions">
+          <footer className={styles.actions}>
             {submitHint && !validStep && status !== "loading" ? (
-              <p className="inquirySubmitHint" role="status">{submitHint}</p>
+              <p className={styles.submitHint} role="status">{submitHint}</p>
             ) : null}
             {status === "error" ? (
-              <p className="inquiryError" role="alert">
+              <p className={styles.error} role="alert">
                 <CircleAlert size={17} aria-hidden="true" />
                 {error}
               </p>
             ) : null}
             {step > 0 ? (
-              <button className="inquiryBack" type="button" onClick={goBack}>
+              <button className={styles.back} type="button" onClick={goBack}>
                 <ChevronLeft size={17} aria-hidden="true" />
                 Back
               </button>
             ) : null}
-            <button className="inquirySubmit inquirySubmit--full" type="submit" disabled={!validStep || status === "loading"}>
+            <button className={clsx(styles.submit, styles.submitFull)} type="submit" disabled={!validStep || status === "loading"}>
               {status === "loading" ? (
                 <>
-                  <LoaderCircle className="inquiryLoader" size={17} aria-hidden="true" />
+                  <LoaderCircle className={styles.loader} size={17} aria-hidden="true" />
                   Sending…
                 </>
               ) : step === 4 ? (
                 <>
-                  <span className="inquirySubmitShort">Send meeting link</span>
-                  <span className="inquirySubmitLong">Send me the meeting link</span>
+                  <span className={styles.submitShort}>Send meeting link</span>
+                  <span className={styles.submitLong}>Send me the meeting link</span>
                 </>
               ) : (
                 "Continue"
@@ -431,8 +433,8 @@ function InquiryStepper({
   progressPercent: number;
 }) {
   return (
-    <div className="inquiryStepper" aria-label={`Step ${currentStep + 1} of 5`}>
-      <ol className="inquiryStepperList">
+    <div className={styles.stepper} aria-label={`Step ${currentStep + 1} of 5`}>
+      <ol className={styles.stepperList}>
         {inquirySteps.map((label, index) => {
           const active = index === currentStep;
           const complete = index < currentStep;
@@ -440,20 +442,20 @@ function InquiryStepper({
           return (
             <li
               key={label}
-              className={`inquiryStepperItem${active ? " inquiryStepperItem--active" : ""}${complete ? " inquiryStepperItem--complete" : ""}`}
+              className={clsx(styles.stepperItem, active && styles.stepperItemActive, complete && styles.stepperItemComplete)}
               aria-current={active ? "step" : undefined}
             >
-              <span className="inquiryStepperNode">{String(index + 1).padStart(2, "0")}</span>
-              <span className="inquiryStepperLabel">{label}</span>
+              <span className={styles.stepperNode}>{String(index + 1).padStart(2, "0")}</span>
+              <span className={styles.stepperLabel}>{label}</span>
             </li>
           );
         })}
       </ol>
-      <div className="inquiryProgressBar" aria-hidden="true">
-        <div className="inquiryProgressBarTrack">
-          <div className="inquiryProgressBarFill" style={{ width: `${progressPercent}%` }} />
+      <div className={styles.progressBar} aria-hidden="true">
+        <div className={styles.progressBarTrack}>
+          <div className={styles.progressBarFill} style={{ width: `${progressPercent}%` }} />
         </div>
-        <span className="inquiryProgressBarPercent">{progressPercent}%</span>
+        <span className={styles.progressBarPercent}>{progressPercent}%</span>
       </div>
     </div>
   );
@@ -469,14 +471,14 @@ function InquiryPrivacyControls({
   onCaptchaTokenChange: (token: string) => void;
 }) {
   return (
-    <div className="inquiryPrivacy inquiryPrivacyPanel">
-      <p className="inquiryPrivacyNotice">
+    <div className={clsx(styles.privacy, styles.privacyPanel)}>
+      <p className={styles.privacyNotice}>
         Contact details are only used to reply.{" "}
         <Link href="/privacy" target="_blank" rel="noreferrer">
           Privacy notice
         </Link>
       </p>
-      <label className="inquiryConsent">
+      <label className={styles.consent}>
         <input type="checkbox" checked={consent} onChange={(event) => onConsentChange(event.target.checked)} />
         <span>I&apos;ve read the privacy notice and agree to share my contact details so Imogen can reply.</span>
       </label>
@@ -497,12 +499,12 @@ type ChoiceStepProps = {
 
 function ChoiceStep({ title, description, name, options, value, onChange, asMainStep = false }: ChoiceStepProps) {
   return (
-    <fieldset className="inquiryChoices">
+    <fieldset className={styles.choices}>
       <legend id={asMainStep ? "inquiry-title" : undefined}>{title}</legend>
       {description ? <p>{description}</p> : null}
       <div>
         {options.map((option, index) => (
-          <label className="inquiryChoice" key={option}>
+          <label className={styles.choice} key={option}>
             <input
               data-inquiry-autofocus={index === 0 ? true : undefined}
               type="radio"
@@ -539,7 +541,7 @@ function BudgetStep({
   onChange,
 }: BudgetStepProps) {
   return (
-    <section className="inquiryBudgetStep" aria-labelledby="inquiry-title">
+    <section className={styles.budgetStep} aria-labelledby="inquiry-title">
       <h2 id="inquiry-title">What budget range are you working with?</h2>
       <p>
         Be honest — there&apos;s no wrong answer here. An accurate range keeps us aligned so I can recommend the
@@ -578,7 +580,7 @@ type ProjectTypeStepProps = {
 
 function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
   return (
-    <fieldset className="inquiryChoices inquiryProjectChoices">
+    <fieldset className={clsx(styles.choices, styles.projectChoices)}>
       <legend className="srOnly">Project type</legend>
       <div>
         {inquiryProjectTypes.map(({ label, value: typeValue }) => {
@@ -587,7 +589,7 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
           const wide = typeValue === "Something else";
 
           return (
-            <label className={`inquiryChoice${wide ? " inquiryProjectChoiceWide" : ""}`} key={typeValue}>
+            <label className={clsx(styles.choice, wide && styles.projectChoiceWide)} key={typeValue}>
               <input
                 type="checkbox"
                 name="projectTypes"
@@ -597,11 +599,11 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
               />
               <span>
                 {selected ? (
-                  <span className="inquiryProjectChoiceCheck" aria-hidden="true">
+                  <span className={styles.projectChoiceCheck} aria-hidden="true">
                     <Check size={12} />
                   </span>
                 ) : null}
-                <span className="inquiryProjectChoiceIcon">
+                <span className={styles.projectChoiceIcon}>
                   {/* Plain <img> for tiny static PNG; Next/Image needs per-instance width/height and a loader config — overkill at 28px. */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -611,7 +613,7 @@ function ProjectTypeStep({ value, onChange }: ProjectTypeStepProps) {
                     height={28}
                     loading="lazy"
                     decoding="async"
-                    className="inquiryProjectChoiceImage"
+                    className={styles.projectChoiceImage}
                     aria-hidden="true"
                   />
                 </span>

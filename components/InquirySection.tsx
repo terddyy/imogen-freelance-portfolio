@@ -3,21 +3,22 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ProjectInquiryForm } from "@/components/ProjectInquiryForm";
+import styles from "@/components/ProjectInquiryForm.module.css";
 
 export function InquirySection() {
   return (
     <section
-      className="inquiryViewport shell inquiryViewport--page"
+      className={`${styles.viewport} shell ${styles.viewportPage}`}
       id="inquire"
       aria-label="Project inquiry"
       data-inquiry-section
       data-inquiry-theme="light"
     >
-      <Link className="inquiryBackHome" href="/">
+      <Link className={styles.backHome} href="/">
         <ArrowLeft size={16} aria-hidden="true" />
         Back to site
       </Link>
-      <div className="inquiryViewportIntro">
+      <div className={styles.viewportIntro}>
         <span className="sectionLabel">Project inquiry</span>
         <h1>Let&apos;s scope your next build.</h1>
       </div>

@@ -5,6 +5,7 @@ import { LoaderCircle, ShieldCheck } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { grantInquirySecurityConsent } from "@/lib/inquiry-consent";
 import { hasCookieConsent, onCookieConsentChange } from "@/lib/cookie-consent";
+import styles from "@/components/ProjectInquiryForm.module.css";
 
 type TurnstileFieldProps = {
   onTokenChange: (token: string) => void;
@@ -112,11 +113,11 @@ export function TurnstileField({ onTokenChange, inquiryConsent = false }: Turnst
 
   if (!canLoadSecurity) {
     return (
-      <div className="inquiryTurnstileGate">
-        <ShieldCheck size={18} aria-hidden="true" className="inquiryTurnstileGateIcon" />
+      <div className={styles.turnstileGate}>
+        <ShieldCheck size={18} aria-hidden="true" className={styles.turnstileGateIcon} />
         <div>
-          <p className="inquiryTurnstileGateTitle">Security check required</p>
-          <p className="inquiryTurnstileGateText">
+          <p className={styles.turnstileGateTitle}>Security check required</p>
+          <p className={styles.turnstileGateText}>
             Confirm the privacy notice above to load bot protection. No ads or analytics — only what&apos;s needed to
             send your inquiry safely.
           </p>
@@ -126,10 +127,10 @@ export function TurnstileField({ onTokenChange, inquiryConsent = false }: Turnst
   }
 
   return (
-    <div className="inquiryTurnstile">
+    <div className={styles.turnstile}>
       {!hasToken ? (
-        <p className="inquiryTurnstileLoading">
-          <LoaderCircle size={15} className="inquiryLoader" aria-hidden="true" />
+        <p className={styles.turnstileLoading}>
+          <LoaderCircle size={15} className={styles.loader} aria-hidden="true" />
           Loading security check…
         </p>
       ) : null}
