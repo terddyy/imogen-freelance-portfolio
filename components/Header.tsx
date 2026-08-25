@@ -7,6 +7,7 @@ import { useMotionValueEvent, useReducedMotion, useScroll } from "motion/react";
 import { useCallback, useState } from "react";
 import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import { motionTiming } from "@/lib/motion-presets";
+import styles from "./Header.module.css";
 
 const headerNav = [
   { label: "Home", href: "/" },
@@ -41,7 +42,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="siteHeader"
+      className={styles.siteHeader}
       data-scrolled={isScrolled ? "true" : "false"}
       aria-label="Primary navigation"
       initial={shouldReduceMotion ? false : { opacity: 0, x: "-50%", y: -18 }}
@@ -60,12 +61,12 @@ export function Header() {
             }
       }
     >
-      <Link className="brandMark" href="/" aria-label="Imogen Inocentes home" onClick={scrollToTop}>
+      <Link className={styles.brandMark} href="/" aria-label="Imogen Inocentes home" onClick={scrollToTop}>
         <strong>IMOGEN</strong>
         <small>INOCENTES.</small>
       </Link>
 
-      <nav className="navLinks" aria-label="Main menu">
+      <nav className={styles.navLinks} aria-label="Main menu">
         {headerNav.map((item) => {
           const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
 
@@ -82,8 +83,8 @@ export function Header() {
         })}
       </nav>
 
-      <div className="headerActions">
-        <ProjectInquiryTrigger className="primaryButton headerCta">Start a project</ProjectInquiryTrigger>
+      <div className={styles.headerActions}>
+        <ProjectInquiryTrigger className={`primaryButton ${styles.headerCta}`}>Start a project</ProjectInquiryTrigger>
       </div>
     </motion.header>
   );
