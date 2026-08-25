@@ -8,6 +8,7 @@ import { useCallback } from "react";
 import { FolderKanban, House, Quote, Send } from "lucide-react";
 import { motionTiming } from "@/lib/motion-presets";
 import { useScrollDirectionVisibility } from "@/hooks/useScrollDirectionVisibility";
+import styles from "./MobileNav.module.css";
 
 const items = [
   { label: "Home", href: "/", icon: House },
@@ -30,9 +31,9 @@ export function MobileNav() {
   if (pathname === "/inquire") return null;
 
   return (
-    <nav className="mobileDock" aria-label="Mobile navigation">
+    <nav className={styles.mobileDock} aria-label="Mobile navigation">
       <motion.div
-        className="mobileDockBar"
+        className={styles.mobileDockBar}
         aria-hidden={!visible}
         initial={false}
         animate={{
@@ -58,18 +59,18 @@ export function MobileNav() {
             <Link
               href={item.href}
               key={item.href}
-              className={isActive ? "mobileDockTab isActive" : "mobileDockTab"}
+              className={isActive ? `${styles.mobileDockTab} isActive` : styles.mobileDockTab}
               aria-current={isActive ? "page" : undefined}
               onClick={item.href === "/" ? scrollToTop : undefined}
             >
-              <span className="mobileDockIcon" aria-hidden="true">
+              <span className={styles.mobileDockIcon} aria-hidden="true">
                 <Icon
                   size={20}
                   strokeWidth={isActive ? 2.4 : 1.8}
                   fill={isActive ? "currentColor" : "none"}
                 />
               </span>
-              <span className="mobileDockLabel">{item.label}</span>
+              <span className={styles.mobileDockLabel}>{item.label}</span>
             </Link>
           );
         })}
