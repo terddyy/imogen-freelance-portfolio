@@ -75,7 +75,10 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        <PortfolioChatbot />
+        {process.env.NODE_ENV !== "production" ||
+        process.env.NEXT_PUBLIC_ENABLE_PORTFOLIO_CHAT === "true" ? (
+          <PortfolioChatbot />
+        ) : null}
         <WhatsAppContact />
         <CookieConsent />
         <MobileNav />

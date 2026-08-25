@@ -81,6 +81,7 @@
   justify-content: center;
   background: #000;
   opacity: 1;
+  pointer-events: none;
   transition: opacity 500ms ease;
 }
 
@@ -3613,6 +3614,7 @@ html[data-theme="light"] .siteHeader[data-scrolled="true"] .navLinks {
   gap: 12px;
   justify-items: start;
   width: min(100vw - 32px, 380px);
+  pointer-events: none;
 }
 
 .portfolioChatbotPanel {
@@ -3620,6 +3622,7 @@ html[data-theme="light"] .siteHeader[data-scrolled="true"] .navLinks {
 }
 
 .portfolioChatbotLauncher {
+  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -3642,6 +3645,15 @@ html[data-theme="light"] .portfolioChatbotLauncher {
 
 .portfolioChatbot[data-open="true"] .portfolioChatbotLauncher {
   border-color: rgba(124, 255, 178, 0.35);
+}
+
+.portfolioChatbot[data-open="true"] .portfolioChatbotPanel {
+  pointer-events: auto;
+}
+
+.portfolioChatbot:not([data-open="true"]) .portfolioChatbotPanel {
+  pointer-events: none;
+  visibility: hidden;
 }
 
 body:has(.proofDialog[open]) .portfolioChatbot {

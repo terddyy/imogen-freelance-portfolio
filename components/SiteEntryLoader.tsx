@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import { CoreSpinLoader } from '@/components/ui/core-spin-loader'
 
-const MIN_DISPLAY_MS = 1400
-const FADE_OUT_MS = 500
+const MIN_DISPLAY_MS = 500
+const FADE_OUT_MS = 400
 
 type LoaderPhase = 'visible' | 'exiting' | 'hidden'
 
@@ -20,13 +20,23 @@ export function SiteEntryLoader() {
       window.setTimeout(() => setPhase('exiting'), delay)
     }
 
-    if (document.readyState === 'complete') {
+    // The page is interactive once the DOM is parsed (readyState 'interactive').
+    // Waiting for 'complete' delays until every image/font/stylesheet finishes,
+    // which makes the entry loader feel stuck. Exit as soon as the user can
+    // actually interact with the page.
+    if (document.readyState !== 'loading') {
       beginExit()
-      return
+    } else {
+      document.addEventListener('DOMContentLoaded', beginExit, { once: true })
     }
 
-    window.addEventListener('load', beginExit, { once: true })
-    return () => window.removeEventListener('load', beginExit)
+    // Never leave the overlay mounted if hydration or load handlers fail.
+    const forceHide = window.setTimeout(() => setPhase('hidden'), 3000)
+
+    return () => {
+      document.removeEventListener('DOMContentLoaded', beginExit)
+      window.clearTimeout(forceHide)
+    }
   }, [])
 
   useEffect(() => {
