@@ -127,3 +127,8 @@
     bottom: calc(var(--mobile-dock-clearance) + env(safe-area-inset-bottom));
   }
 }
+
+body:has(:global(.proofDialog)[open]) .whatsappContact {
+  visibility: hidden;
+  pointer-events: none;
+}

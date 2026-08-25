@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { CoreSpinLoader } from '@/components/ui/core-spin-loader'
 
-const MIN_DISPLAY_MS = 500
+const MIN_DISPLAY_MS = 1500
 const FADE_OUT_MS = 400
 
 type LoaderPhase = 'visible' | 'exiting' | 'hidden'

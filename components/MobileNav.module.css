@@ -126,3 +126,8 @@
     transition: none;
   }
 }
+
+body:has(:global(.proofDialog)[open]) .mobileDock {
+  visibility: hidden;
+  pointer-events: none;
+}
