@@ -1,9 +1,11 @@
+import clsx from "clsx";
 import {
   CUSTOM_BUDGET_OPTION,
   formatCustomBudgetAmount,
   isCustomBudget,
   isValidCustomBudgetAmount,
 } from "@/lib/project-inquiry";
+import styles from "@/components/ProjectInquiryForm.module.css";
 
 type BudgetChoiceGroupProps = {
   title: string;
@@ -29,7 +31,7 @@ export function BudgetChoiceGroup({
   const formattedAmount = customAmount ? formatCustomBudgetAmount(customAmount) : "";
 
   return (
-    <fieldset className="inquiryChoices">
+    <fieldset className={styles.choices}>
       <legend>{title}</legend>
       <div>
         {choiceOptions.map((option, index) => {
@@ -37,7 +39,7 @@ export function BudgetChoiceGroup({
 
           return (
             <label
-              className={`inquiryChoice${isWide ? " inquiryBudgetChoiceWide" : ""}`}
+              className={clsx(styles.choice, isWide && styles.budgetChoiceWide)}
               key={option}
             >
               <input
@@ -54,9 +56,9 @@ export function BudgetChoiceGroup({
         })}
       </div>
       {showCustomInput ? (
-        <div className="inquiryCustomBudget">
+        <div className={styles.customBudget}>
           <label htmlFor={`${name}-amount`}>Your budget amount</label>
-          <div className="inquiryCustomBudgetField">
+          <div className={styles.customBudgetField}>
             <span aria-hidden="true">₱</span>
             <input
               id={`${name}-amount`}
@@ -70,7 +72,7 @@ export function BudgetChoiceGroup({
               aria-describedby={`${name}-amount-hint`}
             />
           </div>
-          <p id={`${name}-amount-hint`} className="inquiryCustomBudgetHint">
+          <p id={`${name}-amount-hint`} className={styles.customBudgetHint}>
             {formattedAmount && isValidCustomBudgetAmount(customAmount)
               ? `We'll note your budget as ${formattedAmount}.`
               : "Enter the amount in Philippine pesos (minimum ₱1,000)."}
