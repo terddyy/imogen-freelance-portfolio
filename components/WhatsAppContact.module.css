@@ -1,0 +1,129 @@
+.whatsappContact {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: min(266px, calc(100vw - 32px));
+  border: 1px solid rgba(124, 255, 178, 0.35);
+  border-radius: 16px;
+  color: var(--text);
+  background: rgba(7, 18, 14, 0.94);
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  backdrop-filter: var(--blur);
+}
+
+:global(html[data-theme="light"]) .whatsappContact {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.whatsappContactMain {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 8px 10px 10px;
+}
+
+.whatsappContactMain:hover,
+.whatsappContactMain:focus-visible,
+.whatsappContactCall:hover,
+.whatsappContactCall:focus-visible {
+  color: var(--green);
+  outline: none;
+}
+
+.whatsappContactIcon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: #062117;
+  background: #25d366;
+}
+
+.whatsappContactCopy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.whatsappContactMain strong {
+  font-size: 12px;
+}
+
+.whatsappContactMain small {
+  color: var(--muted);
+  font: 700 10px/1 var(--font-geist-mono), monospace;
+  white-space: nowrap;
+}
+
+.whatsappContactCall {
+  align-self: stretch;
+  border-left: 1px solid rgba(124, 255, 178, 0.2);
+  padding: 0 12px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.whatsappContactMain,
+.whatsappContactCall {
+  transition:
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsappContactMain,
+  .whatsappContactCall {
+    transition: none;
+  }
+}
+
+@media (max-width: 980px) {
+  .whatsappContact {
+    right: max(14px, env(safe-area-inset-right));
+    left: auto;
+    bottom: calc(var(--mobile-dock-clearance) + env(safe-area-inset-bottom));
+    width: 52px;
+    height: 52px;
+    overflow: hidden;
+    border-radius: 999px;
+    box-shadow:
+      0 12px 32px rgba(0, 0, 0, 0.45),
+      0 0 0 1px rgba(124, 255, 178, 0.28);
+  }
+
+  .whatsappContactCopy,
+  .whatsappContactCall {
+    display: none;
+  }
+
+  .whatsappContactMain {
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .whatsappContactIcon {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 640px) {
+  .whatsappContact {
+    right: max(12px, env(safe-area-inset-right));
+    left: auto;
+    bottom: calc(var(--mobile-dock-clearance) + env(safe-area-inset-bottom));
+  }
+}
