@@ -10,6 +10,7 @@ import { usePortfolioChat } from "@/hooks/usePortfolioChat";
 import { hasCookieConsent, onCookieConsentChange } from "@/lib/cookie-consent";
 import { motionTiming } from "@/lib/motion-presets";
 import { useScrollDirectionVisibility } from "@/hooks/useScrollDirectionVisibility";
+import styles from "./PortfolioChatbot.module.css";
 
 export function PortfolioChatbot() {
   const pathname = usePathname();
@@ -28,10 +29,10 @@ export function PortfolioChatbot() {
   if (pathname === "/inquire") return null;
 
   return (
-    <div className="portfolioChatbot" data-open={isOpen}>
+    <div className={styles.portfolioChatbot} data-open={isOpen}>
       <motion.div
         id="portfolio-chat-panel"
-        className="portfolioChatbotPanel"
+        className={styles.portfolioChatbotPanel}
         initial={false}
         animate={{
           opacity: isOpen ? 1 : 0,
@@ -67,7 +68,7 @@ export function PortfolioChatbot() {
 
       <motion.button
         type="button"
-        className="portfolioChatbotLauncher"
+        className={styles.portfolioChatbotLauncher}
         aria-expanded={isOpen}
         aria-controls="portfolio-chat-panel"
         aria-label={isOpen ? "Close portfolio chat" : "Open portfolio chat"}
