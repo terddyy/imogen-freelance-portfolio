@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { navItems, socials } from "@/lib/portfolio-data";
 import { LinkedInIcon, GitHubIcon, FacebookIcon, EmailIcon } from "@/components/SocialIcons";
+import styles from "@/components/Footer.module.css";
 
 const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
   Facebook: FacebookIcon,
@@ -19,20 +20,20 @@ export function Footer() {
   if (pathname === "/inquire") return null;
 
   return (
-    <footer className="siteFooter">
-      <div className="shell footerGrid">
+    <footer className={styles.siteFooter}>
+      <div className={`shell ${styles.footerGrid}`}>
         <div>
-          <p className="footerQuote">Good design makes the next step obvious.</p>
-          <p className="footerCredit">Imogen Inocentes</p>
+          <p className={styles.footerQuote}>Good design makes the next step obvious.</p>
+          <p className={styles.footerCredit}>Imogen Inocentes</p>
         </div>
-        <div className="footerLinks">
+        <div className={styles.footerLinks}>
           {navItems.map((item) => (
             <Link href={item.href} key={item.href}>
               {item.label}
             </Link>
           ))}
         </div>
-        <div className="footerLinks">
+        <div className={styles.footerLinks}>
           {socials.map((item) => {
             const Icon = iconMap[item.label];
             return (
@@ -45,7 +46,7 @@ export function Footer() {
           })}
         </div>
       </div>
-      <div className="shell footerBottom">
+      <div className={`shell ${styles.footerBottom}`}>
         <span>Copyright 2026 Imogen Inocentes.</span>
         <Link href="/privacy">Privacy</Link>
       </div>

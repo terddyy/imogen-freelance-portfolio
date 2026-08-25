@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { contactMethods } from "@/lib/portfolio-data";
 import { motionTiming } from "@/lib/motion-presets";
 import { useScrollDirectionVisibility } from "@/hooks/useScrollDirectionVisibility";
+import styles from "@/components/WhatsAppContact.module.css";
 
 const whatsapp = contactMethods.find((method) => method.label === "WhatsApp");
 const phone = contactMethods.find((method) => method.label === "Call");
@@ -27,7 +28,7 @@ export function WhatsAppContact() {
 
   return (
     <motion.aside
-      className="whatsappContact"
+      className={styles.whatsappContact}
       aria-label="Direct contact"
       aria-hidden={!visible}
       initial={false}
@@ -48,14 +49,14 @@ export function WhatsAppContact() {
             }
       }
     >
-      <a className="whatsappContactMain" href={whatsapp?.href ?? "https://wa.me/639602506993"} target="_blank" rel="noreferrer" aria-label="WhatsApp Imogen at +63 960 250 6993">
-        <span className="whatsappContactIcon"><WhatsAppIcon size={21} /></span>
-        <span className="whatsappContactCopy">
+      <a className={styles.whatsappContactMain} href={whatsapp?.href ?? "https://wa.me/639602506993"} target="_blank" rel="noreferrer" aria-label="WhatsApp Imogen at +63 960 250 6993">
+        <span className={styles.whatsappContactIcon}><WhatsAppIcon size={21} /></span>
+        <span className={styles.whatsappContactCopy}>
           <strong>WhatsApp me</strong>
           <small>+63 960 250 6993</small>
         </span>
       </a>
-      <a className="whatsappContactCall" href={phone?.href ?? "tel:+639602506993"} aria-label="Call Imogen at +63 960 250 6993">
+      <a className={styles.whatsappContactCall} href={phone?.href ?? "tel:+639602506993"} aria-label="Call Imogen at +63 960 250 6993">
         Call
       </a>
     </motion.aside>
