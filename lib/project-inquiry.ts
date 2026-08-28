@@ -28,7 +28,15 @@ export const emptyInquiry: Inquiry = {
   email: "",
 };
 
-export const standardBudgets = ["Under ₱100k", "₱100k–₱350k", "₱350k–₱650k", "₱650k–₱1.2M", "₱1.2M+"];
+export const standardBudgets = [
+  "Under ₱50k",
+  "₱50k–₱100k",
+  "₱100k–₱350k",
+  "₱350k–₱650k",
+  "₱650k–₱1.2M",
+  "₱1.2M+",
+  "I’m not sure",
+];
 export const thesisBudgets = ["Under ₱50k", "₱50k–₱100k", "₱100k–₱300k", "₱300k+"];
 export const CUSTOM_BUDGET_OPTION = "Enter specific amount";
 

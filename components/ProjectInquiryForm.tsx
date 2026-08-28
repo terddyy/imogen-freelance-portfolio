@@ -544,8 +544,8 @@ function BudgetStep({
     <section className={styles.budgetStep} aria-labelledby="inquiry-title">
       <h2 id="inquiry-title">What budget range are you working with?</h2>
       <p>
-        Be honest — there&apos;s no wrong answer here. An accurate range keeps us aligned so I can recommend the
-        right approach, not over- or under-scope your project.
+        These ranges are initial estimates and may change based on your project&apos;s scope, timeline, and
+        requirements. Not sure yet? Choose &quot;I&apos;m not sure.&quot;
       </p>
       {hasOtherProject ? (
         <BudgetChoiceGroup
