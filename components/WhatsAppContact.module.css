@@ -64,6 +64,9 @@
 }
 
 .whatsappContactCall {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   align-self: stretch;
   border-left: 1px solid rgba(124, 255, 178, 0.2);
   padding: 0 12px;
