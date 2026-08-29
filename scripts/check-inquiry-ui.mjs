@@ -22,7 +22,7 @@ async function installTurnstileStub(context, scenario) {
   }, scenario);
 }
 
-async function reachContactStep(page) {
+async function reachContactStep(page, contactMode) {
   await page.goto(`${baseUrl}/inquire`, { waitUntil: "networkidle" });
   await page.getByLabel("Website").click({ force: true });
   await page.getByRole("button", { name: "Continue" }).click();
@@ -33,8 +33,24 @@ async function reachContactStep(page) {
   await page.getByRole("button", { name: "Continue" }).click();
   await page.locator('input[type="radio"]').first().click({ force: true });
   await page.getByRole("button", { name: "Continue" }).click();
-  await page.getByRole("textbox", { name: "Phone number" }).fill("+639602506993");
+  if (contactMode === "phone" || contactMode === "both") {
+    await page.getByRole("textbox", { name: "Phone number" }).fill("+639602506993");
+  }
+  if (contactMode === "email" || contactMode === "both") {
+    await page.getByRole("textbox", { name: "Email address" }).fill("client@example.com");
+  }
   await page.getByText(/I've read the privacy notice/).click();
+
+  if (contactMode === "email") {
+    const phone = page.getByRole("textbox", { name: "Phone number" });
+    await phone.fill("invalid");
+    assert.equal(
+      await page.getByRole("button", { name: /Send (me the )?meeting link/ }).isDisabled(),
+      true,
+      "An invalid optional phone must block an otherwise valid email inquiry",
+    );
+    await phone.clear();
+  }
 }
 
 async function assertSubmitLayout(page, minimumWidth) {
@@ -73,7 +89,7 @@ async function assertSuccessLayout(page, viewport) {
   assert(returnBox.y + returnBox.height <= viewport.height, "Success action must remain above the fold");
 }
 
-async function runScenario(browser, { scenario, viewport, minimumWidth }) {
+async function runScenario(browser, { scenario, viewport, minimumWidth, contactMode }) {
   const context = await browser.newContext({ viewport });
   await installTurnstileStub(context, scenario);
   const page = await context.newPage();
@@ -81,7 +97,7 @@ async function runScenario(browser, { scenario, viewport, minimumWidth }) {
     route.fulfill({ status: 200, contentType: "application/javascript", body: "" }),
   );
 
-  await reachContactStep(page);
+  await reachContactStep(page, contactMode);
   const submit = await assertSubmitLayout(page, minimumWidth);
 
   if (scenario === "success") {
@@ -107,16 +123,25 @@ try {
     scenario: "success",
     viewport: { width: 390, height: 844 },
     minimumWidth: 200,
+    contactMode: "phone",
+  });
+  await runScenario(browser, {
+    scenario: "success",
+    viewport: { width: 390, height: 844 },
+    minimumWidth: 200,
+    contactMode: "email",
   });
   await runScenario(browser, {
     scenario: "error",
     viewport: { width: 390, height: 844 },
     minimumWidth: 200,
+    contactMode: "phone",
   });
   await runScenario(browser, {
     scenario: "success",
     viewport: { width: 1440, height: 900 },
     minimumWidth: 400,
+    contactMode: "both",
   });
   console.log("Inquiry UI regression check passed.");
 } finally {

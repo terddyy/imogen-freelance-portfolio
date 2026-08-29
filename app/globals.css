@@ -507,8 +507,12 @@ h3 {
   text-align: inherit;
 }
 
+.routeHero .availability {
+  margin-top: 14px;
+}
+
 .projectArchiveSection {
-  padding-top: clamp(36px, 6vw, 72px);
+  padding-top: 0;
 }
 
 .projectArchiveSection .filterBar {

@@ -87,8 +87,8 @@ export function ProjectFilters() {
         </AnimatePresence>
       ) : (
         <div className="emptyState">
-          <h2>No matching projects yet</h2>
-          <p>Placeholder projects will appear here once the selected category has approved work.</p>
+          <h2>No projects in this category yet</h2>
+          <p>Try another filter, or check back soon — more work is being added to the archive.</p>
         </div>
       )}
 

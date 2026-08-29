@@ -68,7 +68,7 @@ export function HeroSection() {
               Nexvision Innovations
               <ArrowUpRight size={15} />
             </a>
-            <a href="https://www.facebook.com/TERDTHEPRO/" target="_blank" rel="noreferrer">
+            <a href="https://www.facebook.com/zentarisoftwaresolution" target="_blank" rel="noreferrer">
               Co-founder &amp; CEO, Zentari
               <ArrowUpRight size={15} />
             </a>

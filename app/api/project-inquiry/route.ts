@@ -291,6 +291,8 @@ export async function POST(request: Request) {
     project.length > 4000 ||
     phone.length > 20 ||
     email.length > 320 ||
+    (Boolean(phone) && !hasValidPhone) ||
+    (Boolean(email) && !hasValidEmail) ||
     (hasOtherProject && !isAcceptedBudgetValue(budget, standardBudgets)) ||
     (hasThesis && !isAcceptedBudgetValue(thesisBudget, thesisBudgets)) ||
     !teamSizes.has(teamSize) ||

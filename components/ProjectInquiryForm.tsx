@@ -56,7 +56,6 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
   const [step, setStep] = useState(0);
   const [inquiry, setInquiry] = useState<Inquiry>(emptyInquiry);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [useEmailInstead, setUseEmailInstead] = useState(false);
   const [stepDirection, setStepDirection] = useState<"forward" | "back">("forward");
   const [error, setError] = useState("");
   const [consent, setConsent] = useState(false);
@@ -66,6 +65,12 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
 
   const hasThesis = inquiry.projectTypes.includes("Thesis / capstone");
   const hasOtherProject = inquiry.projectTypes.some((type) => type !== "Thesis / capstone");
+  const hasPhone = Boolean(inquiry.phone.trim());
+  const hasEmail = Boolean(inquiry.email.trim());
+  const hasValidContact =
+    (hasPhone || hasEmail) &&
+    (!hasPhone || isPhone(inquiry.phone)) &&
+    (!hasEmail || isEmail(inquiry.email));
   const progressPercent = Math.round(((step + 1) / 5) * 100);
 
   useEffect(() => {
@@ -91,29 +96,18 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
               ))
           : step === 3
             ? Boolean(inquiry.timeline)
-            : (useEmailInstead ? isEmail(inquiry.email) : isPhone(inquiry.phone)) &&
-              consent &&
+            : hasValidContact && consent &&
               (!turnstileRequired || Boolean(captchaToken));
 
   const submitHint =
     step !== 4 || status === "loading"
       ? null
-      : useEmailInstead
-        ? !inquiry.email
-          ? "Add your email to receive the meeting link."
-          : !isEmail(inquiry.email)
+      : !hasPhone && !hasEmail
+        ? "Add a phone number, email address, or both."
+        : hasPhone && !isPhone(inquiry.phone)
+          ? "Enter a valid mobile number (e.g. +63 9XX XXX XXXX)."
+          : hasEmail && !isEmail(inquiry.email)
             ? "Enter a valid email address."
-            : !consent
-              ? "Confirm the privacy notice below to continue."
-              : turnstileRequired && !captchaToken
-                ? captchaStatus === "error"
-                  ? "Retry the security check above or contact me directly."
-                  : "Wait for the security check to finish above."
-                : null
-        : !inquiry.phone
-          ? "Add your phone number so we can reach you."
-          : !isPhone(inquiry.phone)
-            ? "Enter a valid mobile number (e.g. +63 9XX XXX XXXX)."
             : !consent
               ? "Confirm the privacy notice below to continue."
               : turnstileRequired && !captchaToken
@@ -258,9 +252,11 @@ return (
             Your project is on my radar.
           </h2>
           <p>
-            {useEmailInstead
-              ? "Thanks for sharing the details. Check your inbox for the meeting link, and let's discuss how we can bring this to life."
-              : "Thanks for sharing the details. I'll text you the next steps for scheduling a quick call."}
+            {hasPhone && hasEmail
+              ? "Thanks for sharing the details. I'll use your phone or email to follow up with the next steps."
+              : hasEmail
+                ? "Thanks for sharing the details. Check your inbox for the next steps."
+                : "Thanks for sharing the details. I'll text you the next steps for scheduling a quick call."}
           </p>
           <Link className={clsx(styles.submit, styles.submitFull)} href="/">
             Back to portfolio
@@ -335,68 +331,40 @@ return (
 
             {step === 4 ? (
               <>
-                {useEmailInstead ? (
-                  <>
-                    <h2 id="inquiry-title">Where should I send the meeting link?</h2>
-                    <label className={styles.field}>
-                      <span className="srOnly">Email address</span>
-                      <input
-                        data-inquiry-autofocus
-                        type="email"
-                        autoComplete="email"
-                        required
-                        value={inquiry.email}
-                        onChange={(event) => update("email", event.target.value)}
-                        placeholder="you@company.com"
-                        aria-invalid={inquiry.email.length > 0 && !isEmail(inquiry.email)}
-                      />
-                    </label>
-                    {inquiry.email && !isEmail(inquiry.email) ? (
-                      <p className={styles.validation}>Enter a valid email address.</p>
+                <h2 id="inquiry-title">How should I reach you?</h2>
+                <p>Share both if you can, or use whichever you prefer.</p>
+                <div className={styles.contactFields}>
+                  <label className={styles.field}>
+                    <span className={styles.fieldLabel}>Phone number <small>Optional</small></span>
+                    <input
+                      data-inquiry-autofocus
+                      type="tel"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      value={inquiry.phone}
+                      onChange={(event) => update("phone", event.target.value)}
+                      placeholder="+63 917 123 4567"
+                      aria-invalid={hasPhone && !isPhone(inquiry.phone)}
+                    />
+                    {hasPhone && !isPhone(inquiry.phone) ? (
+                      <span className={styles.validation}>Enter a valid phone number.</span>
                     ) : null}
-                    <button
-                      className={styles.skip}
-                      type="button"
-                      onClick={() => {
-                        update("email", "");
-                        setUseEmailInstead(false);
-                      }}
-                    >
-                      Use phone instead
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <h2 id="inquiry-title">What&apos;s the best number to reach you?</h2>
-                    <label className={styles.field}>
-                      <span className="srOnly">Phone number</span>
-                      <input
-                        data-inquiry-autofocus
-                        type="tel"
-                        autoComplete="tel"
-                        inputMode="tel"
-                        required
-                        value={inquiry.phone}
-                        onChange={(event) => update("phone", event.target.value)}
-                        placeholder="+63 917 123 4567"
-                        aria-invalid={inquiry.phone.length > 0 && !isPhone(inquiry.phone)}
-                      />
-                    </label>
-                    {inquiry.phone && !isPhone(inquiry.phone) ? (
-                      <p className={styles.validation}>Enter a valid phone number.</p>
+                  </label>
+                  <label className={styles.field}>
+                    <span className={styles.fieldLabel}>Email address <small>Optional</small></span>
+                    <input
+                      type="email"
+                      autoComplete="email"
+                      value={inquiry.email}
+                      onChange={(event) => update("email", event.target.value)}
+                      placeholder="you@company.com"
+                      aria-invalid={hasEmail && !isEmail(inquiry.email)}
+                    />
+                    {hasEmail && !isEmail(inquiry.email) ? (
+                      <span className={styles.validation}>Enter a valid email address.</span>
                     ) : null}
-                    <button
-                      className={styles.skip}
-                      type="button"
-                      onClick={() => {
-                        update("phone", "");
-                        setUseEmailInstead(true);
-                      }}
-                    >
-                      Use email instead
-                    </button>
-                  </>
-                )}
+                  </label>
+                </div>
                 <InquiryPrivacyControls
                   consent={consent}
                   captchaStatus={captchaStatus}
