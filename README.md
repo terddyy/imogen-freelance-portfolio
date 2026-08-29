@@ -45,7 +45,9 @@ Copy `.env.example` to `.env.local`. Secrets stay **server-only**. The only publ
 
 Inquiry success requires **both** Resend and IPROG to accept the message. Full details go by email to `terd@zentariph.com`; SMS is a short heads-up only (no free-text project body).
 
-For local Turnstile testing you can use Cloudflare’s always-pass dummy keys (`1x00000000000000000000AA` / `1x0000000000000000000000000000000AA`). If Turnstile env vars are omitted in development, the API skips CAPTCHA verification; **production fails closed** without `TURNSTILE_SECRET_KEY`.
+For local Turnstile testing, use Cloudflare’s always-pass dummy keys (`1x00000000000000000000AA` / `1x0000000000000000000000000000000AA`) in `.env.local`. Do not reuse a hostname-restricted production widget key on `localhost`; Cloudflare will reject it. If Turnstile env vars are omitted in development, the API skips CAPTCHA verification; **production fails closed** without `TURNSTILE_SECRET_KEY`.
+
+The production Turnstile widget must authorize `www.imogen.dev` (and `imogen.dev` if the apex serves the form). The inquiry UI keeps submission disabled when Turnstile fails, shows a retry action, and offers direct call/WhatsApp contact rather than bypassing verification.
 
 ## Project inquiry API
 

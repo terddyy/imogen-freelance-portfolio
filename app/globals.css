@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./inquiry-light.css";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -1342,6 +1341,5 @@ html:has(.proofDialog[open]) {
     line-height: 1.4;
   }
 }
-
 
 

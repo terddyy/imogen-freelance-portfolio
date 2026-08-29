@@ -6,12 +6,18 @@
 
 .viewport {
   display: grid;
-  grid-template-rows: auto auto;
-  gap: 10px;
-  width: min(760px, calc(100% - 32px));
-  margin-inline: auto;
-  padding: 4px 0 12px;
+  width: 100%;
+  padding: 4px 16px 12px;
   box-sizing: border-box;
+}
+
+.viewportContent {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
 }
 
 .viewport[data-inquiry-section] {
@@ -39,9 +45,29 @@
 
 .viewportPage {
   min-height: 100dvh;
-  grid-template-rows: auto auto 1fr;
   padding-top: clamp(24px, 6vw, 48px);
   padding-bottom: 32px;
+}
+
+.viewport[data-inquiry-theme="light"] {
+  --inquiry-text: #101923;
+  --inquiry-muted: #5a6b7a;
+  --inquiry-dim: #708294;
+  --inquiry-line: rgba(16, 35, 55, 0.12);
+  --inquiry-line-strong: rgba(16, 35, 55, 0.2);
+  --inquiry-accent: #15803d;
+  --inquiry-accent-strong: #166534;
+  --inquiry-accent-soft: rgba(21, 128, 61, 0.1);
+  --inquiry-surface: #fff;
+  --inquiry-surface-muted: #f8fafc;
+  color: var(--inquiry-text);
+  background:
+    radial-gradient(circle at 12% 0%, rgba(21, 128, 61, 0.08), transparent 34%),
+    linear-gradient(180deg, #f7fafc 0%, #eef3f7 100%);
+}
+
+.viewport[data-inquiry-theme="light"]::before {
+  display: none;
 }
 
 .backHome {
@@ -78,7 +104,7 @@
 .viewportIntro :global(.sectionLabel) {
   margin-inline: auto;
   border-color: rgba(34, 197, 94, 0.42);
-  color: var(--text);
+  color: var(--inquiry-accent-strong, var(--text));
   background: rgba(34, 197, 94, 0.06);
   font-size: 12px;
   font-weight: 600;
@@ -127,6 +153,11 @@
 
 .viewportPage .panelViewport {
   height: 100%;
+}
+
+.viewportPage .panelSuccess {
+  align-self: start;
+  height: auto;
 }
 
 .panelViewport .form,
@@ -241,9 +272,8 @@
 .panelViewport .actions {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 10px;
   margin-top: 0;
@@ -252,7 +282,6 @@
 }
 
 .panelViewport .submit {
-  flex: 1;
   min-height: 40px;
   padding: 8px 14px;
   font-size: 13px;
@@ -263,12 +292,17 @@
   font-size: 12px;
 }
 
+.panelViewport .actionFeedback {
+  grid-column: 1 / -1;
+}
+
 .panelViewport .success {
   align-content: center;
 }
 
 .panelViewport .success .submit {
   margin-top: 20px;
+  min-height: 48px;
 }
 
 .panelViewport .field {
@@ -876,6 +910,7 @@
   gap: 8px;
   min-width: 152px;
   border: 0;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -1048,6 +1083,313 @@
   margin-top: 32px;
 }
 
+.actionFeedback {
+  display: grid;
+  gap: 6px;
+}
+
+.turnstileError {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 12px;
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  border-radius: 12px;
+  color: #fecaca;
+  background: rgba(239, 68, 68, 0.07);
+}
+
+.turnstileError > svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.turnstileErrorTitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.turnstileErrorText {
+  margin: 3px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.turnstileRetry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  margin-top: 8px;
+  padding: 6px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.securityFallback {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.securityFallback > span {
+  flex-basis: 100%;
+}
+
+.securityFallback a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--green);
+  font-weight: 800;
+}
+
+.viewport[data-inquiry-theme="light"] .panel {
+  border-color: var(--inquiry-line);
+  color: var(--inquiry-text);
+  background: var(--inquiry-surface);
+  box-shadow:
+    0 1px 2px rgba(16, 35, 55, 0.04),
+    0 18px 48px rgba(46, 70, 92, 0.08);
+  backdrop-filter: none;
+}
+
+.viewport[data-inquiry-theme="light"] .stepperList::before,
+.viewport[data-inquiry-theme="light"] .progressBarTrack {
+  background: var(--inquiry-line);
+}
+
+.viewport[data-inquiry-theme="light"] .stepperNode {
+  border-color: var(--inquiry-line-strong);
+  color: var(--inquiry-dim);
+  background: #fff;
+}
+
+.viewport[data-inquiry-theme="light"] .stepperItemActive .stepperNode {
+  border-color: var(--inquiry-accent);
+  color: #fff;
+  background: var(--inquiry-accent);
+  box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.12);
+}
+
+.viewport[data-inquiry-theme="light"] .stepperItemComplete .stepperNode {
+  border-color: rgba(21, 128, 61, 0.35);
+  color: var(--inquiry-accent-strong);
+  background: #fff;
+}
+
+.viewport[data-inquiry-theme="light"] .stepperLabel {
+  color: var(--inquiry-dim);
+}
+
+.viewport[data-inquiry-theme="light"] .stepperItemActive .stepperLabel {
+  color: var(--inquiry-text);
+}
+
+.viewport[data-inquiry-theme="light"] .stepperItemActive .stepperLabel::after,
+.viewport[data-inquiry-theme="light"] .progressBarFill {
+  background: var(--inquiry-accent);
+  box-shadow: none;
+}
+
+.viewport[data-inquiry-theme="light"] .progressBarPercent,
+.viewport[data-inquiry-theme="light"] .question > p,
+.viewport[data-inquiry-theme="light"] .choices > p,
+.viewport[data-inquiry-theme="light"] .success > p,
+.viewport[data-inquiry-theme="light"] .budgetStep > p,
+.viewport[data-inquiry-theme="light"] .privacyNotice,
+.viewport[data-inquiry-theme="light"] .turnstileGateText,
+.viewport[data-inquiry-theme="light"] .turnstileLoading,
+.viewport[data-inquiry-theme="light"] .submitHint,
+.viewport[data-inquiry-theme="light"] .customBudgetHint {
+  color: var(--inquiry-muted);
+}
+
+.viewport[data-inquiry-theme="light"] .question h2,
+.viewport[data-inquiry-theme="light"] .choices legend,
+.viewport[data-inquiry-theme="light"] .success h2,
+.viewport[data-inquiry-theme="light"] .budgetStep .choices legend,
+.viewport[data-inquiry-theme="light"] .consent,
+.viewport[data-inquiry-theme="light"] .turnstileGateTitle,
+.viewport[data-inquiry-theme="light"] .customBudget label {
+  color: var(--inquiry-text);
+}
+
+.viewport[data-inquiry-theme="light"] .panelViewport .question > p,
+.viewport[data-inquiry-theme="light"] .panelViewport .choices > p,
+.viewport[data-inquiry-theme="light"] .panelViewport .success > p {
+  display: block;
+}
+
+.viewport[data-inquiry-theme="light"] .panelViewport .budgetStep > p {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.viewport[data-inquiry-theme="light"] .field input,
+.viewport[data-inquiry-theme="light"] .field textarea,
+.viewport[data-inquiry-theme="light"] .customBudgetField {
+  border-color: var(--inquiry-line-strong);
+  color: var(--inquiry-text);
+  background: #fff;
+}
+
+.viewport[data-inquiry-theme="light"] .field input::placeholder,
+.viewport[data-inquiry-theme="light"] .field textarea::placeholder {
+  color: rgba(90, 107, 122, 0.72);
+}
+
+.viewport[data-inquiry-theme="light"] .field input:focus,
+.viewport[data-inquiry-theme="light"] .field textarea:focus {
+  border-color: rgba(21, 128, 61, 0.55);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(21, 128, 61, 0.1);
+}
+
+.viewport[data-inquiry-theme="light"] .choice > span {
+  border-color: var(--inquiry-line-strong);
+  color: var(--inquiry-muted);
+  background: var(--inquiry-surface-muted);
+}
+
+@media (hover: hover) {
+  .viewport[data-inquiry-theme="light"] .choice:hover > span {
+    border-color: rgba(21, 128, 61, 0.4);
+    color: var(--inquiry-text);
+  }
+}
+
+.viewport[data-inquiry-theme="light"] .choice input:checked + span {
+  border-color: rgba(21, 128, 61, 0.55);
+  color: var(--inquiry-accent-strong);
+  background: var(--inquiry-accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(21, 128, 61, 0.12);
+}
+
+.viewport[data-inquiry-theme="light"] .projectChoices .choice > span {
+  border-color: var(--inquiry-line);
+  background: #fff;
+}
+
+.viewport[data-inquiry-theme="light"] .projectChoices .choice svg {
+  color: var(--inquiry-accent);
+  filter: none;
+}
+
+.viewport[data-inquiry-theme="light"] .projectChoices .choice strong {
+  color: var(--inquiry-text);
+}
+
+.viewport[data-inquiry-theme="light"] .projectChoices .choice input:checked + span {
+  border-color: rgba(21, 128, 61, 0.5);
+  color: var(--inquiry-accent-strong);
+  background: var(--inquiry-accent-soft);
+  box-shadow:
+    inset 0 0 0 1px rgba(21, 128, 61, 0.14),
+    0 8px 24px rgba(21, 128, 61, 0.08);
+}
+
+.viewport[data-inquiry-theme="light"] .projectChoiceCheck,
+.viewport[data-inquiry-theme="light"] .submitFull {
+  color: #fff;
+  background: var(--inquiry-accent);
+  box-shadow: none;
+}
+
+.viewport[data-inquiry-theme="light"] .privacyPanel,
+.viewport[data-inquiry-theme="light"] .customBudget {
+  border-color: var(--inquiry-line);
+  background: var(--inquiry-surface-muted);
+}
+
+.viewport[data-inquiry-theme="light"] .privacyNotice a,
+.viewport[data-inquiry-theme="light"] .back:hover,
+.viewport[data-inquiry-theme="light"] .back:focus-visible,
+.viewport[data-inquiry-theme="light"] .skip:hover,
+.viewport[data-inquiry-theme="light"] .skip:focus-visible,
+.viewport[data-inquiry-theme="light"] .turnstileGateIcon,
+.viewport[data-inquiry-theme="light"] .step {
+  color: var(--inquiry-accent-strong) !important;
+}
+
+.viewport[data-inquiry-theme="light"] .turnstileGate {
+  border-color: rgba(21, 128, 61, 0.24);
+  background: rgba(21, 128, 61, 0.04);
+}
+
+.viewport[data-inquiry-theme="light"] .back,
+.viewport[data-inquiry-theme="light"] .skip,
+.viewport[data-inquiry-theme="light"] .customBudgetField span {
+  color: var(--inquiry-muted);
+}
+
+.viewport[data-inquiry-theme="light"] .submitFull {
+  box-shadow: 0 12px 28px rgba(21, 128, 61, 0.22);
+}
+
+.viewport[data-inquiry-theme="light"] .submitFull:hover,
+.viewport[data-inquiry-theme="light"] .submitFull:focus-visible {
+  background: #16a34a;
+  box-shadow: 0 16px 32px rgba(21, 128, 61, 0.26);
+}
+
+.viewport[data-inquiry-theme="light"] .submitFull:disabled {
+  color: rgba(16, 35, 55, 0.38);
+  background: rgba(16, 35, 55, 0.06);
+  box-shadow: none;
+}
+
+.viewport[data-inquiry-theme="light"] .validation,
+.viewport[data-inquiry-theme="light"] .error {
+  color: #c2410c;
+}
+
+.viewport[data-inquiry-theme="light"] .successIcon {
+  border-color: rgba(21, 128, 61, 0.28);
+  color: var(--inquiry-accent-strong);
+  background: var(--inquiry-accent-soft);
+}
+
+.viewport[data-inquiry-theme="light"] .budgetStep .choices + .choices {
+  border-top-color: var(--inquiry-line);
+}
+
+.viewport[data-inquiry-theme="light"] .customBudgetField input {
+  color: var(--inquiry-text);
+}
+
+.viewport[data-inquiry-theme="light"] .turnstileError {
+  border-color: rgba(194, 65, 12, 0.2);
+  color: #9a3412;
+  background: rgba(194, 65, 12, 0.06);
+}
+
+.viewport[data-inquiry-theme="light"] .securityFallback {
+  color: var(--inquiry-muted);
+}
+
+.viewport[data-inquiry-theme="light"] .securityFallback a {
+  border-color: var(--inquiry-line-strong);
+  color: var(--inquiry-accent-strong);
+  background: #fff;
+}
+
 @media (min-width: 640px) {
   .submitShort {
     display: none;
@@ -1090,9 +1432,27 @@
 
 @media (max-width: 640px) {
   .viewport {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .viewportContent {
+    grid-template-rows: auto auto auto;
+    align-content: start;
     gap: 12px;
-    padding: 4px 0 12px;
-    width: min(100%, calc(100% - 24px));
+  }
+
+  .viewportPage .panelViewport {
+    height: auto;
+  }
+
+  .viewportPage .panelViewport .form,
+  .viewportPage .panelViewport .success {
+    flex: none;
+  }
+
+  .viewportPage .panelViewport .question {
+    flex: none;
   }
 
   .viewportIntro h1,
@@ -1233,9 +1593,10 @@
 
   .submit {
     min-width: 0;
-    min-height: 36px;
+    min-height: 44px;
     padding: 8px 12px;
     font-size: 11px;
+    white-space: nowrap;
   }
 
   .back {
@@ -1337,4 +1698,9 @@
 
 @keyframes inquirySpin {
   to { transform: rotate(360deg); }
+}
+
+.viewport[data-inquiry-theme="light"] .viewportIntro h1,
+.viewport[data-inquiry-theme="light"] .viewportIntro h2 {
+  color: var(--inquiry-text);
 }

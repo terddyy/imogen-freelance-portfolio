@@ -13,14 +13,24 @@ const required = [
 ];
 
 const missing = required.filter(({ name }) => !process.env[name]?.trim());
+const dummyTurnstileValues = new Set([
+  "1x00000000000000000000AA",
+  "1x0000000000000000000000000000000AA",
+]);
+const invalid = required.filter(
+  ({ name }) => name.includes("TURNSTILE") && dummyTurnstileValues.has(process.env[name]?.trim()),
+);
 
-if (missing.length === 0) {
+if (missing.length === 0 && invalid.length === 0) {
   console.log("OK — all production environment variables are set.");
   process.exit(0);
 }
 
-console.log("Missing or empty environment variables:");
+console.log("Production environment issues:");
 for (const { name, hint } of missing) {
   console.log(`  - ${name} (${hint})`);
+}
+for (const { name } of invalid) {
+  console.log(`  - ${name} (replace the local test value with a production Turnstile credential)`);
 }
 process.exit(1);

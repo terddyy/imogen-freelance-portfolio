@@ -12,7 +12,11 @@ import clsx from "clsx";
 import Link from "next/link";
 import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { BudgetChoiceGroup } from "@/components/BudgetChoiceGroup";
-import { TurnstileField, isTurnstileConfigured } from "@/components/TurnstileField";
+import {
+  TurnstileField,
+  isTurnstileConfigured,
+  type TurnstileStatus,
+} from "@/components/TurnstileField";
 import { grantInquirySecurityConsent } from "@/lib/inquiry-consent";
 import { WhatsAppIcon } from "@/components/WhatsAppContact";
 import {
@@ -57,6 +61,7 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
   const [error, setError] = useState("");
   const [consent, setConsent] = useState(false);
   const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaStatus, setCaptchaStatus] = useState<TurnstileStatus>("idle");
   const turnstileRequired = isTurnstileConfigured();
 
   const hasThesis = inquiry.projectTypes.includes("Thesis / capstone");
@@ -101,7 +106,9 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
             : !consent
               ? "Confirm the privacy notice below to continue."
               : turnstileRequired && !captchaToken
-                ? "Wait for the security check to finish above."
+                ? captchaStatus === "error"
+                  ? "Retry the security check above or contact me directly."
+                  : "Wait for the security check to finish above."
                 : null
         : !inquiry.phone
           ? "Add your phone number so we can reach you."
@@ -110,13 +117,18 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
             : !consent
               ? "Confirm the privacy notice below to continue."
               : turnstileRequired && !captchaToken
-                ? "Wait for the security check to finish above."
+                ? captchaStatus === "error"
+                  ? "Retry the security check above or contact me directly."
+                  : "Wait for the security check to finish above."
                 : null;
 
   function setConsentWithSecurity(value: boolean) {
     setConsent(value);
     if (value) {
       grantInquirySecurityConsent();
+    } else {
+      setCaptchaToken("");
+      setCaptchaStatus("idle");
     }
     setError("");
   }
@@ -203,7 +215,14 @@ export function ProjectInquiryForm({ compact = false }: ProjectInquiryFormProps)
   }
 
 return (
-    <div ref={panelRef} className={clsx(styles.panel, compact && styles.panelViewport)}>
+    <div
+      ref={panelRef}
+      className={clsx(
+        styles.panel,
+        compact && styles.panelViewport,
+        compact && status === "success" && styles.panelSuccess,
+      )}
+    >
       {!compact ? (
         <aside className={styles.directContact} aria-label="Direct contact">
           <div>
@@ -380,22 +399,28 @@ return (
                 )}
                 <InquiryPrivacyControls
                   consent={consent}
+                  captchaStatus={captchaStatus}
                   onConsentChange={setConsentWithSecurity}
                   onCaptchaTokenChange={setCaptchaToken}
+                  onCaptchaStatusChange={setCaptchaStatus}
                 />
               </>
             ) : null}
           </div>
 
           <footer className={styles.actions}>
-            {submitHint && !validStep && status !== "loading" ? (
-              <p className={styles.submitHint} role="status">{submitHint}</p>
-            ) : null}
-            {status === "error" ? (
-              <p className={styles.error} role="alert">
-                <CircleAlert size={17} aria-hidden="true" />
-                {error}
-              </p>
+            {((submitHint && !validStep) || status === "error") ? (
+              <div className={styles.actionFeedback}>
+                {submitHint && !validStep ? (
+                  <p className={styles.submitHint} role="status">{submitHint}</p>
+                ) : null}
+                {status === "error" ? (
+                  <p className={styles.error} role="alert">
+                    <CircleAlert size={17} aria-hidden="true" />
+                    {error}
+                  </p>
+                ) : null}
+              </div>
             ) : null}
             {step > 0 ? (
               <button className={styles.back} type="button" onClick={goBack}>
@@ -463,12 +488,16 @@ function InquiryStepper({
 
 function InquiryPrivacyControls({
   consent,
+  captchaStatus,
   onConsentChange,
   onCaptchaTokenChange,
+  onCaptchaStatusChange,
 }: {
   consent: boolean;
+  captchaStatus: TurnstileStatus;
   onConsentChange: (value: boolean) => void;
   onCaptchaTokenChange: (token: string) => void;
+  onCaptchaStatusChange: (status: TurnstileStatus) => void;
 }) {
   return (
     <div className={clsx(styles.privacy, styles.privacyPanel)}>
@@ -482,7 +511,28 @@ function InquiryPrivacyControls({
         <input type="checkbox" checked={consent} onChange={(event) => onConsentChange(event.target.checked)} />
         <span>I&apos;ve read the privacy notice and agree to share my contact details so Imogen can reply.</span>
       </label>
-      <TurnstileField onTokenChange={onCaptchaTokenChange} inquiryConsent={consent} />
+      <TurnstileField
+        onTokenChange={onCaptchaTokenChange}
+        onStatusChange={onCaptchaStatusChange}
+        inquiryConsent={consent}
+      />
+      {captchaStatus === "error" ? (
+        <div className={styles.securityFallback} aria-label="Direct contact alternatives">
+          <span>Security check unavailable?</span>
+          <a href={phoneContact?.href ?? "tel:+639602506993"}>
+            <PhoneCall size={14} aria-hidden="true" />
+            Call instead
+          </a>
+          <a
+            href={whatsappContact?.href ?? "https://wa.me/639602506993"}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <WhatsAppIcon size={14} />
+            WhatsApp
+          </a>
+        </div>
+      ) : null}
     </div>
   );
 }

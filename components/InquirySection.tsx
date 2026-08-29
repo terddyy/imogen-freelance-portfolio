@@ -8,21 +8,23 @@ import styles from "@/components/ProjectInquiryForm.module.css";
 export function InquirySection() {
   return (
     <section
-      className={`${styles.viewport} shell ${styles.viewportPage}`}
+      className={`${styles.viewport} ${styles.viewportPage}`}
       id="inquire"
       aria-label="Project inquiry"
       data-inquiry-section
       data-inquiry-theme="light"
     >
-      <Link className={styles.backHome} href="/">
-        <ArrowLeft size={16} aria-hidden="true" />
-        Back to site
-      </Link>
-      <div className={styles.viewportIntro}>
-        <span className="sectionLabel">Project inquiry</span>
-        <h1>Let&apos;s scope your next build.</h1>
+      <div className={styles.viewportContent}>
+        <Link className={styles.backHome} href="/">
+          <ArrowLeft size={16} aria-hidden="true" />
+          Back to site
+        </Link>
+        <div className={styles.viewportIntro}>
+          <span className="sectionLabel">Project inquiry</span>
+          <h1>Let&apos;s scope your next build.</h1>
+        </div>
+        <ProjectInquiryForm compact />
       </div>
-      <ProjectInquiryForm compact />
     </section>
   );
 }
