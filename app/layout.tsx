@@ -4,7 +4,6 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppContact } from "@/components/WhatsAppContact";
-import { PortfolioChatbot } from "@/components/PortfolioChatbot";
 import { CookieConsent } from "@/components/CookieConsent";
 import { MobileNav } from "@/components/MobileNav";
 import { SiteEntryLoader } from "@/components/SiteEntryLoader";
@@ -75,10 +74,6 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
-        {process.env.NODE_ENV !== "production" ||
-        process.env.NEXT_PUBLIC_ENABLE_PORTFOLIO_CHAT === "true" ? (
-          <PortfolioChatbot />
-        ) : null}
         <WhatsAppContact />
         <CookieConsent />
         <MobileNav />

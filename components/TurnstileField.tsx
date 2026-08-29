@@ -21,6 +21,7 @@ type TurnstileApi = {
     element: string | HTMLElement,
     options: {
       sitekey: string;
+      action?: string;
       theme?: "light" | "dark" | "auto";
       callback?: (token: string) => void;
       "error-callback"?: (errorCode: string) => boolean | void;
@@ -100,6 +101,7 @@ export function TurnstileField({ onTokenChange, onStatusChange, inquiryConsent =
       setErrorCode("");
       widgetIdRef.current = window.turnstile.render(host, {
         sitekey: siteKey,
+        action: "project-inquiry",
         theme: "auto",
         callback: (token) => {
           if (watchdog) window.clearTimeout(watchdog);

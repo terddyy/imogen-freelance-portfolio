@@ -1,8 +1,9 @@
 import { createHash } from "node:crypto";
-import { hasAllowedRequestSource } from "@/lib/api-security";
+import { getAllowedOrigins, hasAllowedRequestSource } from "@/lib/api-security";
 import { getClientAddress, getClientFingerprint } from "@/lib/client-ip";
 import { consumeRateLimit, rateLimitHeaders, type RateLimitDecision } from "@/lib/rate-limit";
 import { isAcceptedBudgetValue, standardBudgets, thesisBudgets } from "@/lib/project-inquiry";
+import { isValidTurnstileResult } from "@/lib/turnstile-validation";
 
 export const runtime = "nodejs";
 
@@ -20,6 +21,10 @@ const projectTypes = new Set([
 ]);
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_BODY_BYTES = 16 * 1024;
+const acceptedBodyFields = new Set([
+  "projectTypes", "project", "website", "budget", "customBudgetAmount", "thesisBudget",
+  "customThesisBudgetAmount", "teamSize", "timeline", "phone", "email", "consent", "captchaToken",
+]);
 import {
   GLOBAL_INQUIRY_RATE_LIMIT_MAX,
   INQUIRY_RATE_LIMIT_MAX,
@@ -99,7 +104,7 @@ async function readBody(request: Request) {
   return new TextDecoder("utf-8", { fatal: true }).decode(body);
 }
 
-async function verifyTurnstileToken(token: string, remoteIp: string) {
+async function verifyTurnstileToken(token: string, remoteIp: string, requestUrl: string) {
   const secret = process.env.TURNSTILE_SECRET_KEY?.trim();
   if (!secret) {
     if (process.env.NODE_ENV === "production") throw new Error("Turnstile is required in production.");
@@ -120,8 +125,9 @@ async function verifyTurnstileToken(token: string, remoteIp: string) {
   });
   if (!response.ok) return false;
 
-  const result = (await response.json()) as { success?: boolean };
-  return result.success === true;
+  const result = (await response.json()) as { success?: boolean; action?: string; hostname?: string };
+  const allowedHostnames = new Set([...getAllowedOrigins(requestUrl)].map((origin) => new URL(origin).hostname));
+  return isValidTurnstileResult(result, allowedHostnames);
 }
 
 function escapeHtml(value: string) {
@@ -207,6 +213,11 @@ export async function POST(request: Request) {
     return json({ error: "Invalid project inquiry origin." }, 403);
   }
 
+  const contentType = request.headers.get("content-type")?.split(";", 1)[0].trim().toLowerCase();
+  if (contentType !== "application/json") {
+    return json({ error: "Project inquiry must be sent as JSON." }, 415);
+  }
+
   const clientAddress = getClientAddress(request.headers);
   let clientFingerprint: string;
   try {
@@ -216,10 +227,8 @@ export async function POST(request: Request) {
   }
 
   let inquiryRateLimit;
-  let globalRateLimit;
   try {
     inquiryRateLimit = await consumeRateLimit("project-inquiry", clientFingerprint, INQUIRY_RATE_LIMIT_MAX);
-    globalRateLimit = await consumeRateLimit("project-inquiry-global", "site", GLOBAL_INQUIRY_RATE_LIMIT_MAX);
   } catch {
     return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503);
   }
@@ -229,14 +238,6 @@ export async function POST(request: Request) {
       { error: "Too many project inquiries. Please try again later." },
       429,
       tooManyRequestsHeaders(inquiryRateLimit, INQUIRY_RATE_LIMIT_MAX),
-    );
-  }
-
-  if (!globalRateLimit.allowed) {
-    return json(
-      { error: "Project inquiries are temporarily limited. Please try again later." },
-      429,
-      tooManyRequestsHeaders(globalRateLimit, GLOBAL_INQUIRY_RATE_LIMIT_MAX),
     );
   }
 
@@ -250,6 +251,9 @@ export async function POST(request: Request) {
       throw new Error("Invalid project inquiry.");
     }
     body = parsedBody as Record<string, unknown>;
+    if (Object.keys(body).some((field) => !acceptedBodyFields.has(field))) {
+      throw new Error("Invalid project inquiry fields.");
+    }
   } catch (error) {
     if (error instanceof RequestBodyTooLargeError) {
       return json({ error: "Project inquiry is too large." }, 413, inquiryHeaders);
@@ -259,15 +263,6 @@ export async function POST(request: Request) {
 
   if (body.consent !== true) {
     return json({ error: "Please confirm the privacy notice before sending your inquiry." }, 400, inquiryHeaders);
-  }
-
-  try {
-    const captchaOk = await verifyTurnstileToken(getString(body.captchaToken), clientAddress);
-    if (!captchaOk) {
-      return json({ error: "Please complete the security check and try again." }, 400, inquiryHeaders);
-    }
-  } catch {
-    return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503, inquiryHeaders);
   }
 
   const selectedProjectTypes = getStrings(body.projectTypes);
@@ -309,9 +304,33 @@ export async function POST(request: Request) {
     return json({ error: "Enter a valid website address." }, 400, inquiryHeaders);
   }
 
+  try {
+    const captchaOk = await verifyTurnstileToken(getString(body.captchaToken), clientAddress, request.url);
+    if (!captchaOk) {
+      return json({ error: "Please complete the security check and try again." }, 400, inquiryHeaders);
+    }
+  } catch {
+    return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503, inquiryHeaders);
+  }
+
   const deliveryConfig = getDeliveryConfig();
   if (!deliveryConfig) {
     return json({ error: "Project inquiry delivery is not configured yet. Please try again later." }, 503, inquiryHeaders);
+  }
+
+  let globalRateLimit;
+  try {
+    globalRateLimit = await consumeRateLimit("project-inquiry-global", "site", GLOBAL_INQUIRY_RATE_LIMIT_MAX);
+  } catch {
+    return json({ error: "Project inquiry delivery is temporarily unavailable. Please try again later." }, 503, inquiryHeaders);
+  }
+
+  if (!globalRateLimit.allowed) {
+    return json(
+      { error: "Project inquiries are temporarily limited. Please try again later." },
+      429,
+      tooManyRequestsHeaders(globalRateLimit, GLOBAL_INQUIRY_RATE_LIMIT_MAX),
+    );
   }
 
   try {

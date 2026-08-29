@@ -7,7 +7,7 @@ import { API_FLOOD_MAX } from "@/lib/rate-limit-config";
 const MAX_BODY_BYTES = 16 * 1024;
 
 export const config = {
-  matcher: "/api/:path*",
+  matcher: "/api/project-inquiry",
 };
 
 function json(body: unknown, status: number, headers: Record<string, string> = {}) {

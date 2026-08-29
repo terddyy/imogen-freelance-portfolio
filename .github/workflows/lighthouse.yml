@@ -6,18 +6,27 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Check API security policies
+        run: npm run check:api-security
 
       - run: npm run build
         env:
@@ -29,10 +38,15 @@ jobs:
           PUBLIC_SITE_ORIGIN: http://localhost:3000
 
       - name: Wait for server
-        run: npx wait-on http://localhost:3000 --timeout 60000
+        run: |
+          for attempt in {1..60}; do
+            curl --fail --silent http://localhost:3000 >/dev/null && exit 0
+            sleep 1
+          done
+          exit 1
 
       - name: Run Lighthouse CI
-        uses: treosh/lighthouse-ci-action@v12
+        uses: treosh/lighthouse-ci-action@512cc908a55bfb0ad231facca52adf3d3a651df4 # v12
         with:
           configPath: ./lighthouserc.json
           uploadArtifacts: true
