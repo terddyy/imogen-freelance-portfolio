@@ -317,8 +317,8 @@ export const proofMoments: ProofMoment[] = [
   {
     id: "quiet-corner",
     src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1774421921/IMG_20260313_223915_251_wc9hgy.jpg",
-    alt: "Working from a quiet spot",
-    label: "Quiet corner",
+    alt: "Core team at a community event",
+    label: "Community event",
     layout: "onsite2",
     desktopLayout: "onsite2",
   },
