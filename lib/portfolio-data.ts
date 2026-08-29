@@ -309,8 +309,8 @@ export const proofMoments: ProofMoment[] = [
   {
     id: "late-hours",
     src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1771775487/FB_IMG_1771773624608_grg6qp.jpg",
-    alt: "Working alongside a team on a shared build",
-    label: "Late hours",
+    alt: "Core team at a community event",
+    label: "Community event",
     layout: "team2",
     desktopLayout: "team2",
   },
