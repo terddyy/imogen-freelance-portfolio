@@ -1251,10 +1251,15 @@
 .viewport[data-inquiry-theme="light"] .choices legend,
 .viewport[data-inquiry-theme="light"] .success h2,
 .viewport[data-inquiry-theme="light"] .budgetStep .choices legend,
+.viewport[data-inquiry-theme="light"] .fieldLabel,
 .viewport[data-inquiry-theme="light"] .consent,
 .viewport[data-inquiry-theme="light"] .turnstileGateTitle,
 .viewport[data-inquiry-theme="light"] .customBudget label {
   color: var(--inquiry-text);
+}
+
+.viewport[data-inquiry-theme="light"] .fieldLabel small {
+  color: var(--inquiry-muted);
 }
 
 .viewport[data-inquiry-theme="light"] .panelViewport .question > p,
