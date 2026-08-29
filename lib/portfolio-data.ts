@@ -268,7 +268,7 @@ export const proofMoments: ProofMoment[] = [
     id: "team",
     src: "https://res.cloudinary.com/dqojscxhd/image/upload/v1774421921/IMG_20260317_232359_220_anupvj.jpg",
     alt: "Building late into the night",
-    label: "Team session",
+    label: "Someone I admire",
     layout: "team",
     desktopLayout: "team",
   },
