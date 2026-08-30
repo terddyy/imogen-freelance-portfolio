@@ -64,10 +64,7 @@ export function HeroSection() {
           </h1>
           <div className={styles.meta}>
             <strong className={styles.roleLine}>Lead Full Stack Developer</strong>
-            <a href="https://nexvision.info/" target="_blank" rel="noreferrer">
-              Nexvision Innovations
-              <ArrowUpRight size={15} />
-            </a>
+            <span>Nexvision Innovations</span>
             <a href="https://www.facebook.com/zentarisoftwaresolution" target="_blank" rel="noreferrer">
               Co-founder &amp; CEO, Zentari
               <ArrowUpRight size={15} />
