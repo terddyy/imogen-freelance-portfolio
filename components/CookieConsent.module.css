@@ -58,7 +58,6 @@
 @media (max-width: 980px) {
   .cookieConsent {
     left: max(14px, env(safe-area-inset-left));
-    bottom: calc(var(--mobile-dock-clearance) + env(safe-area-inset-bottom));
     width: min(360px, calc(100vw - 28px));
   }
 

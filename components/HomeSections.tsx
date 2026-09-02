@@ -2,13 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
 import {
-  ArrowDownLeft,
   ArrowRight,
   ArrowUpRight,
   Check,
-  Rocket,
   ShieldCheck,
-  Sparkles,
   Users,
   Zap,
 } from "lucide-react";
@@ -32,7 +29,16 @@ const startHereTrust = [
   { icon: Users, label: "Tailored solutions" },
 ] as const;
 
-const laptopRows = [0, 1, 2] as const;
+const experienceRoles = [
+  { role: "Lead Full Stack Engineer", org: "Nexvision Innovations INC" },
+  { role: "Founder & Lead Software Engineer", org: "Zentari Software" },
+  { role: "Director of Engineering", org: "Optrizo Digital Solutions" },
+  { role: "Engineer Lead", org: "WorkFlowPH" },
+  { role: "Club Lead", org: "Amazon Web Services Learning Club" },
+  { role: "Industry Track Scholar", org: "Arizona State University" },
+  { role: "AI Engineer Intern", org: "Flyrank AI" },
+  { role: "Software Engineer Intern", org: "Nexvision Innovations INC" },
+] as const;
 
 export function FeaturedProjects() {
   return <FeaturedProjectCarousel projects={projects} />;
@@ -42,11 +48,33 @@ export function HomeTestimonials() {
   return <HomeTestimonialsStack />;
 }
 
+export function ExperienceSection() {
+  return (
+    <section className="shell experienceSection" id="experience" aria-labelledby="experience-heading">
+      <h2 className="experienceTitle" id="experience-heading">
+        Experience
+      </h2>
+      <ol className="experienceList">
+        {experienceRoles.map((item, index) => (
+          <li key={`${item.org}-${item.role}`}>
+            <span className="experienceIndex" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div>
+              <h3>{item.role}</h3>
+              <p>{item.org}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
 export function AboutSection() {
   return (
     <section className="shell pageSection aboutSection" id="about">
       <div>
-        <span className="sectionLabel">About Imogen</span>
         <h2>Freelancer, design partner, calm launch process.</h2>
         <p>
           Works with founders, service providers, and small teams who need a clear, usable site
@@ -83,7 +111,6 @@ export function ServicesSection() {
   return (
     <section className="shell pageSection" id="services">
       <SectionHeading
-        label="Services"
         title="Custom systems, websites, apps, and AI."
         body="Software built around how your work actually runs."
       />
@@ -123,7 +150,6 @@ export function PricingSection() {
   return (
     <section className="shell pageSection" id="pricing">
       <SectionHeading
-        label="Pricing"
         title="Starter ranges to plan around."
         body="Final pricing depends on scope, content, and timeline."
       />
@@ -159,7 +185,6 @@ export function ToolsSection() {
   return (
     <section className="shell pageSection" id="tools">
       <SectionHeading
-        label="Tools"
         title="Tech stack and tools."
         body="Languages, frameworks, and tools used across projects."
       />
@@ -183,78 +208,36 @@ export function FinalCta() {
   return (
     <section className="shell" id="contact" aria-label="Start your project">
       <div className={styles.section}>
-        <div className={styles.grid}>
-          <div>
-            <span className={styles.eyebrow}>
-              <Sparkles size={14} aria-hidden="true" />
-              Let&apos;s Build Something Great
-            </span>
-            <h2 className={styles.heading}>
-              Turn your ideas into <span className={styles.gradient}>real impact</span>.
-            </h2>
-            <p className={styles.lead}>
-              Share your project with us and get a tailored solution that{" "}
-              <span className={styles.gradient}>drives results</span>.
-            </p>
-            <ul className={styles.trustList} aria-label="Why work with us">
-              {startHereTrust.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <li key={item.label} className={styles.trustItem}>
-                    <Icon size={18} aria-hidden="true" />
-                    {item.label}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+        <div>
+          <h2 className={styles.heading}>Let&apos;s build something great.</h2>
+          <p className={styles.lead}>
+            Turn your ideas into real impact. Share your project and get a tailored
+            solution that drives results.
+          </p>
+        </div>
 
-          <div className={styles.right}>
-            <span className={styles.floatNote} aria-hidden="true">
-              Let&apos;s make it happen.
-              <ArrowDownLeft size={14} />
-            </span>
-
-            <div className={styles.scene} aria-hidden="true">
-              <div className={styles.laptop}>
-                <div className={styles.laptopScreen}>
-                  <div className={styles.laptopHeader}>
-                    <span className={styles.laptopDot} />
-                    <span className={styles.laptopDot} />
-                    <span className={styles.laptopDot} />
-                  </div>
-                  <p className={styles.laptopTitle}>
-                    Your project,<br />
-                    <em>our expertise.</em>
-                  </p>
-                  <ul className={styles.laptopList}>
-                    {laptopRows.map((row) => (
-                      <li key={row} className={styles.laptopRow}>
-                        <Check size={14} />
-                        <span className={styles.laptopBar} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={styles.laptopBase} />
-              </div>
-              <div className={styles.rocketOrbit}>
-                <div className={styles.rocketCube}>
-                  <Rocket aria-hidden="true" />
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.ctaRow}>
-              <ProjectInquiryTrigger className={`primaryButton ${styles.primary}`}>
-                Start Your Project
-                <ArrowRight size={18} aria-hidden="true" />
-              </ProjectInquiryTrigger>
-              <p className={styles.ctaHint}>
-                <ArrowDownLeft size={14} aria-hidden="true" />
-                Send us your inquiry — we&apos;ll handle the rest.
-              </p>
-            </div>
+        <div className={styles.body}>
+          <ul className={styles.trustList} aria-label="Why work with us">
+            {startHereTrust.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.label} className={styles.trustItem}>
+                  <Icon size={14} aria-hidden="true" />
+                  {item.label}
+                </li>
+              );
+            })}
+          </ul>
+          <div className={styles.actions}>
+            <ProjectInquiryTrigger className="primaryButton">
+              Start your project
+              <ArrowRight size={16} aria-hidden="true" />
+            </ProjectInquiryTrigger>
+            <Link className="secondaryButton" href="/contact">
+              Contact details
+              <ArrowUpRight size={15} aria-hidden="true" />
+            </Link>
+            <p className={styles.hint}>Replies within one business day.</p>
           </div>
         </div>
       </div>
@@ -267,18 +250,16 @@ export function TestimonialsRouteContent() {
 }
 
 type SectionHeadingProps = {
-  label: string;
   title: string;
   body: string;
   href?: string;
   cta?: string;
 };
 
-function SectionHeading({ label, title, body, href, cta }: SectionHeadingProps) {
+function SectionHeading({ title, body, href, cta }: SectionHeadingProps) {
   return (
     <div className="sectionHeading">
       <div>
-        <span className="sectionLabel">{label}</span>
         <h2>{title}</h2>
         <p>{body}</p>
       </div>

@@ -15,7 +15,6 @@ export default function ContactPage() {
     <main className="page routePage">
       <AnimatedSection>
         <section className="shell routeHero">
-          <span className="sectionLabel">Contact</span>
           <h1>Reach Imogen directly or start with the project brief.</h1>
           <p>
             Use the channels below for a quick conversation, or send a structured inquiry when you are ready

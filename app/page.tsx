@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import {
+  ExperienceSection,
   FinalCta,
   HeroSection,
   ProcessSection,
@@ -38,6 +39,9 @@ export default function Home() {
   return (
     <main className="page">
       <HeroSection />
+      <AnimatedSection mode="fade">
+        <ExperienceSection />
+      </AnimatedSection>
       <AnimatedSection className="sectionStretch">
         <FeaturedProjectCarousel projects={projects} />
       </AnimatedSection>

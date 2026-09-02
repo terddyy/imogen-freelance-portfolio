@@ -11,7 +11,6 @@ export default function TestimonialsPage() {
     <main className="page routePage">
       <AnimatedSection>
         <section className="shell routeHero">
-          <span className="sectionLabel">Client Notes</span>
           <h1>What clients say about working together.</h1>
           <p>
             Real feedback from commissioned projects — communication, delivery speed, and the quality

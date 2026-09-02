@@ -94,8 +94,16 @@ export type Testimonial = {
   email?: string;
 };
 
+export const primaryNav = [
+  { label: "Home", href: "/" },
+  { label: "Work", href: "/projects" },
+  { label: "Testimonials", href: "/testimonials" },
+  { label: "Contact", href: "/contact" },
+];
+
+/** Footer and secondary surfaces — home is implied from the brand mark. */
 export const navItems = [
-  { label: "Projects", href: "/projects" },
+  { label: "Work", href: "/projects" },
   { label: "Testimonials", href: "/testimonials" },
   { label: "Contact", href: "/contact" },
 ];

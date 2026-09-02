@@ -12,7 +12,6 @@ export function ProcessSection() {
     <section className="shell pageSection" id="process">
       <div className="sectionHeading">
         <div>
-          <span className="sectionLabel">Process</span>
           <h2>From first message to launch.</h2>
           <p>Clear checkpoints so the work stays on track.</p>
         </div>

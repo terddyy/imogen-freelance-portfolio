@@ -49,7 +49,7 @@
 .item.active .badge {
   border-color: transparent;
   background: var(--cyan);
-  color: #05121b;
+  color: var(--primary-foreground);
 }
 
 .meta {

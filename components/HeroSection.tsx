@@ -1,111 +1,82 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ComponentType } from "react";
 import { ProjectInquiryTrigger } from "@/components/ProjectInquiryTrigger";
-import heroBackground from "@/public/Hero-background.webp";
-import { ArrowRight, ArrowUpRight, ChevronDown, CircleDot } from "lucide-react";
-import { HeroAnimationController } from "@/components/HeroAnimationController";
+import { ArrowRight, ArrowUpRight, CircleDot } from "lucide-react";
 import { LinkedInIcon, GitHubIcon, FacebookIcon, EmailIcon } from "@/components/SocialIcons";
+import { socials } from "@/lib/portfolio-data";
 import styles from "@/components/HeroSection.module.css";
+
+const socialIconMap: Record<string, ComponentType<{ size?: number }>> = {
+  Facebook: FacebookIcon,
+  LinkedIn: LinkedInIcon,
+  GitHub: GitHubIcon,
+  Email: EmailIcon,
+};
 
 export function HeroSection() {
   return (
-    <section className={styles.section} id="hero" aria-label="Imogen Inocentes hero">
-      <HeroAnimationController />
-      <div className={styles.stage} aria-hidden="true">
-        <div className={styles.backgroundFrame}>
-          <Image
-            className={styles.background}
-            src={heroBackground}
-            alt=""
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 1920px"
-          />
-        </div>
-        <div className={styles.shade} />
-        <div className={styles.brandCloud}>
-          <span className={`${styles.brand} ${styles.brandAws}`}>
-            <Image src="/logos/aws.svg" alt="" width={160} height={88} loading="lazy" />
-          </span>
-          <span className={`${styles.brand} ${styles.brandGoogle}`}>
-            <Image src="/logos/google.svg" alt="" width={136} height={46} loading="lazy" />
-          </span>
-          <span className={`${styles.brand} ${styles.brandMicrosoft}`}>
-            <Image src="/logos/microsoft.svg" alt="" width={36} height={36} loading="lazy" />
-          </span>
-          <span className={`${styles.brand} ${styles.brandOracle}`}>
-            <Image src="/logos/oracle.svg" alt="" width={112} height={18} loading="lazy" />
-          </span>
-          <span className={`${styles.brand} ${styles.brandIbm}`}>
-            <Image src="/logos/ibm.svg" alt="" width={72} height={26} loading="lazy" />
-          </span>
-          <span className={`${styles.brand} ${styles.brandAzure}`}>
-            <Image src="/logos/azure.svg" alt="" width={36} height={36} loading="lazy" />
-          </span>
-          <span className={`${styles.brand} ${styles.brandAsu}`}>
-            <Image src="/logos/asu.svg" alt="" width={118} height={26} loading="lazy" />
-          </span>
-        </div>
-      </div>
-
+    <section className={styles.section} id="hero" aria-label="Portfolio hero">
       <div className={styles.content}>
         <div className={styles.copy}>
-          <p className={styles.kicker}>
-            <span>01</span>
-            Lead full-stack development · Scalable software
-          </p>
-          <span className="availability">
-            <CircleDot size={14} />
-            Available for select builds
-          </span>
-          <h1>
-            Complex problems.
-            <em>Clear software.</em>
-          </h1>
-          <div className={styles.meta}>
-            <strong className={styles.roleLine}>Lead Full Stack Developer</strong>
-            <span>Nexvision Innovations</span>
-            <a href="https://www.facebook.com/zentarisoftwaresolution" target="_blank" rel="noreferrer">
-              Co-founder &amp; CEO, Zentari
-              <ArrowUpRight size={15} />
-            </a>
-          </div>
+          <p className={styles.eyebrow}>Lead Full Stack Engineer</p>
+          <h1>Imogen Inocentes</h1>
           <p className={styles.intro}>
-            5 years of experience building scalable software across web products, internal systems, and
-            workflow automation.
+            Five years shipping web products, internal tools, and workflow automation for teams that need
+            reliable software without agency overhead. Lead developer at Nexvision Innovations; co-founder of{" "}
+            <a
+              href="https://www.facebook.com/zentarisoftwaresolution"
+              target="_blank"
+              rel="noreferrer"
+              className={styles.inlineLink}
+            >
+              Zentari
+              <ArrowUpRight size={13} aria-hidden="true" />
+            </a>
+            .
           </p>
           <div className={styles.actions}>
-          <ProjectInquiryTrigger className={`primaryButton ${styles.primary}`}>
-            Inquire a project
-            <ArrowUpRight size={17} aria-hidden="true" />
-          </ProjectInquiryTrigger>
+            <ProjectInquiryTrigger className={`primaryButton ${styles.primary}`}>
+              Start a project
+              <ArrowUpRight size={17} aria-hidden="true" />
+            </ProjectInquiryTrigger>
             <Link className={`secondaryButton ${styles.secondary}`} href="/projects">
-              Explore the work
+              View selected work
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
+            <span className={styles.availability}>
+              <CircleDot size={11} aria-hidden="true" />
+              Open for select projects
+            </span>
           </div>
           <div className={`socialRow ${styles.socials}`} aria-label="Social links">
-            <a href="https://www.facebook.com/TERDTHEPRO/" target="_blank" rel="noreferrer" aria-label="Facebook" className={styles.facebookHighlight}>
-              <FacebookIcon size={20} />
-              <span>Facebook</span>
-            </a>
-            <a href="https://www.linkedin.com/in/terd/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-              <LinkedInIcon size={18} />
-            </a>
-            <a href="https://github.com/terddyy" target="_blank" rel="noreferrer" aria-label="GitHub">
-              <GitHubIcon size={18} />
-            </a>
-            <a href="mailto:terd@zentariph.com" aria-label="Email Imogen">
-              <EmailIcon size={18} />
-            </a>
+            {socials.map((item) => {
+              const Icon = socialIconMap[item.label];
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target={item.href.startsWith("http") ? "_blank" : undefined}
+                  rel={item.href.startsWith("http") ? "noreferrer" : undefined}
+                  aria-label={item.label}
+                >
+                  {Icon ? <Icon size={18} /> : null}
+                </a>
+              );
+            })}
           </div>
         </div>
-      </div>
 
-      <div className={styles.scrollCue} aria-hidden="true">
-        <ChevronDown size={22} />
-        <ChevronDown size={22} />
-        <ChevronDown size={22} />
+        <div className={styles.portraitSlot}>
+          <Image
+            src="/profile/hero-profile.png"
+            alt="Portrait of Imogen Inocentes"
+            fill
+            priority
+            sizes="(max-width: 980px) 100vw, 360px"
+            className={styles.portraitImage}
+          />
+        </div>
       </div>
     </section>
   );

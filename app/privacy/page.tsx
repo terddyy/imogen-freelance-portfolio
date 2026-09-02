@@ -13,7 +13,6 @@ export default function PrivacyPage() {
     <main className="page routePage">
       <AnimatedSection>
         <section className="shell routeHero">
-          <span className="sectionLabel">Privacy</span>
           <h1>How your inquiry details are used.</h1>
           <p>
             This page explains what happens when you send a project inquiry through this website.

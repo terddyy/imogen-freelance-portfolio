@@ -1,23 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Manrope } from "next/font/google";
+import { Archivo } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { GeistPixelSquare } from "geist/font/pixel";
 import "./globals.css";
 import { Header } from "@/components/Header";
+import { SideNav } from "@/components/SideNav";
 import { Footer } from "@/components/Footer";
-import { WhatsAppContact } from "@/components/WhatsAppContact";
 import { CookieConsent } from "@/components/CookieConsent";
-import { MobileNav } from "@/components/MobileNav";
 import { SiteEntryLoader } from "@/components/SiteEntryLoader";
 import { getSiteOrigin } from "@/lib/site";
 
-const manrope = Manrope({
+const archivo = Archivo({
   variable: "--font-manrope",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -26,8 +24,8 @@ export const viewport: Viewport = {
   userScalable: true,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#05070b" },
-    { media: "(prefers-color-scheme: light)", color: "#f6f8fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
 };
 
@@ -68,15 +66,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${manrope.variable} ${geistMono.variable}`} data-theme="dark">
+    <html
+      lang="en"
+      className={`${archivo.variable} ${GeistMono.variable} ${GeistSans.variable} ${GeistPixelSquare.variable}`}
+      data-theme="light"
+    >
       <body>
         <SiteEntryLoader />
+        <SideNav />
         <Header />
-        {children}
-        <Footer />
-        <WhatsAppContact />
+        <div className="siteShell">
+          {children}
+          <Footer />
+        </div>
         <CookieConsent />
-        <MobileNav />
       </body>
     </html>
   );

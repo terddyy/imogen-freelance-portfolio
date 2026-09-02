@@ -13,12 +13,11 @@ export default function ProjectsPage() {
     <main className="page routePage">
       <AnimatedSection>
         <section className="shell routeHero">
-          <span className="sectionLabel">Work</span>
+          <h1>Selected builds across web, apps, and custom systems.</h1>
           <span className="availability">
             <CircleDot size={14} />
             Archive still growing
           </span>
-          <h1>Selected builds across web, apps, and custom systems.</h1>
           <p>
             This is a living sample of commissioned work — not the full catalog. I&apos;m still
             compiling case studies, screenshots, and write-ups, and new projects will appear here as

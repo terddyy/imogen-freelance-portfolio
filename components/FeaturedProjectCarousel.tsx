@@ -318,7 +318,6 @@ export function FeaturedProjectCarousel({ projects }: FeaturedProjectCarouselPro
       <div className={styles.gridOverlay} aria-hidden="true" />
       <div className={styles.content}>
         <div className={styles.header}>
-          <p className={styles.eyebrow}>Portfolio</p>
           <h2 id="featured-projects-title">Featured Projects</h2>
         </div>
       </div>

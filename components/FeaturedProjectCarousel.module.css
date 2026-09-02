@@ -4,8 +4,8 @@
   position: relative;
   overflow: hidden;
   padding: clamp(24px, 3.5vh, 36px) 0 clamp(40px, 5vh, 64px);
-  color: #fff;
-  background: #070807;
+  color: var(--text);
+  background: var(--bg);
 }
 
 .bandPlaceholder {
@@ -14,10 +14,7 @@
 }
 
 .gridOverlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 46%, rgba(140, 234, 196, 0.06), transparent 38rem);
+  display: none;
 }
 
 .content {
@@ -35,24 +32,6 @@
   gap: 20px;
   margin-bottom: clamp(14px, 2vh, 20px);
   text-align: left;
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
-  color: rgba(255, 255, 255, 0.82);
-  font: 800 12px/1 var(--font-geist-mono), monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.eyebrow::before {
-  width: 38px;
-  height: 1px;
-  content: "";
-  background: #fff;
 }
 
 .header h2 {
@@ -102,10 +81,10 @@
   width: var(--featured-card-width);
   aspect-ratio: 756 / 1024;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid var(--line);
   border-radius: 14px;
-  background: #07100e;
-  box-shadow: 0 24px 72px rgba(0, 0, 0, 0.45);
+  background: var(--surface);
+  box-shadow: var(--shadow-glass);
 }
 
 .carouselCardButton {
@@ -119,7 +98,7 @@
 }
 
 .carouselCardButton:focus-visible {
-  outline: 2px solid rgba(124, 255, 178, 0.85);
+  outline: 2px solid var(--ring);
   outline-offset: -2px;
 }
 
@@ -147,7 +126,7 @@
   align-items: center;
   gap: 8px;
   width: fit-content;
-  color: #fff;
+  color: var(--text);
   font-size: 15px;
   font-weight: 800;
 }
@@ -158,7 +137,7 @@
 
 .allLink:hover,
 .allLink:focus-visible {
-  color: #8ceac4;
+  color: var(--muted);
   outline: none;
 }
 

@@ -90,7 +90,7 @@ export function InquireForm() {
   return (
     <div
       ref={panelRef}
-      className="flex flex-col overflow-hidden rounded-lg border border-neon/25 bg-[linear-gradient(180deg,rgba(18,29,37,0.92),rgba(7,12,20,0.96))] p-2.5 shadow-[0_0_0_1px_rgba(0,255,136,0.08),0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:rounded-2xl sm:p-5 sm:shadow-[0_0_0_1px_rgba(0,255,136,0.08),0_24px_80px_rgba(0,0,0,0.4),0_0_60px_rgba(0,255,136,0.05)]"
+      className="flex flex-col overflow-hidden rounded-lg border border-neon/25 bg-[linear-gradient(180deg,rgba(18,29,37,0.92),rgba(7,12,20,0.96))] p-2.5 shadow-[0_0_0_1px_rgba(255,178,0,0.08),0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:rounded-2xl sm:p-5 sm:shadow-[0_0_0_1px_rgba(255,178,0,0.08),0_24px_80px_rgba(0,0,0,0.4),0_0_60px_rgba(255,178,0,0.05)]"
     >
       {status === "success" ? (
         <section className="grid flex-1 content-center justify-items-start gap-2.5 sm:gap-4" aria-live="polite">
@@ -109,7 +109,7 @@ export function InquireForm() {
           </p>
           <Link
             href="/"
-            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-neon px-3 py-2 text-xs font-extrabold text-[#04120a] shadow-[0_10px_28px_rgba(0,255,136,0.24)] transition hover:bg-[#2dd46a] sm:mt-3 sm:rounded-xl sm:px-4 sm:py-2.5 sm:text-sm"
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-neon px-3 py-2 text-xs font-extrabold text-[#1a1200] shadow-[0_10px_28px_rgba(255,178,0,0.24)] transition hover:bg-[#2dd46a] sm:mt-3 sm:rounded-xl sm:px-4 sm:py-2.5 sm:text-sm"
           >
             Back to portfolio
             <ArrowRight size={17} aria-hidden="true" />
@@ -252,7 +252,7 @@ export function InquireForm() {
             <button
               type="submit"
               disabled={!validStep || status === "loading"}
-              className="inline-flex w-full min-h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-neon px-2.5 py-1.5 text-[11px] font-extrabold text-[#04120a] shadow-[0_8px_20px_rgba(0,255,136,0.2)] transition enabled:hover:bg-[#2dd46a] disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-white/35 disabled:shadow-none sm:min-h-0 sm:gap-2 sm:rounded-xl sm:px-4 sm:py-2.5 sm:text-sm sm:shadow-[0_10px_28px_rgba(0,255,136,0.24)]"
+              className="inline-flex w-full min-h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-neon px-2.5 py-1.5 text-[11px] font-extrabold text-[#1a1200] shadow-[0_8px_20px_rgba(255,178,0,0.2)] transition enabled:hover:bg-[#2dd46a] disabled:cursor-not-allowed disabled:bg-white/5 disabled:text-white/35 disabled:shadow-none sm:min-h-0 sm:gap-2 sm:rounded-xl sm:px-4 sm:py-2.5 sm:text-sm sm:shadow-[0_10px_28px_rgba(255,178,0,0.24)]"
             >
               {status === "loading" ? (
                 <>
@@ -299,9 +299,9 @@ function InquireStepper({
               <span
                 className={`relative z-10 grid size-4 place-items-center rounded-full border font-mono text-[7px] font-bold transition sm:size-6 sm:text-[9px] ${
                   active
-                    ? "border-[#00ff88] bg-[#00ff88] text-[#04120a] shadow-[0_0_0_4px_rgba(0,255,136,0.12),0_0_18px_rgba(0,255,136,0.55)]"
+                    ? "border-[#ffb200] bg-[#ffb200] text-[#1a1200] shadow-[0_0_0_4px_rgba(255,178,0,0.12),0_0_18px_rgba(255,178,0,0.55)]"
                     : complete
-                      ? "border-[#00ff88]/40 bg-[rgba(10,14,18,0.92)] text-[#00ff88]"
+                      ? "border-[#ffb200]/40 bg-[rgba(10,14,18,0.92)] text-[#ffb200]"
                       : "border-white/16 bg-[rgba(10,14,18,0.92)] text-[#9eafbf]/70"
                 }`}
               >
@@ -310,7 +310,7 @@ function InquireStepper({
               <span
                 className={`relative hidden w-full overflow-hidden pb-1 text-[11px] leading-tight whitespace-nowrap text-ellipsis sm:block sm:pb-2 ${
                   active
-                    ? "font-bold text-white after:absolute after:right-[22%] after:bottom-0 after:left-[22%] after:h-0.5 after:rounded-full after:bg-[#00ff88] after:shadow-[0_0_8px_rgba(0,255,136,0.7)] after:content-['']"
+                    ? "font-bold text-white after:absolute after:right-[22%] after:bottom-0 after:left-[22%] after:h-0.5 after:rounded-full after:bg-[#ffb200] after:shadow-[0_0_8px_rgba(255,178,0,0.7)] after:content-['']"
                     : "font-medium text-[#9eafbf]/60"
                 }`}
               >
@@ -323,7 +323,7 @@ function InquireStepper({
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-1.5 sm:gap-3" aria-hidden="true">
         <div className="h-[2px] overflow-hidden rounded-full bg-white/10 sm:h-[3px]">
           <div
-            className="h-full rounded-full bg-[#00ff88] shadow-[0_0_12px_rgba(0,255,136,0.7)] transition-[width] duration-300"
+            className="h-full rounded-full bg-[#ffb200] shadow-[0_0_12px_rgba(255,178,0,0.7)] transition-[width] duration-300"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -361,13 +361,13 @@ function ProjectTypeGrid({
               <span
                 className={`relative flex h-full flex-col items-center justify-center gap-0.5 rounded-md border px-1 py-1.5 text-center transition sm:gap-1.5 sm:rounded-xl sm:px-2 sm:py-2.5 ${
                   selected
-                    ? "border-neon bg-neon/[0.06] shadow-[inset_0_0_0_1px_rgba(0,255,136,0.2),0_0_20px_rgba(0,255,136,0.18)]"
+                    ? "border-neon bg-neon/[0.06] shadow-[inset_0_0_0_1px_rgba(255,178,0,0.2),0_0_20px_rgba(255,178,0,0.18)]"
                     : "border-white/8 bg-white/[0.03] hover:border-white/15"
                 }`}
               >
                 {selected ? (
                   <span
-                    className="absolute top-0.5 right-0.5 grid size-3 place-items-center rounded-full bg-neon text-[#04120a] shadow-[0_0_10px_rgba(0,255,136,0.55)] sm:top-1 sm:right-1 sm:size-4"
+                    className="absolute top-0.5 right-0.5 grid size-3 place-items-center rounded-full bg-neon text-[#1a1200] shadow-[0_0_10px_rgba(255,178,0,0.55)] sm:top-1 sm:right-1 sm:size-4"
                     aria-hidden="true"
                   >
                     <Check size={7} className="sm:hidden" />
@@ -378,13 +378,13 @@ function ProjectTypeGrid({
                   size={14}
                   strokeWidth={1.75}
                   aria-hidden="true"
-                  className={`sm:hidden ${selected ? "text-neon drop-shadow-[0_0_8px_rgba(0,255,136,0.55)]" : "text-neon/90 drop-shadow-[0_0_6px_rgba(0,255,136,0.35)]"}`}
+                  className={`sm:hidden ${selected ? "text-neon drop-shadow-[0_0_8px_rgba(255,178,0,0.55)]" : "text-neon/90 drop-shadow-[0_0_6px_rgba(255,178,0,0.35)]"}`}
                 />
                 <Icon
                   size={20}
                   strokeWidth={1.75}
                   aria-hidden="true"
-                  className={`hidden sm:block ${selected ? "text-neon drop-shadow-[0_0_8px_rgba(0,255,136,0.55)]" : "text-neon/90 drop-shadow-[0_0_6px_rgba(0,255,136,0.35)]"}`}
+                  className={`hidden sm:block ${selected ? "text-neon drop-shadow-[0_0_8px_rgba(255,178,0,0.55)]" : "text-neon/90 drop-shadow-[0_0_6px_rgba(255,178,0,0.35)]"}`}
                 />
                 <strong className="text-[8px] font-semibold leading-tight text-white sm:text-[11px]">{label}</strong>
               </span>
@@ -442,7 +442,7 @@ function BudgetRadioGroup({
               <span
                 className={`flex h-full items-center rounded-md border px-2 py-1 text-[10px] font-extrabold transition sm:rounded-lg sm:px-3 sm:py-2 sm:text-[13px] ${
                   checked
-                    ? "border-neon/70 bg-neon/10 text-neon shadow-[inset_0_0_0_1px_rgba(0,255,136,0.13)]"
+                    ? "border-neon/70 bg-neon/10 text-neon shadow-[inset_0_0_0_1px_rgba(255,178,0,0.13)]"
                     : "border-white/10 bg-white/[0.035] text-[#9eafbf] hover:border-neon/50 hover:text-white"
                 }`}
               >
@@ -528,7 +528,7 @@ function RadioGroup({
               <span
                 className={`flex h-full items-center rounded-md border px-2 py-1 text-[10px] font-extrabold transition sm:rounded-lg sm:px-3 sm:py-2 sm:text-[13px] ${
                   checked
-                    ? "border-neon/70 bg-neon/10 text-neon shadow-[inset_0_0_0_1px_rgba(0,255,136,0.13)]"
+                    ? "border-neon/70 bg-neon/10 text-neon shadow-[inset_0_0_0_1px_rgba(255,178,0,0.13)]"
                     : "border-white/10 bg-white/[0.035] text-[#9eafbf] hover:border-neon/50 hover:text-white"
                 }`}
               >
@@ -577,7 +577,7 @@ function ContactStep({
               onChange={(event) => update("email", event.target.value)}
               placeholder="you@company.com"
               aria-invalid={inquiry.email.length > 0 && !isEmail(inquiry.email)}
-              className="w-full rounded-lg border border-white/10 bg-[rgba(2,7,12,0.56)] px-2.5 py-1.5 text-[11px] text-white outline-none transition placeholder:text-[#9eafbf]/60 focus:border-neon/60 focus:bg-[rgba(2,7,12,0.8)] focus:shadow-[0_0_0_4px_rgba(0,255,136,0.1)] sm:px-3 sm:py-2 sm:text-[13px]"
+              className="w-full rounded-lg border border-white/10 bg-[rgba(2,7,12,0.56)] px-2.5 py-1.5 text-[11px] text-white outline-none transition placeholder:text-[#9eafbf]/60 focus:border-neon/60 focus:bg-[rgba(2,7,12,0.8)] focus:shadow-[0_0_0_4px_rgba(255,178,0,0.1)] sm:px-3 sm:py-2 sm:text-[13px]"
             />
           </label>
           {inquiry.email && !isEmail(inquiry.email) ? (
@@ -611,7 +611,7 @@ function ContactStep({
               onChange={(event) => update("phone", event.target.value)}
               placeholder="+63 917 123 4567"
               aria-invalid={inquiry.phone.length > 0 && !isPhone(inquiry.phone)}
-              className="w-full rounded-lg border border-white/10 bg-[rgba(2,7,12,0.56)] px-2.5 py-1.5 text-[11px] text-white outline-none transition placeholder:text-[#9eafbf]/60 focus:border-neon/60 focus:bg-[rgba(2,7,12,0.8)] focus:shadow-[0_0_0_4px_rgba(0,255,136,0.1)] sm:px-3 sm:py-2 sm:text-[13px]"
+              className="w-full rounded-lg border border-white/10 bg-[rgba(2,7,12,0.56)] px-2.5 py-1.5 text-[11px] text-white outline-none transition placeholder:text-[#9eafbf]/60 focus:border-neon/60 focus:bg-[rgba(2,7,12,0.8)] focus:shadow-[0_0_0_4px_rgba(255,178,0,0.1)] sm:px-3 sm:py-2 sm:text-[13px]"
             />
           </label>
           {inquiry.phone && !isPhone(inquiry.phone) ? (
@@ -641,7 +641,7 @@ function ContactStep({
             type="checkbox"
             checked={consent}
             onChange={(event) => setConsent(event.target.checked)}
-            className="mt-0.5 size-3 shrink-0 accent-[#00ff88] sm:size-4"
+            className="mt-0.5 size-3 shrink-0 accent-[#ffb200] sm:size-4"
           />
           <span>
             I understand the privacy notice and accept necessary cookies to send this inquiry securely.

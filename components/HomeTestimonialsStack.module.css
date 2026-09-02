@@ -1,6 +1,6 @@
 .bandPlaceholder {
   min-height: clamp(500px, 68vh, 660px);
-  background: #050608;
+  background: var(--bg);
 }
 
 .clipDefs {
@@ -18,8 +18,8 @@
   position: relative;
   overflow: hidden;
   padding: clamp(48px, 7vw, 88px) 0 clamp(40px, 5vw, 64px);
-  color: #f3f8ff;
-  background: #050608;
+  color: var(--text);
+  background: var(--bg);
 }
 
 .content {
@@ -29,18 +29,6 @@
 
 .header {
   margin-bottom: clamp(24px, 4vw, 36px);
-}
-
-.sectionLabel {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  border: 1px solid rgba(34, 197, 94, 0.42);
-  border-radius: 999px;
-  padding: 7px 14px;
-  background: rgba(34, 197, 94, 0.08);
-  color: #7cffb2;
-  font: 600 12px/1 var(--font-geist-mono), monospace;
 }
 
 .headerText h2 {
@@ -61,7 +49,7 @@
 
 .headerMeta p {
   max-width: 22ch;
-  color: #8d9bab;
+  color: var(--muted);
   font-size: 15px;
   line-height: 1.5;
 }
@@ -71,7 +59,7 @@
   align-items: center;
   gap: 4px;
   flex-shrink: 0;
-  color: #7ad7ff;
+  color: var(--text);
   font-size: 14px;
   font-weight: 700;
   text-decoration: none;
@@ -120,7 +108,7 @@
 }
 
 .card:focus-visible {
-  outline: 2px solid rgba(122, 215, 255, 0.72);
+  outline: 2px solid var(--ring);
   outline-offset: 4px;
 }
 
@@ -182,7 +170,7 @@
 }
 
 .card[data-theme="navy"] {
-  --card-quote-color: rgba(122, 215, 255, 0.26);
+  --card-quote-color: rgba(255, 178, 0, 0.26);
 }
 
 .cardContent {
@@ -389,7 +377,7 @@
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--line-strong);
   cursor: pointer;
   transition:
     width 220ms ease,
@@ -398,18 +386,18 @@
 
 .dot:hover,
 .dot:focus-visible {
-  background: rgba(255, 255, 255, 0.36);
+  background: var(--dim);
   outline: none;
 }
 
 .dotActive {
   width: 26px;
-  background: #c9a55c;
+  background: var(--text);
 }
 
 .dotActive:hover,
 .dotActive:focus-visible {
-  background: #d4b06a;
+  background: var(--text);
 }
 
 @media (prefers-reduced-motion: reduce) {

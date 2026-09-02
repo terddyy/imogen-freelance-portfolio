@@ -148,7 +148,6 @@ export function ProofGallery() {
     <section className={styles.section} id="proof" aria-labelledby="proof-title">
       <div className={`${styles.headerBlock} shell`}>
         <div className={styles.header}>
-          <span className="sectionLabel">In practice</span>
           <h2 id="proof-title">A few snapshots from recent work.</h2>
         </div>
       </div>

@@ -9,7 +9,7 @@ const THEME_STORAGE_KEY = "imogen-theme";
 
 function readStoredTheme(): Theme {
   if (typeof window === "undefined" || !hasCookieConsent()) {
-    return "dark";
+    return "light";
   }
 
   const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -17,7 +17,7 @@ function readStoredTheme(): Theme {
     return stored;
   }
 
-  return document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
 function persistCurrentThemeIfNeeded() {
@@ -25,12 +25,12 @@ function persistCurrentThemeIfNeeded() {
     return;
   }
 
-  const currentTheme = document.documentElement.dataset.theme === "light" ? "light" : "dark";
+  const currentTheme = document.documentElement.dataset.theme === "dark" ? "dark" : "light";
   window.localStorage.setItem(THEME_STORAGE_KEY, currentTheme);
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     setTheme(readStoredTheme());

@@ -72,7 +72,6 @@ export function HomeTestimonialsStack() {
       <div className={styles.content}>
         <div className={styles.header}>
           <div className={styles.headerText}>
-            <span className={styles.sectionLabel}>Client Notes</span>
             <h2 id="testimonials-heading">What clients say.</h2>
             <div className={styles.headerMeta}>
               <p>Direct feedback from our partners.</p>
