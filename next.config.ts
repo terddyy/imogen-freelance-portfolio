@@ -8,16 +8,16 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 const isDev = process.env.NODE_ENV === "development";
 
-// Incremental CSP: allow self + Turnstile; keep unsafe-inline for Next/runtime styles.
+// Incremental CSP: allow self; keep unsafe-inline for Next/runtime styles.
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://challenges.cloudflare.com`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' blob: data: https://res.cloudinary.com",
   "media-src 'self' blob: https://res.cloudinary.com",
   "font-src 'self'",
-  "connect-src 'self' https://challenges.cloudflare.com",
-  "frame-src 'self' https://challenges.cloudflare.com",
+  "connect-src 'self'",
+  "frame-src 'self'",
   "worker-src 'self' blob:",
   "base-uri 'self'",
   "form-action 'self'",
@@ -39,7 +39,6 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    proxyClientMaxBodySize: "16kb",
     optimizePackageImports: ["lucide-react", "motion"],
   },
   async headers() {

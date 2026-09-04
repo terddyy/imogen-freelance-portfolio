@@ -97,8 +97,6 @@ export function Header() {
     };
   }, [isMenuOpen, closeMenu]);
 
-  if (pathname === "/inquire") return null;
-
   return (
     <>
       <motion.header
@@ -206,7 +204,7 @@ export function Header() {
                   </div>
                 </div>
                 <ProjectInquiryTrigger className={`primaryButton ${styles.menuCta}`}>
-                  Start a project
+                  Contact me
                 </ProjectInquiryTrigger>
               </motion.div>
             </nav>

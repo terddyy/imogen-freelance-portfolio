@@ -8,9 +8,6 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "check:inquiry-ui": "node scripts/check-inquiry-ui.mjs",
-    "check:api-security": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-api-security.mjs",
-    "check:production": "node --env-file=.env.local scripts/check-production-env.mjs",
     "analyze": "cross-env ANALYZE=true next build",
     "screenshot": "node scripts/screenshot.mjs"
   },

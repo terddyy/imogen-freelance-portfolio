@@ -5,7 +5,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 
 export const metadata: Metadata = {
   title: "Privacy | Imogen Inocentes",
-  description: "How project inquiry contact details are used, stored, and deleted.",
+  description: "How your contact details are used, stored, and deleted when you reach out.",
 };
 
 export default function PrivacyPage() {
@@ -13,9 +13,9 @@ export default function PrivacyPage() {
     <main className="page routePage">
       <AnimatedSection>
         <section className="shell routeHero">
-          <h1>How your inquiry details are used.</h1>
+          <h1>How your details are used.</h1>
           <p>
-            This page explains what happens when you send a project inquiry through this website.
+            This page explains what happens when you contact Imogen through this website.
             It is written in plain language for people deciding whether to share a phone number or email.
           </p>
         </section>
@@ -25,41 +25,38 @@ export default function PrivacyPage() {
         <section className="shell routeSection privacyContent">
           <h2>Purpose</h2>
           <p>
-            Contact details and project answers are collected only so Imogen can reply about scope,
-            timing, and fit. They are not sold, and they are not used for marketing lists.
+            This website does not collect your information on its own. When you use a contact link,
+            your email or messaging app sends your message directly to Imogen, and the details are used
+            only to reply about scope, timing, and fit. They are not sold, and they are not used for
+            marketing lists.
           </p>
 
-          <h2>What you may share</h2>
+          <h2>How you reach out</h2>
           <ul>
-            <li>Phone number and/or email address (at least one is required)</li>
-            <li>Optional website URL</li>
-            <li>Project type, budget range, team size, and optional project notes</li>
+            <li>Email — the &ldquo;Contact me&rdquo; buttons open your own email app addressed to Imogen.</li>
+            <li>Phone or WhatsApp — using the numbers shown on the contact page.</li>
           </ul>
+          <p>
+            Whatever you choose to include in that message (name, email, phone, or project notes) is
+            entirely up to you.
+          </p>
 
           <h2>Who receives your information</h2>
           <ul>
             <li>
-              <strong>Resend</strong> — sends the full inquiry by email to the site operator
-              (`terd@zentariph.com`). If you provide an email, it may be set as the reply address.
-            </li>
-            <li>
-              <strong>Upstash Redis</strong> — stores rate-limit counters keyed by a hashed IP
-              fingerprint, not your form answers.
-            </li>
-            <li>
-              <strong>Cloudflare Turnstile</strong> — verifies that a submission is likely from a real
-              person (bot protection). It does not receive your project notes.
+              <strong>Imogen</strong> — receives your message in a personal inbox or messaging app. No
+              third-party form, database, or delivery service sits between you and that inbox.
             </li>
             <li>
               <strong>Hosting provider</strong> (for example Vercel) — may retain standard request logs
-              according to their policy.
+              for the pages you view, according to their policy.
             </li>
           </ul>
 
           <h2>Retention</h2>
           <p>
-            This site does not keep an inquiry database. Details live in the operator&apos;s email inbox
-            and Resend delivery history until deleted there on request.
+            This site does not keep a contact database. Your message lives in Imogen&apos;s inbox or
+            messaging history until deleted there on request.
           </p>
 
           <h2>Cookies and local storage</h2>
@@ -78,37 +75,27 @@ export default function PrivacyPage() {
               <code>imogen-cookie-consent</code> so your accept or reject choice is remembered and the
               notice is not shown again.
             </li>
-            <li>
-              <strong>Cloudflare Turnstile</strong> — loaded only on the inquiry form (after cookie
-              consent) to block bots. Cloudflare may set cookies or use similar identifiers as part of
-              that service.
-            </li>
           </ul>
-          <p>
-            Submitting the inquiry form is separate: you must tick a checkbox confirming you understand
-            how your personal details will be used.
-          </p>
 
           <h2>Your choices</h2>
           <p>
             On first visit you can accept necessary cookies or reject all. Rejecting still lets you
-            browse; theme preference is not saved, and the inquiry security check is not loaded until
-            you opt in on the form. You can also contact Imogen by phone or WhatsApp instead of the
-            form.
+            browse; theme preference is simply not saved. You decide what to share whenever you choose
+            to contact Imogen.
           </p>
 
           <h2>Deletion requests</h2>
           <p>
-            To ask for your inquiry details to be deleted from email records, email{" "}
+            To ask for a message you sent to be deleted, email{" "}
             <a href="mailto:terd@zentariph.com">terd@zentariph.com</a> from the address you used, or
-            include the phone number you submitted.
+            include the phone number you contacted from.
           </p>
 
           <p className="privacyMeta">Last updated: August 18, 2026</p>
 
           <div className="privacyActions">
             <ProjectInquiryTrigger className="primaryButton">
-              Start a project
+              Contact me
             </ProjectInquiryTrigger>
             <Link href="/contact" className="secondaryButton">
               Back to contact

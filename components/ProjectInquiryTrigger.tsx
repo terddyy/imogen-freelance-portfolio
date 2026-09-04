@@ -1,9 +1,7 @@
-"use client";
-
-import Link from "next/link";
 import type { ReactNode } from "react";
 
-const INQUIRY_HREF = "/inquire";
+const CONTACT_EMAIL = "terddy03@gmail.com";
+const CONTACT_HREF = `mailto:${CONTACT_EMAIL}`;
 
 type ProjectInquiryTriggerProps = {
   children: ReactNode;
@@ -12,8 +10,8 @@ type ProjectInquiryTriggerProps = {
 
 export function ProjectInquiryTrigger({ children, className }: ProjectInquiryTriggerProps) {
   return (
-    <Link href={INQUIRY_HREF} className={className}>
+    <a href={CONTACT_HREF} className={className}>
       {children}
-    </Link>
+    </a>
   );
 }

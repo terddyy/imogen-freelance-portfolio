@@ -16,8 +16,6 @@ export function SideNav() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  if (pathname === "/inquire") return null;
-
   return (
     <aside className={styles.rail} aria-label="Site navigation">
       <Link className={styles.brandMark} href="/" aria-label="Imogen Inocentes home" onClick={scrollToTop}>
@@ -51,7 +49,7 @@ export function SideNav() {
           <CircleDot size={11} aria-hidden="true" />
           Open for select projects
         </span>
-        <ProjectInquiryTrigger className={`primaryButton ${styles.railCta}`}>Start a project</ProjectInquiryTrigger>
+        <ProjectInquiryTrigger className={`primaryButton ${styles.railCta}`}>Contact me</ProjectInquiryTrigger>
         <ThemeToggle />
       </div>
     </aside>

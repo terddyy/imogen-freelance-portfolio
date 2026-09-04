@@ -37,7 +37,7 @@ export function HeroSection() {
           </p>
           <div className={styles.actions}>
             <ProjectInquiryTrigger className={`primaryButton ${styles.primary}`}>
-              Start a project
+              Contact me
               <ArrowUpRight size={17} aria-hidden="true" />
             </ProjectInquiryTrigger>
             <Link className={`secondaryButton ${styles.secondary}`} href="/projects">

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import { navItems, socials } from "@/lib/portfolio-data";
 import { LinkedInIcon, GitHubIcon, FacebookIcon, EmailIcon } from "@/components/SocialIcons";
@@ -15,10 +14,6 @@ const iconMap: Record<string, React.ComponentType<{ size?: number }>> = {
 };
 
 export function Footer() {
-  const pathname = usePathname();
-
-  if (pathname === "/inquire") return null;
-
   return (
     <footer className={styles.siteFooter}>
       <div className={`shell ${styles.footerGrid}`}>

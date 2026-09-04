@@ -1,8 +1,0 @@
-<svg width="360" height="240" viewBox="0 0 360 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="360" height="240" fill="#08101A"/>
-  <rect x="24" y="28" width="312" height="140" rx="12" fill="#101B29" stroke="#7CFFB2" stroke-opacity=".25"/>
-  <rect x="48" y="52" width="200" height="92" rx="8" fill="#0D1724" stroke="#7AD7FF" stroke-opacity=".2"/>
-  <path d="M72 88h152M72 108h120M72 128h96" stroke="#F3F8FF" stroke-opacity=".2" stroke-width="6" stroke-linecap="round"/>
-  <circle cx="280" cy="98" r="28" fill="#1C3548"/>
-  <text x="180" y="210" text-anchor="middle" fill="#9EAFBF" font-family="Arial, Helvetica, sans-serif" font-size="16">In the room</text>
-</svg>

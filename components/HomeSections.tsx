@@ -206,7 +206,7 @@ export function ToolsSection() {
 
 export function FinalCta() {
   return (
-    <section className="shell" id="contact" aria-label="Start your project">
+    <section className="shell" id="contact" aria-label="Contact Imogen">
       <div className={styles.section}>
         <div>
           <h2 className={styles.heading}>Let&apos;s build something great.</h2>
@@ -230,7 +230,7 @@ export function FinalCta() {
           </ul>
           <div className={styles.actions}>
             <ProjectInquiryTrigger className="primaryButton">
-              Start your project
+              Contact me
               <ArrowRight size={16} aria-hidden="true" />
             </ProjectInquiryTrigger>
             <Link className="secondaryButton" href="/contact">

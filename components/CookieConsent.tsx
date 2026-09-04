@@ -1,20 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { hasCookieDecision, setCookieConsent } from "@/lib/cookie-consent";
 import styles from "@/components/CookieConsent.module.css";
 
 export function CookieConsent() {
-  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     setVisible(!hasCookieDecision());
   }, []);
 
-  if (pathname === "/inquire") return null;
   if (!visible) return null;
 
   function decide(status: "accepted" | "rejected") {
@@ -29,9 +26,8 @@ export function CookieConsent() {
           Cookies on this site
         </p>
         <p className={styles.cookieConsentText}>
-          This portfolio uses only necessary cookies and local storage — for theme preference and bot
-          protection on the inquiry form. There are no analytics or advertising trackers. Reject all to
-          browse without those.{" "}
+          This portfolio uses only necessary local storage — for your theme preference and this cookie
+          choice. There are no analytics or advertising trackers. Reject all to browse without those.{" "}
           <Link href="/privacy">Privacy notice</Link>
         </p>
       </div>

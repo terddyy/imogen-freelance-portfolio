@@ -7,7 +7,7 @@ import { getPortfolioIcon } from "@/lib/portfolio-icons";
 
 export const metadata = {
   title: "Contact | Imogen Inocentes",
-  description: "Reach Imogen Inocentes by phone, WhatsApp, email, or the project inquiry form.",
+  description: "Reach Imogen Inocentes by email, phone, or WhatsApp.",
 };
 
 export default function ContactPage() {
@@ -15,17 +15,17 @@ export default function ContactPage() {
     <main className="page routePage">
       <AnimatedSection>
         <section className="shell routeHero">
-          <h1>Reach Imogen directly or start with the project brief.</h1>
+          <h1>Reach Imogen directly.</h1>
           <p>
-            Use the channels below for a quick conversation, or send a structured inquiry when you are ready
-            to share scope, budget, and timing.
+            Send an email with your scope, budget, and timing, or use any of the channels below for a
+            quick conversation.
           </p>
           <ProjectInquiryTrigger className="primaryButton">
-            Inquire a project
+            Contact me
             <ArrowUpRight size={17} aria-hidden="true" />
           </ProjectInquiryTrigger>
           <p className="contactPrivacyHint">
-            Inquiries share contact details only so Imogen can reply.{" "}
+            Your details are used only so Imogen can reply.{" "}
             <Link href="/privacy">Read the privacy notice</Link>.
           </p>
         </section>

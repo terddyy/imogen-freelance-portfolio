@@ -44,10 +44,8 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/Hero-background.webp",
-        width: 1920,
-        height: 1080,
-        alt: "Imogen Inocentes portfolio — Lead Developer, Full Stack/AI",
+        url: "/profile/hero-profile.png",
+        alt: "Portrait of Imogen Inocentes — Lead Developer, Full Stack/AI",
       },
     ],
   },
@@ -56,7 +54,7 @@ export const metadata: Metadata = {
     title: "Imogen Inocentes | Lead Developer | Full Stack/AI",
     description:
       "Portfolio of Imogen Inocentes — Lead Developer building full stack applications and AI-powered solutions.",
-    images: ["/Hero-background.webp"],
+    images: ["/profile/hero-profile.png"],
   },
 };
 
